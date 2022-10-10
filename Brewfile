@@ -1,0 +1,17 @@
+brew "git"
+brew "yarn"
+brew "pnpm"
+brew "stats"
+brew "docker-compose"
+brew "fnm"
+brew "tree"
+
+cask "google-chrome"
+cask "raycast"
+cask "docker"
+cask "visual-studio-code"
+cask "skitch"
+cask "appcleaner"
+
+# cask "slack"
+# cask "zoom"
