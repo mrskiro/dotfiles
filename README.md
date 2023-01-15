@@ -1,4 +1,6 @@
+# dotfiles for macos
+
 ```shell
-brew bundle
+make all
 ```
 
