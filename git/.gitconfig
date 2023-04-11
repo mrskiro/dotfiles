@@ -1,5 +1,7 @@
 [user]
 	name = purpleeeee
-	email = h.purpleeeee@gmail.com
+	email = mrskhrk@gmail.com
 [init]
 	defaultBranch = main
+[commit]
+	template = ~/.git-commit-template.txt
