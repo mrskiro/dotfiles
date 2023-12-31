@@ -1,0 +1,28 @@
+{
+  "editor.fontFamily": "Monaspace Argon",
+  "editor.fontLigatures": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.editor.enablePreview": false,
+  "workbench.iconTheme": "material-icon-theme",
+  "typescript.referencesCodeLens.enabled": true,
+  "terminal.integrated.lineHeight": 1.2,
+  // アクセシビリティ
+  "editor.accessibilitySupport": "auto",
+  "audioCues.volume": 0,
+  // extensions
+  "prettier.semi": false,
+  "prettier.singleQuote": false,
+  "console-ninja.featureSet": "Community"
+}

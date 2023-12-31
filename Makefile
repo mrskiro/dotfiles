@@ -1,5 +1,5 @@
 all:
-	brew zsh starship git
+	brew zsh starship git vscode
 
 .PHONY: brew
 brew:
@@ -18,3 +18,7 @@ starship:
 git:
 	ln -sf ${PWD}/git/.gitconfig ${HOME}/.gitconfig
 	ln -sf ${PWD}/git/.git-commit-template.txt ${HOME}/.git-commit-template.txt
+
+.PHONY: vscode
+vscode:
+	ln -sf ${PWD}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
