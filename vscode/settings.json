@@ -15,11 +15,11 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "workbench.colorTheme": "One Dark Pro",
   "workbench.editor.enablePreview": false,
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "catppuccin-latte",
   "typescript.referencesCodeLens.enabled": true,
   "terminal.integrated.lineHeight": 1.2,
   // アクセシビリティ
-  "editor.accessibilitySupport": "auto",
+  "editor.accessibilitySupport": "off",
   "audioCues.volume": 0,
   // extensions
   "prettier.semi": false,
