@@ -13,9 +13,7 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "workbench.colorTheme": "One Dark Pro",
   "workbench.editor.enablePreview": false,
-  "workbench.iconTheme": "catppuccin-latte",
   "typescript.referencesCodeLens.enabled": true,
   "terminal.integrated.lineHeight": 1.2,
   // アクセシビリティ
@@ -24,5 +22,8 @@
   // extensions
   "prettier.semi": false,
   "prettier.singleQuote": false,
-  "console-ninja.featureSet": "Community"
+  "terminal.integrated.env.osx": {},
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.iconTheme": "catppuccin-latte",
+  "window.zoomLevel": 1
 }
