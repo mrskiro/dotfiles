@@ -5,3 +5,5 @@
 	defaultBranch = main
 [commit]
 	template = ~/.git-commit-template.txt
+[rebase]
+	autostash = true
