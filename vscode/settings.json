@@ -1,30 +1,40 @@
 {
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.accessibilitySupport": "off",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "Monaspace Argon",
   "editor.fontLigatures": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.tabSize": 2,
   "explorer.compactFolders": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "workbench.editor.enablePreview": false,
-  "typescript.referencesCodeLens.enabled": true,
-  "terminal.integrated.lineHeight": 1.2,
-  "editor.accessibilitySupport": "off",
-  // extensions
-  "prettier.semi": false,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "plaintext": false,
+    "scminput": false
+  },
+  "githubPullRequests.pullBranch": "never",
+  "javascript.updateImportsOnFileMove.enabled": "always",
   "prettier.singleQuote": false,
-  "workbench.colorTheme": "One Dark Pro",
-  "workbench.iconTheme": "catppuccin-latte",
-  "window.zoomLevel": 1,
-  "accessibility.signals.sounds.volume": 0,
+  "projectManager.groupList": true,
+  "tailwindCSS.validate": false,
   "terminal.integrated.env.osx": {
-    "FIG_NEW_SESSION": "1"
-  }
+    "FIG_NEW_SESSION": "1",
+    "Q_NEW_SESSION": "1"
+  },
+  "terminal.integrated.lineHeight": 1.2,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "window.zoomLevel": 1,
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.editor.enablePreview": false,
+  "workbench.iconTheme": "catppuccin-latte"
 }
