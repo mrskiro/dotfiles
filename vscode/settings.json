@@ -36,5 +36,6 @@
   "window.zoomLevel": 1,
   "workbench.colorTheme": "One Dark Pro",
   "workbench.editor.enablePreview": false,
-  "workbench.iconTheme": "catppuccin-latte"
+  "workbench.iconTheme": "catppuccin-latte",
+  "editor.linkedEditing": true
 }

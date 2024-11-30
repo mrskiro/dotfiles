@@ -12,6 +12,7 @@ zsh:
 
 .PHONY: starship
 starship:
+  # TODO: .config/starship.toml: No such file or directory
 	ln -sf ${PWD}/starship/starship.toml ${HOME}/.config/starship.toml
 
 .PHONY: git
@@ -22,3 +23,6 @@ git:
 .PHONY: vscode
 vscode:
 	ln -sf ${PWD}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
+
+dump-brew:
+	brew bundle dump --file=${PWD}/brew/Brewfile --force

@@ -1,9 +1,9 @@
 [user]
 	name = mrskiro
 	email = mrskiro.h@gmail.com
-[init]
-	defaultBranch = main
 [commit]
 	template = ~/.git-commit-template.txt
 [rebase]
 	autostash = true
+[push]
+	default = current
