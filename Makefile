@@ -19,6 +19,8 @@ starship:
 git:
 	ln -sf ${PWD}/git/.gitconfig ${HOME}/.gitconfig
 	ln -sf ${PWD}/git/.git-commit-template.txt ${HOME}/.git-commit-template.txt
+	mkdir -p ${HOME}/.config/git
+	ln -sf ${PWD}/git/.gitignore ${HOME}/.config/git/ignore
 
 .PHONY: vscode
 vscode:
