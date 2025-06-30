@@ -26,5 +26,12 @@ git:
 vscode:
 	ln -sf ${PWD}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
 
+.PHONY: claude
+claude:
+	npm install -g @anthropic-ai/claude-code
+	ln -sf ${PWD}/claude/CLAUDE.md ${HOME}/.claude/CLAUDE.md
+	ln -sf ${PWD}/claude/commands ${HOME}/.claude/commands
+	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
+
 dump-brew:
 	brew bundle dump --file=${PWD}/brew/Brewfile --force

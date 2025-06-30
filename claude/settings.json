@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "Bash(pnpm lint:*)",
+      "READ(**)",
+      "UPDATE(**)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(rg:*)",
+      "Bash(mv:*)",
+      "Bash(cat:*)",
+      "Bash(comm:*)",
+      "Bash(afplay:*)"
+    ],
+    "deny": ["Bash(sudo:*)", "Bash(rm -rf:*)", "Read(.env.*)"]
+  },
+  "preferredNotifChannel": "terminal_bell"
+}
