@@ -1,5 +1,5 @@
 all:
-	brew zsh starship git vscode
+	brew zsh starship git vscode claude
 
 .PHONY: brew
 brew:
