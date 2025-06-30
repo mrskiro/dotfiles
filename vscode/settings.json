@@ -9,6 +9,7 @@
   "editor.fontLigatures": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+"editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
   "explorer.compactFolders": false,
@@ -23,7 +24,9 @@
   },
   "githubPullRequests.pullBranch": "never",
   "javascript.updateImportsOnFileMove.enabled": "always",
+  "markdown.editor.pasteUrlAsFormattedLink.enabled": "always",
   "prettier.singleQuote": false,
+  "prettier.trailingComma": "es5",
   "projectManager.groupList": true,
   "tailwindCSS.validate": false,
   "terminal.integrated.env.osx": {
@@ -35,7 +38,5 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "window.zoomLevel": 1,
   "workbench.colorTheme": "One Dark Pro",
-  "workbench.editor.enablePreview": false,
-  "workbench.iconTheme": "catppuccin-latte",
-  "editor.linkedEditing": true
+  "workbench.iconTheme": "catppuccin-latte"
 }
