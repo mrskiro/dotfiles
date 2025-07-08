@@ -4,6 +4,7 @@ all:
 .PHONY: brew
 brew:
 	sh brew/install.sh
+	# 再起動しないとかも
 	brew bundle --file ${PWD}/brew/Brewfile
 
 .PHONY: zsh
@@ -25,6 +26,10 @@ git:
 .PHONY: vscode
 vscode:
 	ln -sf ${PWD}/vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
+
+.PHONY: cursor
+cursor:
+	ln -sf ${PWD}/cursor/settings.json ${HOME}/Library/Application\ Support/Cursor/User/settings.json
 
 .PHONY: claude
 claude:
