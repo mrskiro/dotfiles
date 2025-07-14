@@ -1,5 +1,5 @@
 all:
-	brew zsh starship git vscode claude
+	brew zsh starship git vscode claude mise
 
 .PHONY: brew
 brew:
@@ -38,6 +38,10 @@ claude:
 	ln -sf ${PWD}/claude/CLAUDE.md ${HOME}/.claude/CLAUDE.md
 	ln -sf ${PWD}/claude/commands ${HOME}/.claude/commands
 	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
+
+.PHONY: mise
+mise:
+	ln -sf ${PWD}/mise/config.toml ${HOME}/.config/mise/config.toml
 
 dump-brew:
 	brew bundle dump --file=${PWD}/brew/Brewfile --force

@@ -1,0 +1,8 @@
+[tools]
+buf = "latest"
+claude = "latest"
+go = "latest"
+node = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]

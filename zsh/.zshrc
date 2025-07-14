@@ -3,7 +3,6 @@
 
 alias ls="ls -G"
 alias ..="cd .."
-alias restart="exec $SHELL -l"
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -16,7 +15,6 @@ zinit light zsh-users/zsh-syntax-highlighting
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(starship init zsh)"
-eval "$(fnm env --use-on-cd --shell zsh)" # https://github.com/Schniz/fnm?tab=readme-ov-file#zsh
 
 # https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
 source <(fzf --zsh)
@@ -35,3 +33,4 @@ esac
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
+eval "$(mise activate zsh)"
