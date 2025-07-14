@@ -26,10 +26,6 @@ AI 運用 5 原則
 
 このメモリーを読み込んだら必ず「ユーザーメモリを読み込みました」 と宣言してください
 
-## YOU MUST
-
-- 全ての TODO 完了またはユーザー のアクションが必要な際は最後に一度だけ `afplay /System/Library/Sounds/Sosumi.aiff` コマンドを実行して通知する
-
 ## Conventions
 
 ### TypeScript
