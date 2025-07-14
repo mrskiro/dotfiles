@@ -9,25 +9,17 @@
   "editor.fontLigatures": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
-"editor.linkedEditing": true,
+  "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
   "explorer.compactFolders": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "github.copilot.editor.enableAutoCompletions": true,
-  "github.copilot.enable": {
-    "*": true,
-    "markdown": true,
-    "plaintext": false,
-    "scminput": false
-  },
   "githubPullRequests.pullBranch": "never",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "markdown.editor.pasteUrlAsFormattedLink.enabled": "always",
   "prettier.singleQuote": false,
   "prettier.trailingComma": "es5",
-  "projectManager.groupList": true,
   "tailwindCSS.validate": false,
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1",
@@ -38,5 +30,9 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "window.zoomLevel": 1,
   "workbench.colorTheme": "One Dark Pro",
-  "workbench.iconTheme": "catppuccin-latte"
+  "workbench.iconTheme": "catppuccin-latte",
+  "workbench.sideBar.location": "right",
+  "terminal.integrated.bellDuration": 2000,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "workbench.panel.defaultLocation": "left"
 }
