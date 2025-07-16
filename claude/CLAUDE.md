@@ -26,7 +26,24 @@ AI 運用 5 原則
 
 このメモリーを読み込んだら必ず「ユーザーメモリを読み込みました」 と宣言してください
 
+## Core Principles
+
+- KISS (Keep It Simple, Stupid)
+
+  - Solutions must be straightforward and easy to understand.
+  - Avoid over-engineering or unnecessary abstraction.
+  - Prioritise code readability and maintainability.
+
+- YAGNI (You Aren’t Gonna Need It)
+  - Do not add speculative features or future-proofing unless explicitly required.
+  - Focus only on immediate requirements and deliverables.
+  - Minimise code bloat and long-term technical debt.
+
 ## Conventions
+
+### Package Manager
+
+- 特に指定がなければ pnpm を使用します
 
 ### TypeScript
 
@@ -46,3 +63,4 @@ AI 運用 5 原則
 ### Tailwind
 
 - space-y-4 のようなクラスは使わず、要素間の余白は flex もしくは grid の gap を使用すること
+- grid ファーストアプローチを好みます
