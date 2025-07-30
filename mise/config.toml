@@ -1,8 +1,8 @@
 [tools]
 buf = "latest"
-claude = "latest"
 go = "latest"
 node = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
