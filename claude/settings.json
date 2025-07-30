@@ -1,8 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch",
-      "Bash(pnpm lint:*)",
       "READ(**)",
       "UPDATE(**)",
       "Bash(grep:*)",
@@ -12,7 +10,13 @@
       "Bash(mv:*)",
       "Bash(cat:*)",
       "Bash(comm:*)",
-      "Bash(afplay:*)"
+      "Bash(afplay:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "deny": ["Bash(sudo:*)", "Bash(rm -rf:*)", "Read(.env.*)"]
   },
@@ -23,7 +27,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Submarine.aiff"
+            "command": "osascript -e 'display notification \"Notification in: '$(basename \"$CLAUDE_PROJECT_DIR\")'\" with title \"Claude Code\" sound name \"Submarine\"'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Completed in: '$(basename \"$CLAUDE_PROJECT_DIR\")'\" with title \"Claude Code\" sound name \"Glass\"'"
           }
         ]
       }
