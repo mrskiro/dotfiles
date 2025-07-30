@@ -21,6 +21,8 @@
   "prettier.singleQuote": false,
   "prettier.trailingComma": "es5",
   "tailwindCSS.validate": false,
+  "terminal.integrated.bellDuration": 2000,
+  "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1",
     "Q_NEW_SESSION": "1"
@@ -31,9 +33,6 @@
   "window.zoomLevel": 1,
   "workbench.colorTheme": "One Dark Pro",
   "workbench.iconTheme": "catppuccin-latte",
-  "workbench.sideBar.location": "right",
-  "terminal.integrated.bellDuration": 2000,
-  "terminal.integrated.defaultProfile.osx": "zsh",
   "workbench.panel.defaultLocation": "left",
-  "github.copilot.nextEditSuggestions.enabled": true
+  "workbench.sideBar.location": "right"
 }
