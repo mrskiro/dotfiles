@@ -16,7 +16,17 @@
       "Bash(gh run list:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "mcp__ide__getDiagnostics",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__onboarding",
+      "mcp__serena__list_dir",
+      "mcp__serena__think_about_collected_information",
+      "mcp__serena__write_memory",
+      "mcp__serena__find_symbol",
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__replace_regex"
     ],
     "deny": ["Bash(sudo:*)", "Bash(rm -rf:*)", "Read(.env.*)"]
   },

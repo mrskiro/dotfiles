@@ -3,6 +3,7 @@ buf = "latest"
 go = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
+uv = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

@@ -33,11 +33,11 @@ cursor:
 
 .PHONY: claude
 claude:
-	npm install -g @anthropic-ai/claude-code
 	mkdir -p ${HOME}/.claude
 	ln -sf ${PWD}/claude/CLAUDE.md ${HOME}/.claude/CLAUDE.md
 	ln -sf ${PWD}/claude/commands ${HOME}/.claude/commands
 	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
+	claude mcp add context7 -s user -- npx -y @upstash/context7-mcp
 
 .PHONY: mise
 mise:

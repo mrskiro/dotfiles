@@ -41,6 +41,8 @@ AI 運用 5 原則
 
 ## Conventions
 
+- 全てのファイル操作には Serena を使用します
+
 ### Package Manager
 
 - 特に指定がなければ pnpm を使用します
