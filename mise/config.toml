@@ -3,6 +3,7 @@ buf = "latest"
 go = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
+"npm:pnpm" = "latest"
 uv = "latest"
 
 [settings]
