@@ -12,8 +12,14 @@
       "Bash(comm:*)",
       "Bash(afplay:*)",
       "Bash(gh pr checks:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
       "Bash(gh run view:*)",
       "Bash(gh run list:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm test:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
@@ -23,6 +29,7 @@
       "mcp__serena__list_dir",
       "mcp__serena__think_about_collected_information",
       "mcp__serena__write_memory",
+      "mcp__serena__insert_after_symbol",
       "mcp__serena__find_symbol",
       "mcp__serena__search_for_pattern",
       "mcp__serena__replace_symbol_body",
@@ -31,7 +38,8 @@
       "mcp__serena__read_memory",
       "mcp__serena__find_file",
       "mcp__serena__activate_project",
-      "mcp__serena__think_about_whether_you_are_done"
+      "mcp__serena__think_about_whether_you_are_done",
+      "mcp__serena__list_memories"
     ],
     "deny": ["Bash(sudo:*)", "Bash(rm -rf:*)", "Read(.env.*)"]
   },
