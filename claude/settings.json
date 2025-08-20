@@ -42,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Notification in: '$(basename \"$CLAUDE_PROJECT_DIR\")'\" with title \"Claude Code\" sound name \"Submarine\"'"
+            "command": "terminal-notifier -title \"Claude Code\" -subtitle \"Notification\" -message \"$(basename $CLAUDE_PROJECT_DIR)\" -activate \"com.microsoft.VSCode\" -sound \"Submarine\""
           }
         ]
       }
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Completed in: '$(basename \"$CLAUDE_PROJECT_DIR\")'\" with title \"Claude Code\" sound name \"Glass\"'"
+            "command": "terminal-notifier -title \"Claude Code\" -message \"Completed in: $(basename $CLAUDE_PROJECT_DIR)\" -activate \"com.microsoft.VSCode\" -sound \"Glass\""
           }
         ]
       }
