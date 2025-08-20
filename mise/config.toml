@@ -4,6 +4,7 @@ go = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:pnpm" = "latest"
+terraform = "latest"
 uv = "latest"
 
 [settings]
