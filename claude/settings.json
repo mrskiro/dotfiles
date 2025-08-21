@@ -17,10 +17,12 @@
       "Bash(gh run view:*)",
       "Bash(gh run list:*)",
       "Bash(pnpm list:*)",
+      "Bash(pnpm ls:*)",
       "Bash(pnpm view:*)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm test:*)",
       "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:zenn.dev)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "mcp__ide__getDiagnostics",
@@ -66,5 +68,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
   }
 }
