@@ -1,6 +1,8 @@
 # Memory
 
-このメモリーを読み込んだら必ず「ユーザーメモリを読み込みました」 と宣言してください
+Always respond in Japanese.
+
+When this memory is loaded, always declare "ユーザーメモリを読み込みました"
 
 ## Core Principles
 
@@ -17,30 +19,31 @@
 
 ## Conventions
 
-- ファイル操作は常に Serena を使用します
-- ライブラリやツールの調査には常に context7 を使用します
+- Always use Serena for file operations
+- Always use context7 for library and tool research
 
 ### Package Manager
 
-- 特に指定がなければ pnpm を使用します
+- Use pnpm unless otherwise specified
 
 ### TypeScript
 
-- interface ではなく type を使用します
-- 関数型のアプローチを好みます
-- function ではなくアロー関数を使用します
-- named export を使用します
-- 複数参照される場合を除いて、変数宣言を行わないでください。インラインで記述した方が型推論を効かせながらスコープを狭められるからです。
-- バレルファイル（index.ts での re-export）は使用しません
-- ユーザーから指示があった場合もしくは FW の制約がない限り、実現可能な範囲で実装ファイルは分割せず 1 ファイルにまとめてください。
-- any の使用は禁止されています
+- Use type instead of interface
+- Prefer functional approach
+- Use arrow functions instead of function declarations
+- Use named exports
+- Avoid variable declarations unless referenced multiple times. Inline expressions enable better type inference while keeping scope narrow
+- Do not use barrel files (re-export via index.ts)
+- Unless instructed by user or constrained by framework, keep implementations in a single file when feasible
+- Never use 'any' type
 
 ### React
 
-- コンポーネントは自分のレイアウトコンテキスト（親要素が Card、Modal、Sidebar など）
-  を知るべきではなく、各コンポーネントは自分の責務のみに集中し、どこで使われるかを意識しないこと。これにより関心の分離、再利用性、テスタビリティ、保守性が向上する
+- Components must not know their layout context (parent elements like Card, Modal, Sidebar)
+  Each component should focus only on its own responsibilities, not where it will be used
+  This improves separation of concerns, reusability, testability, and maintainability
 
 ### Tailwind
 
-- space-y-4 のようなクラスは使わず、要素間の余白は flex もしくは grid の gap を使用すること
-- grid ファーストアプローチを好みます
+- Never use spacing utilities like space-y-4. Use flex or grid gap for element spacing
+- Prefer grid-first approach
