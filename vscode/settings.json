@@ -1,4 +1,8 @@
 {
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "cSpell.userWords": ["mrskiro"],
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.accessibilitySupport": "off",
   "editor.codeActionsOnSave": {
@@ -15,6 +19,7 @@
   "explorer.compactFolders": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
+  "github.copilot.nextEditSuggestions.enabled": true,
   "githubPullRequests.pullBranch": "never",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "markdown.editor.pasteUrlAsFormattedLink.enabled": "always",
