@@ -7,6 +7,8 @@ node = "latest"
 "npm:ccusage" = "latest"
 terraform = "latest"
 uv = "latest"
+"npm:yarn" = "latest"
+bun = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
