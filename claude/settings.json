@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "WebSearch",
       "READ(**)",
       "UPDATE(**)",
       "Bash(grep:*)",
@@ -10,7 +11,6 @@
       "Bash(mv:*)",
       "Bash(cat:*)",
       "Bash(comm:*)",
-      "Bash(afplay:*)",
       "Bash(gh pr checks:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -23,6 +23,7 @@
       "Bash(pnpm test:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:zenn.dev)",
+      "WebFetch(domain:github.com)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "mcp__ide__getDiagnostics",
