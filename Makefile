@@ -39,7 +39,6 @@ claude:
 	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
 	chmod +x ${PWD}/claude/statusline.sh
 	ln -sf ${PWD}/claude/statusline.sh ${HOME}/.claude/statusline.sh
-	claude mcp add context7 -s user -- npx -y @upstash/context7-mcp
 
 .PHONY: mise
 mise:
