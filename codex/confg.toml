@@ -1,0 +1,28 @@
+model = "gpt-5-codex"
+model_reasoning_effort = "high"
+
+[features]
+web_search_request = true
+
+[sandbox_workspace_write]
+network_access = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest"]
+
+
+[projects."/Users/gam0249/mrskiro/ai-dlc"]
+trust_level = "trusted"
+
+[projects."/Users/gam0249/mrskiro/cc-aidlc"]
+trust_level = "trusted"
+
+[projects."/Users/gam0249/mrskiro/dance-monorepo"]
+trust_level = "trusted"
+
+[projects."/Users/gam0249/mrskiro/ticketing-web"]
+trust_level = "trusted"
+
+[projects."/Users/gam0249/mrskiro/keymelo"]
+trust_level = "trusted"

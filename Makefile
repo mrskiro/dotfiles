@@ -1,5 +1,5 @@
 all:
-	brew zsh starship git vscode claude mise
+	brew zsh starship git vscode claude codex mise
 
 .PHONY: brew
 brew:
@@ -39,6 +39,12 @@ claude:
 	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
 	chmod +x ${PWD}/claude/statusline.sh
 	ln -sf ${PWD}/claude/statusline.sh ${HOME}/.claude/statusline.sh
+
+.PHONY: codex
+codex:
+	mkdir -p ${HOME}/.codex
+	ln -sf ${PWD}/codex/confg.toml ${HOME}/.codex/config.toml
+	ln -sf ${PWD}/codex/AGENTS.md ${HOME}/.codex/AGENTS.md
 
 .PHONY: mise
 mise:

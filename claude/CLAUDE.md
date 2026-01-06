@@ -20,7 +20,6 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 ## Conventions
 
 - Always respond Japanese
-- Always use Serena for file operations
 - Always use context7 for library and tool research
 
 ### Package Manager

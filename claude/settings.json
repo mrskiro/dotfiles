@@ -11,6 +11,7 @@
       "Bash(mv:*)",
       "Bash(cat:*)",
       "Bash(comm:*)",
+      "Bash(lsof:*)",
       "Bash(gh pr checks:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -47,7 +48,12 @@
       "mcp__serena__think_about_whether_you_are_done",
       "mcp__serena__list_memories"
     ],
-    "deny": ["Bash(sudo:*)", "Read(.env.*)"],
+    "deny": [
+      "Bash(sudo:*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "!Read(.env.example)"
+    ],
     "ask": ["Bash(rm -rf:*)", "Bash(rmdir:*)"]
   },
   "hooks": {
@@ -78,5 +84,6 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "alwaysThinkingEnabled": false
+  "enabledPlugins": {},
+  "alwaysThinkingEnabled": true
 }
