@@ -84,6 +84,11 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "enabledPlugins": {},
-  "alwaysThinkingEnabled": true
+  "enabledPlugins": {
+    "pr-review-toolkit@claude-code-plugins": true
+  },
+  "alwaysThinkingEnabled": true,
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  }
 }
