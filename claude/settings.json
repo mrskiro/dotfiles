@@ -32,13 +32,8 @@
       "mcp__context7__get-library-docs",
       "mcp__ide__getDiagnostics"
     ],
-    "deny": [
-      "Bash(sudo:*)",
-      "Read(.env)",
-      "Read(.env.*)",
-      "!Read(.env.example)"
-    ],
-    "ask": ["Bash(rm -rf:*)", "Bash(rmdir:*)"]
+    "deny": ["Bash(sudo:*)"],
+    "ask": ["Bash(rm -rf:*)", "Bash(rmdir:*)", "Read(.env.*)"]
   },
   "hooks": {
     "Notification": [
