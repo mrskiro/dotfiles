@@ -1,4 +1,7 @@
 {
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -15,25 +18,46 @@
       "Bash(gh pr checks:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr list:*)",
       "Bash(gh run view:*)",
       "Bash(gh run list:*)",
+      "Bash(gh issue view:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
+      "Bash(git pull:*)",
+      "Bash(git show:*)",
+      "Bash(git fetch:*)",
+      "Bash(pnpm install)",
       "Bash(pnpm list:*)",
       "Bash(pnpm ls:*)",
       "Bash(pnpm view:*)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm test:*)",
+      "Bash(pnpm build:*)",
+      "Bash(npm view:*)",
       "Bash(tree:*)",
+      "Bash(docker ps:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:zenn.dev)",
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:env.t3.gg)",
+      "WebFetch(domain:zod.dev)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:ja.react.dev)",
+      "WebFetch(domain:orm.drizzle.team)",
+      "WebFetch(domain:oxc.rs)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "mcp__ide__getDiagnostics"
     ],
     "deny": ["Bash(sudo:*)"],
-    "ask": ["Bash(rm -rf:*)", "Bash(rmdir:*)", "Read(.env.*)"]
+    "ask": [
+      "Bash(rm -rf:*)",
+      "Bash(rmdir:*)",
+      "Read(.env.*)",
+      "Bash(terraform apply:*)"
+    ]
   },
   "hooks": {
     "Notification": [
@@ -64,10 +88,9 @@
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "pr-review-toolkit@claude-code-plugins": true
+    "pr-review-toolkit@claude-code-plugins": true,
+    "feature-dev@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true,
-  "env": {
-    "ENABLE_TOOL_SEARCH": "true"
-  }
+  "alwaysThinkingEnabled": true
 }
