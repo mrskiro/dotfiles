@@ -37,9 +37,50 @@ format_tokens() {
   fi
 }
 
+# Account usage (cached, 5 min TTL)
+CACHE_FILE="/tmp/claude_usage_cache"
+CACHE_TTL=300
+
+get_account_usage() {
+  if [ -f "$CACHE_FILE" ]; then
+    local cache_age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
+    if [ "$cache_age" -lt "$CACHE_TTL" ]; then
+      cat "$CACHE_FILE"
+      return
+    fi
+  fi
+
+  local token
+  token=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
+  [ -z "$token" ] && return
+
+  local response
+  response=$(curl -s --max-time 5 \
+    -H "Authorization: Bearer $token" \
+    -H "anthropic-beta: oauth-2025-04-20" \
+    "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
+
+  if [ $? -eq 0 ] && echo "$response" | jq -e '.five_hour' > /dev/null 2>&1; then
+    echo "$response" > "$CACHE_FILE"
+    echo "$response"
+  fi
+}
+
+usage_response=$(get_account_usage)
+
+five_hour=""
+seven_day=""
+if [ -n "$usage_response" ]; then
+  five_hour=$(echo "$usage_response" | jq -r '.five_hour.utilization // empty' 2>/dev/null)
+  seven_day=$(echo "$usage_response" | jq -r '.seven_day.utilization // empty' 2>/dev/null)
+fi
+
 # Output
 printf "%s" "$model"
 printf " │ %s" "$dir_name"
 [ -n "$git_branch" ] && printf " │ ⎇ %s" "$git_branch"
 printf " │ %d%%" "$percent_used"
 printf " │ %s/%s" "$(format_tokens "$total_input")" "$(format_tokens "$total_output")"
+[ -n "$five_hour" ] && printf " │ 5h:%.0f%%" "$five_hour"
+[ -n "$seven_day" ] && printf " │ 7d:%.0f%%" "$seven_day"
+exit 0
