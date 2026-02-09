@@ -51,4 +51,4 @@ mise:
 	ln -sf ${PWD}/mise/config.toml ${HOME}/.config/mise/config.toml
 
 dump-brew:
-	brew bundle dump --file=${PWD}/brew/Brewfile --force
+	brew bundle dump --file=${PWD}/brew/Brewfile --force --no-go
