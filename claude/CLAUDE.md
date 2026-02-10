@@ -1,13 +1,10 @@
 # Memory
 
-Always respond in Japanese.
-
 When this memory is loaded, always declare "ユーザーメモリを読み込みました"
 
 ## Core Principles
 
 - KISS (Keep It Simple, Stupid)
-
   - Solutions must be straightforward and easy to understand.
   - Avoid over-engineering or unnecessary abstraction.
   - Prioritise code readability and maintainability.
@@ -19,7 +16,6 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 
 ## Conventions
 
-- Always respond Japanese
 - Always use context7 for library and tool research
 
 ### Package Manager
