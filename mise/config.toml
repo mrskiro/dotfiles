@@ -2,7 +2,6 @@
 buf = "latest"
 go = "latest"
 node = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
 "npm:@openai/codex" = "latest"
 "npm:pnpm" = "latest"
 "npm:ccusage" = "latest"

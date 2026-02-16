@@ -1,8 +1,8 @@
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
 
 alias ls="ls -G"
 alias ..="cd .."
+
+eval "$(mise activate zsh)"
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -22,4 +22,5 @@ source <(fzf --zsh)
 
 autoload -U +X bashcompinit && bashcompinit
 
-eval "$(mise activate zsh)"
+
+export PATH="$HOME/.local/bin:$PATH"
