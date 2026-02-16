@@ -4,6 +4,7 @@
   },
   "cSpell.userWords": ["mrskiro"],
   "diffEditor.ignoreTrimWhitespace": false,
+  "docker.extension.enableComposeLanguageServer": false,
   "editor.accessibilitySupport": "off",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
@@ -39,5 +40,16 @@
   "workbench.colorTheme": "One Dark Pro",
   "workbench.iconTheme": "catppuccin-latte",
   "workbench.panel.defaultLocation": "left",
-  "workbench.sideBar.location": "right"
+  "workbench.sideBar.location": "right",
+  "chat.agentsControl.enabled": false,
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "json.schemaDownload.trustedDomains": {
+    "https://schemastore.azurewebsites.net/": true,
+    "https://raw.githubusercontent.com/": true,
+    "https://www.schemastore.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://json-schema.org/": true,
+    "https://biomejs.dev": true
+  },
+  "git.blame.editorDecoration.enabled": true
 }
