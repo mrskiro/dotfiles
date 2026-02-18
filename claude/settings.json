@@ -82,9 +82,7 @@
       "Skill(git:ci-fix)",
       "mcp__pencil"
     ],
-    "deny": [
-      "Bash(sudo:*)"
-    ],
+    "deny": ["Bash(sudo:*)"],
     "ask": [
       "Bash(rm -rf:*)",
       "Bash(rmdir:*)",
@@ -123,9 +121,10 @@
   "enabledPlugins": {
     "pr-review-toolkit@claude-code-plugins": true,
     "feature-dev@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true
   },
+  "language": "Japanese",
   "alwaysThinkingEnabled": true,
-  "language": "Japanese"
+  "effortLevel": "medium",
+  "model": "sonnet"
 }
