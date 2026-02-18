@@ -17,6 +17,7 @@ bun = "latest"
 rust = "latest"
 "cargo:wrkflw" = "latest"
 aws-cli = "latest"
+gcloud = "latest"
 python = "3.12"
 
 [settings]
