@@ -2,6 +2,7 @@
 
 input=$(cat)
 
+cwd=$(echo "$input" | jq -r '.workspace.current_dir')
 model=$(echo "$input" | jq -r '.model.display_name')
 context_size=$(echo "$input" | jq -r '.context_window.context_window_size')
 usage=$(echo "$input" | jq '.context_window.current_usage')
@@ -64,8 +65,17 @@ if [ -n "$usage_response" ]; then
   seven_day=$(echo "$usage_response" | jq -r '.seven_day.utilization // empty' 2>/dev/null)
 fi
 
+# Git branch
+git_branch=""
+if git_branch_raw=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null); then
+  git_branch="$git_branch_raw"
+elif git_branch_raw=$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null); then
+  git_branch="$git_branch_raw"
+fi
+
 # Output
 printf "%s" "$model"
+[ -n "$git_branch" ] && printf " │ %s" "$git_branch"
 printf " │ %d%%" "$percent_used"
 printf " │ %s/%s" "$(format_tokens "$total_input")" "$(format_tokens "$total_output")"
 [ -n "$five_hour" ] && printf " │ 5h:%.0f%%" "$five_hour"
