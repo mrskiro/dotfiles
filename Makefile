@@ -36,6 +36,7 @@ claude:
 	mkdir -p ${HOME}/.claude
 	ln -sf ${PWD}/claude/CLAUDE.md ${HOME}/.claude/CLAUDE.md
 	ln -sf ${PWD}/claude/commands ${HOME}/.claude/commands
+	ln -sf ${PWD}/claude/skills/codex-review ${HOME}/.claude/skills/codex-review
 	ln -sf ${PWD}/claude/settings.json ${HOME}/.claude/settings.json
 	chmod +x ${PWD}/claude/statusline.sh
 	ln -sf ${PWD}/claude/statusline.sh ${HOME}/.claude/statusline.sh
