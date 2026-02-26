@@ -14,6 +14,7 @@
   "editor.fontLigatures": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.glyphMargin": false,
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
@@ -39,6 +40,7 @@
   "window.zoomLevel": 1,
   "workbench.colorTheme": "One Dark Pro",
   "workbench.iconTheme": "catppuccin-latte",
+  "workbench.layoutControl.enabled": false,
   "workbench.panel.defaultLocation": "left",
   "workbench.sideBar.location": "right",
   "chat.agentsControl.enabled": false,
@@ -51,5 +53,10 @@
     "https://json-schema.org/": true,
     "https://biomejs.dev": true
   },
-  "git.blame.editorDecoration.enabled": true
+  "git.blame.editorDecoration.enabled": true,
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/usr/bin/zsh",
+    "args": ["--login"]
+  },
+  "explorer.confirmPasteNative": false
 }
