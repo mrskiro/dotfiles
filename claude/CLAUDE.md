@@ -39,7 +39,12 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
   Each component should focus only on its own responsibilities, not where it will be used
   This improves separation of concerns, reusability, testability, and maintainability
 
-### Tailwind
+### Styling
+
+- Styling must be done in CSS whenever possible. Do not use JavaScript for styling purposes
+- Use modern CSS features proactively (e.g. :has(), :is(), :where(), container queries, cascade layers)
+
+#### Tailwind
 
 - Never use spacing utilities like space-y-4. Use flex or grid gap for element spacing
 - Prefer grid-first approach
