@@ -1,6 +1,7 @@
 {
   "env": {
-    "ENABLE_TOOL_SEARCH": "true"
+    "ENABLE_TOOL_SEARCH": "true",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
     "allow": [
@@ -31,6 +32,7 @@
       "Bash(gh search issues:*)",
       "Bash(gh repo view:*)",
       "Bash(gh secret list:*)",
+      "Bash(gh search code:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git pull:*)",
@@ -82,7 +84,9 @@
       "Skill(git:ci-fix)",
       "mcp__pencil"
     ],
-    "deny": ["Bash(sudo:*)"],
+    "deny": [
+      "Bash(sudo:*)"
+    ],
     "ask": [
       "Bash(rm -rf:*)",
       "Bash(rmdir:*)",
@@ -122,10 +126,10 @@
     "pr-review-toolkit@claude-code-plugins": true,
     "feature-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
-  "model": "sonnet"
+  "effortLevel": "medium"
 }
