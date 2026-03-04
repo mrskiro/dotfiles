@@ -64,3 +64,7 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 - Never use spacing utilities like space-y-4. Use flex or grid gap for element spacing
 - Prefer grid-first approach
 - Never use arbitrary values (e.g., `px-[12px]`) when a preset utility exists (e.g., `px-3`)
+
+## Git
+
+- Never commit or push without explicit user instruction
