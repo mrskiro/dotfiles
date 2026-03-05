@@ -41,6 +41,8 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 - Do not use barrel files (re-export via index.ts)
 - Unless instructed by user or constrained by framework, keep implementations in a single file when feasible
 - Never use 'any' type
+- Never use tsx or ts-node to run TypeScript. Node.js natively executes TypeScript (`node script.ts`)
+- Use Intl APIs (e.g. `Intl.DateTimeFormat`) for date/number formatting instead of manual string manipulation
 
 ### React
 
