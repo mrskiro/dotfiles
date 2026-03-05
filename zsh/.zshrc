@@ -11,6 +11,7 @@ export LANG=ja_JP.UTF-8
 alias ls="ls -G"
 alias ..="cd .."
 alias ta="tmux attach -t claude"
+alias y="yazi"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(mise activate zsh)"
@@ -33,3 +34,5 @@ autoload -U +X bashcompinit && bashcompinit
 
 
 export PATH="$HOME/.local/bin:$PATH"
+
+eval "$(zoxide init zsh)"
