@@ -1,0 +1,6 @@
+customCommands:
+  - key: 'o'
+    context: 'files'
+    command: 'yazi {{.SelectedFile.Name | quote}}'
+    description: 'Open in yazi'
+    output: terminal
