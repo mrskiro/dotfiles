@@ -1,3 +1,6 @@
+git:
+  pagers:
+    - pager: "delta --dark --paging=never"
 customCommands:
   - key: 'o'
     context: 'files'
