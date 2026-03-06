@@ -1,5 +1,5 @@
 all:
-	brew zsh starship git vscode claude mise yazi ghostty lazygit
+	brew zsh starship git vscode claude mise yazi ghostty lazygit micro
 
 .PHONY: brew
 brew:
@@ -59,6 +59,11 @@ ghostty:
 lazygit:
 	mkdir -p "${HOME}/Library/Application Support/lazygit"
 	ln -sf ${PWD}/lazygit/config.yml "${HOME}/Library/Application Support/lazygit/config.yml"
+
+.PHONY: micro
+micro:
+	mkdir -p ${HOME}/.config/micro
+	ln -sf ${PWD}/micro/settings.json ${HOME}/.config/micro/settings.json
 
 dump-brew:
 	brew bundle dump --file=${PWD}/brew/Brewfile --force --no-go
