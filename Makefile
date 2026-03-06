@@ -10,6 +10,8 @@ brew:
 .PHONY: zsh
 zsh:
 	ln -sf ${PWD}/zsh/.zshrc ${HOME}/.zshrc
+	mkdir -p ${HOME}/.config/sheldon
+	ln -sf ${PWD}/zsh/plugins.toml ${HOME}/.config/sheldon/plugins.toml
 
 .PHONY: starship
 starship:
