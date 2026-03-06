@@ -7,6 +7,7 @@ compinit
 
 
 export LANG=ja_JP.UTF-8
+export EDITOR=micro
 
 alias ls="ls -G"
 alias ..="cd .."
