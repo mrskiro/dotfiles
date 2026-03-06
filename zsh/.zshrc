@@ -30,6 +30,11 @@ eval "$(starship init zsh)"
 # https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
 source <(fzf --zsh)
 
+# carapace
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+source <(carapace _carapace)
+
 
 autoload -U +X bashcompinit && bashcompinit
 
