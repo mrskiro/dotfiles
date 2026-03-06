@@ -27,6 +27,10 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 
 ## Conventions
 
+### CLI Tools
+
+- When a command is not found and installing it permanently is unnecessary, use `pkgx` to run it temporarily (e.g., `pkgx blt`, `pkgx node@18 script.js`)
+
 ### Package Manager
 
 - Use pnpm unless otherwise specified
