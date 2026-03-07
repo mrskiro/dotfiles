@@ -71,6 +71,10 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 - Prefer grid-first approach
 - Never use arbitrary values (e.g., `px-[12px]`) when a preset utility exists (e.g., `px-3`)
 
+## Environment
+
+- Home directory config files (`~/.claude/`, `~/.zshrc`, etc.) are managed by chezmoi. Edit via chezmoi source directory (`~/.local/share/chezmoi/`), not the target paths directly
+
 ## Git
 
 - Never commit or push without explicit user instruction
