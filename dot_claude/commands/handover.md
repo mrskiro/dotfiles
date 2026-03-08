@@ -28,7 +28,7 @@ Then walk through the ENTIRE conversation from start to finish. Do not rely on m
 
 ## Step 2: Write the handover
 
-Create `.claude/handovers/YYYY-MM-DD_HHmm.md` (local time). Create the directory if needed.
+Create `handover-YYYY-MM-DD_HHmm.md` in the repository root (local time).
 
 Omit empty sections EXCEPT "Failed Approaches" — write "None" if nothing failed.
 
@@ -107,4 +107,4 @@ Include tool usage failures (wrong arguments, unsupported features, API quirks).
 - Show code, don't describe it.
 - Do not read previous handover files. Each captures only the current session.
 - After writing, print the path:
-  `In your next session, reference: @.claude/handovers/<filename>`
+  `In your next session, reference: @handover-<filename>`
