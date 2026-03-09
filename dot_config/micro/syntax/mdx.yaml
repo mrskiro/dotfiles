@@ -1,0 +1,57 @@
+# Based on https://github.com/micro-editor/micro/blob/518a274980b19e025a678b6039f1f5aa9bae8cc7/runtime/syntax/markdown.yaml
+filetype: markdown
+
+detect:
+    filename: "\\.mdx$"
+
+rules:
+    # Tables (Github extension)
+    - type: ".*[ :]\\|[ :].*"
+
+      # quotes
+    - statement:  "^>.*"
+
+      # Emphasis
+    - type: "(^|[[:space:]])(_[^ ][^_]*_|\\*[^ ][^*]*\\*)"
+
+      # Strong emphasis
+    - type: "(^|[[:space:]])(__[^ ][^_]*__|\\*\\*[^ ][^*]*\\*\\*)"
+
+      # strike-through
+    - type: "(^|[[:space:]])~~[^ ][^~]*~~"
+
+      # horizontal rules
+    - special: "^(---+|===+|___+|\\*\\*\\*+)\\s*$"
+
+      # headlines
+    - special:  "^#{1,6}.*"
+
+      # lists
+    - identifier:   "^[[:space:]]*[\\*+-] |^[[:space:]]*[0-9]+\\. "
+
+      # misc
+    - preproc:   "(\\(([CcRr]|[Tt][Mm])\\)|\\.{3}|(^|[[:space:]])\\-\\-($|[[:space:]]))"
+
+      # links
+    - constant: "\\[[^]]+\\]"
+    - constant: "\\[([^][]|\\[[^]]*\\])*\\]\\([^)]+\\)"
+
+      # images
+    - underlined: "!\\[[^][]*\\](\\([^)]+\\)|\\[[^]]+\\])"
+
+      # urls
+    - underlined: "https?://[^ )>]+"
+
+      # JSX tags
+    - identifier: "</?[A-Z][a-zA-Z0-9]*"
+    - identifier: "/>"
+
+      # import/export
+    - preproc: "^(import|export) .*"
+
+    - special: "^```$"
+
+    - special:
+        start: "`"
+        end: "`"
+        rules: []
