@@ -2,6 +2,16 @@
 show_hidden = true
 ratio = [1, 2, 4]
 
+[[plugin.prepend_fetchers]]
+id = "git"
+url = "*"
+run = "git"
+
+[[plugin.prepend_fetchers]]
+id = "git"
+url = "*/"
+run = "git"
+
 [[plugin.prepend_previewers]]
 url = "*.mdx"
 run = 'piper -- bat -p --color=always --language=markdown "$1"'

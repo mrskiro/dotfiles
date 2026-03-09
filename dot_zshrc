@@ -12,7 +12,14 @@ export EDITOR=micro
 alias ls="ls -G"
 alias ..="cd .."
 alias ta="tmux attach -t claude"
-alias y="yazi"
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(mise activate zsh)"
