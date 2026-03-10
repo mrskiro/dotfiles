@@ -2,7 +2,6 @@
 name: claude-md
 description: >
   Audit and prune CLAUDE.md files, or record session learnings with a strict quality bar.
-  Every instruction has a cost — this skill ensures only lines that prevent real mistakes survive.
   Use when: "CLAUDE.md見直して", "学びを記録して", "prune", "audit",
   or when the user asks to add/remove/review rules in CLAUDE.md or .claude/rules/.
 ---
