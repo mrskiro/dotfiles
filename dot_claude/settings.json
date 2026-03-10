@@ -40,7 +40,11 @@
       "Bash(git show:*)",
       "Bash(git fetch:*)",
       "Bash(git check-ignore:*)",
+      "Bash(git commit:*)",
       "Bash(pnpm install)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm dev)",
       "Bash(pnpm list:*)",
       "Bash(pnpm ls:*)",
       "Bash(pnpm view:*)",
@@ -88,6 +92,7 @@
       "Bash(sudo:*)"
     ],
     "ask": [
+      "Bash(git add:*)",
       "Bash(rm -rf:*)",
       "Bash(rmdir:*)",
       "Read(.env.*)",
