@@ -13,6 +13,9 @@ brew bundle --file brew/Brewfile
 
 # 3. Apply dotfiles
 chezmoi init --apply mrskiro/dotfiles
+
+# 4. Set default applications for file extensions
+pkgx duti ~/.duti
 ```
 
 ## Brew
