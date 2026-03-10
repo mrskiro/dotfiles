@@ -55,7 +55,7 @@ Search via xAI Responses API with `x_search` tool.
 
 ### Authentication
 
-Read `XAI_API_KEY` from `.claude/settings.local.json` env. If missing, direct user to https://console.x.ai/team/default/api-keys.
+Read `XAI_API_KEY` from `~/.claude/settings.local.json` env. If missing, direct user to https://console.x.ai/team/default/api-keys.
 
 ### Execution
 

@@ -11,10 +11,13 @@ Managed with [chezmoi](https://www.chezmoi.io/).
 # 2. Install packages from Brewfile
 brew bundle --file brew/Brewfile
 
-# 3. Apply dotfiles
+# 3. Unlock Bitwarden (required for secrets in templates)
+export BW_SESSION=$(bw unlock --raw)
+
+# 4. Apply dotfiles
 chezmoi init --apply mrskiro/dotfiles
 
-# 4. Set default applications for file extensions
+# 5. Set default applications for file extensions
 pkgx duti ~/.duti
 ```
 
