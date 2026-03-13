@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git checkout:*), Bash(git add:*), Bash(git status:*), Bash(git push:*), Bash(git commit:*), Bash(gh pr create:*), Bash(gh pr edit:*)
+allowed-tools: Bash(git checkout:*), Bash(git add:*), Bash(git status:*), Bash(git push:*), Bash(git commit:*), Bash(git diff:*), Bash(git log:*), Bash(gh pr create:*), Bash(gh pr edit:*)
 description: Commit, push, and open a PR
 ---
 
@@ -27,10 +27,11 @@ Example: Branch `feat/add-login` → PR title `feat: add login`
 Based on the above changes:
 
 1. Create a new branch if on main (use appropriate prefix: `feat/`, `fix/`, `chore/`, `refactor/`)
-2. Create a single commit with an appropriate message
-3. Push the branch to origin
-4. Create a pull request using `gh pr create --assignee @me`
+2. **Filter changes**: Only include files that were changed in this session. If git diff shows changes to files that are clearly unrelated to the current task (e.g., changes from a different branch or previous session), exclude them by staging only the relevant files. NEVER use `git add -A` or `git add .`. Always add specific files by name.
+3. Create a single commit with an appropriate message
+4. Push the branch to origin
+5. Create a pull request using `gh pr create --assignee @me`
    - PR title MUST follow the convention above based on branch name
    - Assignee MUST be set to `@me` (the current user)
    - If a PR already exists for this branch, update its title and body using `gh pr edit` instead
-5. You have the capability to call multiple tools in a single response. You MUST do all of the above in a single message. Do not use any other tools or do anything else. Do not send any other text or messages besides these tool calls.
+6. You have the capability to call multiple tools in a single response. You MUST do all of the above in a single message. Do not use any other tools or do anything else. Do not send any other text or messages besides these tool calls.

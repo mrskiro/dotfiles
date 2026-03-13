@@ -96,7 +96,8 @@
       "Bash(rmdir:*)",
       "Read(.env.*)",
       "Bash(terraform apply:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -156,5 +157,6 @@
   },
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "skipAutoPermissionPrompt": true
 }
