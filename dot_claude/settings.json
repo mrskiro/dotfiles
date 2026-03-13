@@ -99,6 +99,17 @@
     ]
   },
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -re '.new_string // .content // empty' | grep '^[[:space:]]*\\(//\\|#\\|--\\) *[-=*#/]\\{3,\\}' && { echo 'Warning: Section divider or decorative comments detected. Remove them.' >&2; exit 2; } || exit 0"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
