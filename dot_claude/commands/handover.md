@@ -10,11 +10,7 @@ The rule is simple: **nothing essential may be omitted**. If the user said it, d
 
 ## Step 1: Gather facts
 
-Run these commands first:
-
-- `git status`
-- `git diff --stat`
-- `git log --oneline -5`
+Gather the current git state: status, diff stat, and recent 5 commits.
 
 Then walk through the ENTIRE conversation from start to finish. Do not rely on memory of "what seemed important." Read every user message and every assistant response. Extract:
 
