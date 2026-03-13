@@ -99,6 +99,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -re '.command' | grep -q -- '--no-verify' && { echo 'Blocked: --no-verify is not allowed' >&2; exit 2; } || exit 0"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
