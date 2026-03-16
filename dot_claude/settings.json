@@ -109,6 +109,15 @@
             "command": "jq -re '.command' | grep -q -- '--no-verify' && { echo 'Blocked: --no-verify is not allowed' >&2; exit 2; } || exit 0"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$FILE\" in \"$HOME\"/.local/share/chezmoi/*) exit 0 ;; esac && SOURCE=$(chezmoi source-path \"$FILE\" 2>/dev/null) && echo \"Blocked: chezmoi managed. Edit: $SOURCE\" >&2 && exit 2 || exit 0"
+          }
+        ]
       }
     ],
     "PostToolUse": [
