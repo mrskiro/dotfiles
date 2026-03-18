@@ -21,6 +21,7 @@ aws-cli = "latest"
 bitwarden = "latest"
 gcloud = "latest"
 python = "3.12"
+"npm:agent-browser" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
