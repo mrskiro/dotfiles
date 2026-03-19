@@ -167,6 +167,5 @@
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
-  "skipAutoPermissionPrompt": true,
-  "model": "opusplan"
+  "skipAutoPermissionPrompt": true
 }
