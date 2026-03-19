@@ -95,7 +95,8 @@
       "Bash(rm -rf:*)",
       "Bash(rmdir:*)",
       "Read(.env.*)",
-      "Bash(terraform apply:*)"
+      "Bash(terraform apply:*)",
+      "Bash(chezmoi apply:*)"
     ],
     "defaultMode": "auto"
   },
