@@ -75,6 +75,13 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 
 - Home directory config files (`~/.claude/`, `~/.zshrc`, etc.) are managed by chezmoi. Edit via chezmoi source directory (`~/.local/share/chezmoi/`), not the target paths directly
 
+## gstack
+
+Available skills from gstack (`~/.claude/skills/gstack/`):
+/plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation, /review, /ship, /browse, /qa, /qa-only, /qa-design-review, /setup-browser-cookies, /retro, /document-release
+
+Note: For web browsing, use Claude in Chrome (`mcp__claude-in-chrome__*`) as the primary tool. Use `/browse` from gstack only for headless QA testing of development apps.
+
 ## Git
 
 - Never commit or push without explicit user instruction
