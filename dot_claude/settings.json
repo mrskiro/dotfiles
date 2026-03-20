@@ -4,101 +4,10 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "allow": [
-      "WebSearch",
-      "READ(**)",
-      "UPDATE(**)",
-      "Bash(echo:*)",
-      "Bash(grep:*)",
-      "Bash(find:*)",
-      "Bash(ls:*)",
-      "Bash(rg:*)",
-      "Bash(mv:*)",
-      "Bash(cat:*)",
-      "Bash(comm:*)",
-      "Bash(lsof:*)",
-      "Bash(head:*)",
-      "Bash(jq:*)",
-      "Bash(dig:*)",
-      "Bash(nslookup:*)",
-      "Bash(gh pr checks:*)",
-      "Bash(gh pr view:*)",
-      "Bash(gh pr diff:*)",
-      "Bash(gh pr edit:*)",
-      "Bash(gh pr list:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh run list:*)",
-      "Bash(gh issue view:*)",
-      "Bash(gh search issues:*)",
-      "Bash(gh repo view:*)",
-      "Bash(gh secret list:*)",
-      "Bash(gh search code:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git pull:*)",
-      "Bash(git push:*)",
-      "Bash(git show:*)",
-      "Bash(git fetch:*)",
-      "Bash(git check-ignore:*)",
-      "Bash(git commit:*)",
-      "Bash(pnpm install)",
-      "Bash(pnpm install:*)",
-      "Bash(pnpm add:*)",
-      "Bash(pnpm dev)",
-      "Bash(pnpm list:*)",
-      "Bash(pnpm ls:*)",
-      "Bash(pnpm view:*)",
-      "Bash(pnpm lint:*)",
-      "Bash(pnpm test:*)",
-      "Bash(pnpm build:*)",
-      "Bash(pnpm --version:*)",
-      "Bash(pnpm why:*)",
-      "Bash(npm view:*)",
-      "Bash(npm search:*)",
-      "Bash(tree:*)",
-      "Bash(docker ps:*)",
-      "Bash(pinact run:*)",
-      "Bash(brew info:*)",
-      "Bash(brew search:*)",
-      "Bash(code --list-extensions:*)",
-      "Bash(terraform plan:*)",
-      "Bash(terraform validate:*)",
-      "Bash(gcloud projects list:*)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:zenn.dev)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:env.t3.gg)",
-      "WebFetch(domain:zod.dev)",
-      "WebFetch(domain:ui.shadcn.com)",
-      "WebFetch(domain:ja.react.dev)",
-      "WebFetch(domain:orm.drizzle.team)",
-      "WebFetch(domain:oxc.rs)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:discuss.google.dev)",
-      "WebFetch(domain:future-architect.github.io)",
-      "WebFetch(domain:blog.cloudflare.com)",
-      "WebFetch(domain:community.cloudflare.com)",
-      "WebFetch(domain:support.google.com)",
-      "WebFetch(domain:docs.cloud.google.com)",
-      "mcp__context7__query-docs",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "mcp__ide__getDiagnostics",
-      "Skill(git:ci-fix)",
-      "mcp__pencil"
-    ],
     "deny": [
       "Bash(sudo:*)"
     ],
-    "ask": [
-      "Bash(git add:*)",
-      "Bash(rm -rf:*)",
-      "Bash(rmdir:*)",
-      "Read(.env.*)",
-      "Bash(terraform apply:*)",
-      "Bash(chezmoi apply:*)"
-    ],
-    "defaultMode": "auto"
+    "defaultMode": "bypassPermissions"
   },
   "hooks": {
     "PreToolUse": [
@@ -107,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -re '.command' | grep -q -- '--no-verify' && { echo 'Blocked: --no-verify is not allowed' >&2; exit 2; } || exit 0"
+            "command": "bash ~/.claude/hooks/pre-tool-safety.sh"
           }
         ]
       },
@@ -168,5 +77,7 @@
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "skipDangerousModePermissionPrompt": true,
+  "feedbackSurveyRate": 0
 }
