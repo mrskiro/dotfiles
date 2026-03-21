@@ -29,7 +29,7 @@
           },
           {
             "type": "command",
-            "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$(basename \"$FILE\")\" in lefthook.yml|lefthook-local.yml|tsconfig.json) echo \"Blocked: $FILE is protected. Fix the code, not the config.\" >&2; exit 2 ;; esac && case \"$FILE\" in */.claude/settings.json|*/.claude/settings.local.json) echo \"Blocked: hook/permission config is protected.\" >&2; exit 2 ;; esac; exit 0"
+            "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$(basename \"$FILE\")\" in lefthook.yml|lefthook-local.yml|tsconfig.json) echo \"Blocked: $FILE is protected. Fix the code, not the config.\" >&2; exit 2 ;; esac; exit 0"
           }
         ]
       }
