@@ -1,8 +1,4 @@
-# Memory
-
-When this memory is loaded, always declare "ユーザーメモリを読み込みました"
-
-## Core Principles
+# Core Principles
 
 - KISS (Keep It Simple, Stupid)
   - Solutions must be straightforward and easy to understand.
