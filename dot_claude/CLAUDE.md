@@ -56,10 +56,6 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 - Use modern CSS features proactively (e.g. :has(), :is(), :where(), container queries, cascade layers)
 - Never use arbitrary values (e.g., `px-[12px]`) when a preset utility exists (e.g., `px-3`)
 
-## Environment
-
-- Home directory config files (`~/.claude/`, `~/.zshrc`, etc.) are managed by chezmoi. Edit via chezmoi source directory (`~/.local/share/chezmoi/`), not the target paths directly
-
 ## gstack
 
 Available skills from gstack (`~/.claude/skills/gstack/`):
