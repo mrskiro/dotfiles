@@ -9,7 +9,7 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
   - Avoid over-engineering or unnecessary abstraction.
   - Prioritise code readability and maintainability.
 
-- YAGNI (You Aren’t Gonna Need It)
+- YAGNI (You Aren't Gonna Need It)
   - Do not add speculative features or future-proofing unless explicitly required.
   - Focus only on immediate requirements and deliverables.
   - Minimise code bloat and long-term technical debt.
@@ -41,9 +41,6 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 - Prefer functional approach
 - Use arrow functions instead of function declarations
 - Use named exports
-- Avoid variable declarations unless referenced multiple times. Inline expressions enable better type inference while keeping scope narrow
-- Do not use barrel files (re-export via index.ts)
-- Unless instructed by user or constrained by framework, keep implementations in a single file when feasible
 - Never use 'any' type
 - Never use tsx or ts-node to run TypeScript. Node.js natively executes TypeScript (`node script.ts`)
 - Use Intl APIs (e.g. `Intl.DateTimeFormat`) for date/number formatting instead of manual string manipulation
@@ -51,24 +48,12 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 ### React
 
 - Components must not know their layout context (parent elements like Card, Modal, Sidebar)
-  Each component should focus only on its own responsibilities, not where it will be used
-  This improves separation of concerns, reusability, testability, and maintainability
-- Prefer useEffect for DOM event subscribe/unsubscribe (cleanup handles removal automatically)
 - Avoid useEffect for reacting to state changes — handle side effects directly in the event handler that triggers the change
-- Derive values from existing state instead of storing redundant state (e.g., use a boolean + JSX ternary instead of storing label strings)
-- When a value can be inferred from another ref/state, do not create a separate ref for it
-- Do not pass implementation details (e.g., DOM nodes) as props — pass use-case-specific functions or values instead
-- Do not specify optional parameters with their default values
 
 ### Styling
 
 - Styling must be done in CSS whenever possible. Do not use JavaScript for styling purposes
 - Use modern CSS features proactively (e.g. :has(), :is(), :where(), container queries, cascade layers)
-
-#### Tailwind
-
-- Never use spacing utilities like space-y-4. Use flex or grid gap for element spacing
-- Prefer grid-first approach
 - Never use arbitrary values (e.g., `px-[12px]`) when a preset utility exists (e.g., `px-3`)
 
 ## Environment
@@ -79,8 +64,6 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 
 Available skills from gstack (`~/.claude/skills/gstack/`):
 /plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation, /review, /ship, /browse, /qa, /qa-only, /qa-design-review, /setup-browser-cookies, /retro, /document-release
-
-Note: For web browsing, use Claude in Chrome (`mcp__claude-in-chrome__*`) as the primary tool. Use `/browse` from gstack only for headless QA testing of development apps.
 
 ## Git
 
