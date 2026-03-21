@@ -60,7 +60,3 @@ When this memory is loaded, always declare "ユーザーメモリを読み込み
 
 Available skills from gstack (`~/.claude/skills/gstack/`):
 /plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation, /review, /ship, /browse, /qa, /qa-only, /qa-design-review, /setup-browser-cookies, /retro, /document-release
-
-## Git
-
-- Never commit or push without explicit user instruction
