@@ -5,7 +5,8 @@
   },
   "permissions": {
     "deny": [
-      "Bash(sudo:*)"
+      "Bash(sudo:*)",
+      "Bash(gh secret set *)"
     ],
     "defaultMode": "bypassPermissions"
   },
