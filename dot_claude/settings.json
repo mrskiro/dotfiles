@@ -18,6 +18,11 @@
           {
             "type": "command",
             "command": "bash ~/.claude/hooks/pre-tool-safety.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/check-branch-pr-status.sh",
+            "timeout": 10
           }
         ]
       },
