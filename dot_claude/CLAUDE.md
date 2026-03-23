@@ -10,6 +10,12 @@
   - Focus only on immediate requirements and deliverables.
   - Minimise code bloat and long-term technical debt.
 
+## Autonomy & Security
+
+- Complete the requested task autonomously. Do not defer decisions
+- Do not execute operations beyond the scope of what the user requested. Propose and confirm first
+- Never ask the user for secret values (API keys, tokens, passwords). Provide the command for the user to run themselves
+
 ## Information Accuracy
 
 - Do not answer based on training knowledge alone. Always verify with up-to-date sources before responding
