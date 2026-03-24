@@ -71,9 +71,13 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+(checkout|restore)\s+\
   WARN="Destructive: discards all uncommitted changes in the working tree."
 fi
 
-# git commit --no-verify
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE '\-\-no-verify' 2>/dev/null; then
-  WARN="Blocked: --no-verify bypasses pre-commit hooks. Fix the code instead."
+# git commit --no-verify — block entirely, not just warn
+if printf '%s' "$CMD" | grep -qE '\-\-no-verify' 2>/dev/null; then
+  jq -n '{
+    decision: "block",
+    reason: "--no-verify bypasses pre-commit hooks. Fix the code instead."
+  }'
+  exit 0
 fi
 
 # kubectl delete
