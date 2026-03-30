@@ -19,7 +19,7 @@ cd "$ROOT"
 ERRORS=""
 
 # pinact: auto-fix SHA pins
-P=$(pinact run -u 2>&1) || ERRORS="pinact: $P"
+P=$(pinact run -u --min-age 7 2>&1) || ERRORS="pinact: $P"
 
 # ghalint: security policy check (non-zero exit = violations found, not a failure)
 # strip noise: timestamp, ERR prefix, program, version, reference URL
