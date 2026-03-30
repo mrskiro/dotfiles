@@ -5,9 +5,9 @@ set -euo pipefail
 INPUT=$(cat)
 CMD=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
-# Only check git commit commands
+# Only check commands that contain git commit (handles chained commands like eval ... && git commit)
 case "$CMD" in
-  git\ commit*) ;;
+  *git\ commit*) ;;
   *) exit 0 ;;
 esac
 
