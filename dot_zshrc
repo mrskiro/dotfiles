@@ -11,7 +11,6 @@ export EDITOR=micro
 
 alias ls="ls -G"
 alias ..="cd .."
-alias ta="tmux attach -t claude"
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
