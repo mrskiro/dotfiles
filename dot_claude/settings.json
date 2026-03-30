@@ -57,28 +57,8 @@
         ]
       }
     ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "terminal-notifier -title \"Claude Code\" -subtitle \"Notification\" -message \"$(basename $CLAUDE_PROJECT_DIR)\" -activate \"com.microsoft.VSCode\" -sound \"Submarine\""
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "terminal-notifier -title \"Claude Code\" -message \"Completed in: $(basename $CLAUDE_PROJECT_DIR)\" -activate \"com.microsoft.VSCode\" -sound \"Glass\""
-          }
-        ]
-      }
-    ]
+    "Notification": [],
+    "Stop": []
   },
   "statusLine": {
     "type": "command",
