@@ -55,11 +55,22 @@ Search via xAI Responses API with `x_search` tool.
 
 ### Authentication
 
-Use the `$XAI_API_KEY` environment variable (set via `settings.local.json` env). Do NOT read the JSON file directly — the value is already available in the shell. If the variable is empty, direct user to https://console.x.ai/team/default/api-keys.
+Load API key from `.env` in this skill's directory:
+
+```bash
+source ~/.claude/skills/research/.env
+```
+
+If the file or `XAI_API_KEY` is missing, tell the user to create `~/.claude/skills/research/.env`:
+```
+XAI_API_KEY=<key>
+```
+Get key at https://console.x.ai/team/default/api-keys.
 
 ### Execution
 
 ```
+source ~/.claude/skills/research/.env && \
 curl -s https://api.x.ai/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $XAI_API_KEY" \
