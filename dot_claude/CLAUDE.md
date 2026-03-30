@@ -58,6 +58,16 @@
 - Use modern CSS features proactively (e.g. :has(), :is(), :where(), container queries, cascade layers)
 - Never use arbitrary values (e.g., `px-[12px]`) when a preset utility exists (e.g., `px-3`)
 
+### Testing
+
+- Follow AAA (Arrange-Act-Assert). Each test must be self-contained — no shared helper functions
+- Verify the test fails before fixing the bug (Red-Green). If pass/fail doesn't match expectations, the test itself is broken
+
+### Debugging
+
+- No guessing. Add logs to trace state, identify root cause, then fix. Change code only after you know why it's broken
+- If the same approach fails twice, stop and rethink the premise
+
 ## gstack
 
 Available skills from gstack (`~/.claude/skills/gstack/`):
