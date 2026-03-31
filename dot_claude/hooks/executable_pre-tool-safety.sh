@@ -71,11 +71,11 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+(checkout|restore)\s+\
   WARN="Destructive: discards all uncommitted changes in the working tree."
 fi
 
-# git commit --no-verify — block entirely, not just warn
-if printf '%s' "$CMD" | grep -qE '\-\-no-verify' 2>/dev/null; then
+# Skip hooks — block entirely, not just warn
+if printf '%s' "$CMD" | grep -qE '\-\-no-verify|(^|[;&|]\s*)LEFTHOOK=(0|false)\s' 2>/dev/null; then
   jq -n '{
     decision: "block",
-    reason: "--no-verify bypasses pre-commit hooks. Fix the code instead."
+    reason: "Skipping git hooks (--no-verify, LEFTHOOK=0) is not allowed. Fix the underlying issue."
   }'
   exit 0
 fi
