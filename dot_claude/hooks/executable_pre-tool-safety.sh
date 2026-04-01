@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # pre-tool-safety.sh — PreToolUse hook for destructive command detection
 # Runs on every Bash tool call in bypassPermissions mode.
-# Returns permissionDecision:"ask" with reason for dangerous commands.
+# Returns permissionDecision:"deny" for dangerous commands.
 # Safe exceptions (build artifacts) are allowed through.
 set -euo pipefail
 
@@ -9,8 +9,10 @@ INPUT=$(cat)
 
 CMD=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
+ALLOW='{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
+
 if [ -z "$CMD" ]; then
-  echo '{}'
+  echo "$ALLOW"
   exit 0
 fi
 
@@ -33,7 +35,7 @@ if printf '%s' "$CMD" | grep -qE 'rm\s+(-[a-zA-Z]*r[a-zA-Z]*\s+|--recursive\s+)'
     esac
   done
   if [ "$SAFE_ONLY" = true ]; then
-    echo '{}'
+    echo "$ALLOW"
     exit 0
   fi
 fi
@@ -71,13 +73,9 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+(checkout|restore)\s+\
   WARN="Destructive: discards all uncommitted changes in the working tree."
 fi
 
-# Skip hooks — block entirely, not just warn
+# Skip hooks
 if printf '%s' "$CMD" | grep -qE '\-\-no-verify|(^|[;&|]\s*)LEFTHOOK=(0|false)\s' 2>/dev/null; then
-  jq -n '{
-    decision: "block",
-    reason: "Skipping git hooks (--no-verify, LEFTHOOK=0) is not allowed. Fix the underlying issue."
-  }'
-  exit 0
+  WARN="Skipping git hooks (--no-verify, LEFTHOOK=0) is not allowed. Fix the underlying issue."
 fi
 
 # kubectl delete
@@ -98,7 +96,7 @@ fi
 # --- Output ---
 if [ -n "$WARN" ]; then
   WARN_ESCAPED=$(printf '%s' "$WARN" | sed 's/"/\\"/g')
-  printf '{"permissionDecision":"ask","message":"%s"}\n' "$WARN_ESCAPED"
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$WARN_ESCAPED"
 else
-  echo '{}'
+  echo "$ALLOW"
 fi
