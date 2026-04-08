@@ -1,47 +1,78 @@
 ---
-description: "Fix CI failures automatically and update PR"
-allowed-tools: Bash(git:*), Bash(gh:*)
+name: gh-ci-fix
+description: >
+  Fix CI failures locally until green. Monitors the CI run for the current branch,
+  diagnoses failures from logs, fixes locally, verifies, and pushes. Repeats up to 3 rounds.
+  Use when: "CIが落ちた", "CI fix", "CI直して", "make CI green", "CIグリーンにして",
+  or after pushing when CI might fail.
 ---
 
-# Fix CI Failures
+# CI Fix
 
-You are tasked with automatically detecting and fixing CI failures for the current PR, then pushing the fixes.
+Fix CI failures for the current branch. Detect → diagnose → fix locally → verify → push. Repeat until green or 3 rounds.
 
 ## Context
 
-- Current branch: !`git branch --show-current`
-- PR status: !`gh pr view --json number,title,statusCheckRollup`
-- Recent commits: !`git log --oneline -5`
+- Branch: !`git branch --show-current`
+- Latest CI run: !`gh run list --branch $(git branch --show-current) --limit 1 --json databaseId,status,conclusion,name,headSha 2>/dev/null || echo "no runs found"`
 
-## Execution Steps
+## Process
 
-1. **Detect CI Failures**
+### 1. Wait for CI if in progress
 
-   - Identify all failed CI checks from the PR status above
-   - For each failure, get detailed logs using: `gh run view <run-id> --log-failed`
+If the latest run is `in_progress` or `queued`:
+```bash
+gh run watch <run-id>
+```
 
-2. **Analyze and Fix**
+### 2. Check result
 
-   - Read the error logs carefully
-   - Identify the root cause of each failure
-   - Apply appropriate fixes based on the error type
-   - Verify fixes work before committing
+If `conclusion` is `success` → report "CI is green" and stop.
+If `conclusion` is `failure` → proceed.
 
-3. **Commit and Push**
-   - Create a descriptive commit message
-   - Push changes to update the PR
+### 3. Get failure details
 
-## Important Notes
+```bash
+gh run view <run-id> --log-failed 2>&1 | tail -100
+```
 
-- Fix all detected errors if possible
-- If a fix is not possible automatically, report the issue to the user with details
-- Always verify fixes before committing
+Read the output. Identify the failing step and root cause.
 
-## Expected Output
+### 4. Fix locally
 
-Provide a summary report including:
+Based on the error:
+- Lint/format → run the project's lint fix command
+- Type error → fix the type
+- Test failure → understand why it fails, fix code or test
+- Build failure → fix compilation
 
-- List of CI failures detected
-- Fixes applied for each failure
-- Commit message and push status
-- Any issues requiring manual intervention
+**Verify locally before pushing** — run the same checks that CI runs. Read the CI workflow file if needed to know what commands to run:
+```bash
+cat .github/workflows/ci.yml
+```
+
+### 5. Commit and push
+
+```bash
+git add <fixed-files>
+git commit -m "fix: <what was fixed>"
+git push
+```
+
+Each fix is a separate atomic commit.
+
+### 6. Repeat
+
+Go back to step 1. Wait for the new CI run.
+
+**Maximum 3 rounds.** If still failing after 3 fix-push cycles, stop and report:
+- What was tried
+- What remains broken
+- Why further automated fixing is unlikely to help
+
+## Principles
+
+- Always verify locally before pushing. Don't waste CI minutes on untested fixes.
+- Fix the root cause, not the symptom.
+- Each fix = one atomic commit with a descriptive message.
+- 3 rounds max. Diminishing returns beyond that.
