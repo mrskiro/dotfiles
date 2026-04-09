@@ -1,14 +1,16 @@
 ---
 name: ship
 description: >
-  "shipして" "PRにして" "push" "できた" "実装終わった" "ship it" "create a PR" —
-  implementation complete triggers. Autonomous pipeline: review → verify → commit →
-  push → PR → CI fix → review-comment fix → squash merge. Goal is MERGED.
+  "shipして" "PRにして" "push" "できた" "実装終わった" "実装して" "作って"
+  "ship it" "create a PR" "build this" "implement" —
+  Autonomous pipeline from implementation to merged PR. Handles: implement
+  (with subagent worktree dispatch for multi-task plans) → review → verify →
+  commit → push → PR → CI fix → review-comment fix → squash merge. Goal is MERGED.
 ---
 
 # Ship
 
-Autonomous shipping pipeline. Goal: PR merged. Once invoked, runs to completion without human intervention.
+Autonomous pipeline. Goal: changes implemented, reviewed, verified, and merged. Once invoked, runs to completion without human intervention.
 
 ## Context
 
@@ -18,18 +20,47 @@ Autonomous shipping pipeline. Goal: PR merged. Once invoked, runs to completion 
 
 ## Process
 
-### 1. Pre-flight
+### 0. Route
 
-- Not on main/master branch (abort if so)
-- There are changes to ship (committed or uncommitted)
-- If uncommitted changes exist, include them
+Determine what mode to run in:
+
+**A. Changes already exist** (uncommitted changes or commits ahead of main):
+→ Skip to Step 2 (Review). Implementation is done.
+
+**B. A plan exists** (passed as argument, or `/plan` output in context):
+→ Go to Step 1 (Implement from plan).
+
+**C. A task description is given** (user describes what to build):
+→ Create a branch, implement directly, then proceed to Step 2.
+
+### 1. Implement from plan
+
+Read the plan. For each task, respecting dependency order:
+
+**Single task or small change:**
+Implement directly in the current session on a feature branch.
+
+**Multiple independent tasks (AFK classified):**
+Dispatch each as a subagent with `isolation: "worktree"`. Each worker:
+1. Creates a feature branch
+2. Reads the task description and acceptance criteria
+3. Explores relevant codebase
+4. Implements the change
+5. Runs local verification (test/lint/typecheck)
+6. Commits and creates a PR
+
+**HITL tasks:**
+Implement in the main session. Ask the user for judgment where needed.
+
+After all tasks are implemented and PRs created, proceed to Step 2 for each PR.
 
 ### 2. Review
 
 Run `/review` for cross-model quality verification.
 
-If NEEDS ATTENTION with CRITICAL findings: fix, re-verify locally, then proceed.
-If PASS or MEDIUM/LOW only: proceed.
+- P0/P1 findings: fix, re-verify locally, then proceed.
+- P2 findings: defer — log as TODO, do not block the PR.
+- Implementer may pushback on findings if they disagree. Bias toward merging.
 
 ### 3. Local verification
 
@@ -69,6 +100,8 @@ Wait if in progress: `gh run watch <run-id>`
 
 If CI fails: diagnose from `gh run view --log-failed`, fix locally, verify, push. Maximum 3 rounds.
 
+If CI fails after 3 rounds: consider rework (discard branch, recreate from scratch) before reporting blocked.
+
 ### 7. PR review comments
 
 Check for review comments:
@@ -77,15 +110,16 @@ PR_NUM=$(gh pr view --json number -q .number)
 gh api "repos/:owner/:repo/pulls/$PR_NUM/comments" --jq '.[] | select(.in_reply_to_id == null) | {id, path, line, body, user: .user.login}'
 ```
 
-If comments exist, invoke `/gh-review-fix` behavior:
-- **AUTO-FIX**: clear mechanical fixes → fix, reply, push
+If comments exist:
+- **P0/P1**: fix, reply, push
+- **P2**: defer or pushback with explanation
 - **NEEDS-HUMAN**: architectural/judgment questions → report and stop
 
 After fixing, re-run CI check (back to Step 6).
 
 ### 8. Merge
 
-When CI is green and no unresolved review comments:
+When CI is green and no unresolved P0/P1 review comments:
 ```bash
 gh pr merge --squash --delete-branch
 ```
@@ -98,8 +132,7 @@ gh pr merge --squash --delete-branch
 PR: <URL>
 Status: MERGED
 CI: GREEN
-Review: PASS
-Review comments: N fixed, M needs-human
+Review: PASS (P0: 0, P1: 0 fixed, P2: N deferred)
 Commits: <count>
 ```
 
@@ -110,18 +143,20 @@ Or if blocked:
 PR: <URL>
 CI: <GREEN/RED>
 Blocker: <what stopped autonomous completion>
-  - CI red after 3 fix rounds, OR
-  - Review comments need human judgment
 Action needed: <what the user should do>
 ```
+
+After completion, suggest `/codify` if design decisions or learnings emerged during implementation.
 
 ## Principles
 
 - Goal is MERGED, not just PR created.
 - Once started, run to completion. Do not ask for confirmation.
+- Bias toward merging. P2 findings do not block.
+- Pushback is allowed. The implementer can defer or disagree with review findings.
 - Review before push. Local verification before push.
 - Each fix is an atomic commit.
-- 3 CI fix rounds max.
+- 3 CI fix rounds max. If stuck, consider rework (discard and regenerate) over repeated patching.
 - AUTO-FIX review comments without asking. NEEDS-HUMAN = stop and report.
 - Squash merge with branch deletion.
-- **Context anxiety**: When context is running low, do NOT skip verification steps. Rushing to finish and cutting corners is worse than reporting "blocked due to context limits". Run every check even if context is tight.
+- **Context anxiety**: When context is running low, do NOT skip verification steps. Report "blocked due to context limits" rather than cutting corners.
