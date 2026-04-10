@@ -67,8 +67,11 @@ Evaluate whether context is efficient and well-structured. See `references/conte
 **Structure checks:**
 - Is CLAUDE.md a map (pointers to deeper docs) or an encyclopedia (everything inline)?
 - Are there missing pointers to existing docs/, ADR/, README?
-- Are rules in `.claude/rules/` using `paths` frontmatter where appropriate?
-- Are there redundancies between CLAUDE.md, rules/, and hooks?
+
+**Rules audit** — read the frontmatter of every file in `.claude/rules/`. For each:
+- Does it have `paths`? If the content only applies to specific directories/file types, it should
+- Does the content overlap with CLAUDE.md or hooks? If so, one of them should be removed
+- Is the content something Claude already knows from training? If so, delete
 
 ### 4. Tool coverage
 
