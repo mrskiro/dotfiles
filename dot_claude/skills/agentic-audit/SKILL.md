@@ -40,7 +40,9 @@ Read the actual files before judging. Score based on what exists, not assumption
 
 ### 2. Lifecycle controls
 
-Organize every control by **when it runs**. See `references/lifecycle.md` for detailed criteria.
+**Before evaluating lifecycle controls, read `references/lifecycle.md`.**
+
+Organize every control by **when it runs**.
 
 | Stage | What to look for |
 |---|---|
@@ -55,7 +57,7 @@ Report as **one row per stage** — group all controls into a single cell per st
 
 ### 3. Context quality
 
-Evaluate whether context is efficient and well-structured. See `references/context.md` for detailed criteria.
+**Before evaluating context quality, read `references/context.md`.**
 
 **CLAUDE.md litmus test** — for each line:
 - Already known from training? → delete
@@ -75,7 +77,9 @@ Evaluate whether context is efficient and well-structured. See `references/conte
 
 ### 4. Tool coverage
 
-Assess whether the agent can **act on** this project's infrastructure. See `references/tools.md` for detailed criteria.
+**Before evaluating tool coverage, read `references/tools.md`.**
+
+Assess whether the agent can **act on** this project's infrastructure.
 
 - Detect tech stack from project files
 - For each external service/data store: can the agent interact with it?
