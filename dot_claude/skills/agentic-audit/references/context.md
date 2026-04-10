@@ -63,6 +63,32 @@ If these exist but CLAUDE.md doesn't mention them, the agent won't discover them
 - Requires judgment? → **CLAUDE.md or rules/** (inferential, may be ignored)
 - Hook > Linter rule > CLAUDE.md (reliability order)
 
+## Output format
+
+For each CLAUDE.md file audited, classify every line/block into one of these categories and present as a table:
+
+| Line/Block | Action | Reason |
+|---|---|---|
+| `pnpm test` | **Keep** | Build command, not inferable |
+| `Use arrow functions` | **Delete** | Biome enforces this |
+| `Admin routing conventions` | **Move to rules/** | Only applies to apps/admin/ |
+| `No pointer to docs/testing.md` | **Missing** | Existing doc not discoverable |
+| `Format with biome` | **Convert to hook** | Should be PostToolUse, not CLAUDE.md |
+
+Categories:
+- **Delete** — doesn't pass litmus test
+- **Move to rules/** — should be path-scoped with `paths` frontmatter
+- **Convert to hook** — should be mechanically enforced
+- **Keep** — earns its place
+- **Missing** — something the project has but CLAUDE.md doesn't point to
+
+For rules/ audit, present as:
+
+| Rule file | paths? | Issue |
+|---|---|---|
+| admin-design-system.md | ✅ paths: apps/admin/** | OK |
+| gitnexus.md | ❌ no paths | Should scope to refactoring contexts |
+
 ## Sources
 
 - OpenAI: AGENTS.md ~100 lines, map not encyclopedia, progressive disclosure
