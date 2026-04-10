@@ -117,9 +117,16 @@ Three levels:
 2. **SKILL.md body** — loaded when skill triggers
 3. **Bundled resources** — loaded on demand, referenced from SKILL.md
 
-Keep SKILL.md under 500 lines. Move detailed reference to separate files and reference them:
+Keep SKILL.md under 500 lines. Move detailed reference to separate files.
+
+When referencing supporting files from SKILL.md, use imperative "read" instructions, not passive "see" links. The model may skip passive references.
+
 ```markdown
-For complete API details, see [references/api-details.md](references/api-details.md)
+# Good — model reads the file before proceeding
+**Before evaluating, read `references/criteria.md`.**
+
+# Bad — model may skip this
+For details, see [references/criteria.md](references/criteria.md)
 ```
 
 #### context: fork
