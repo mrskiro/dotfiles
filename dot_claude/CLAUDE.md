@@ -15,6 +15,16 @@
 - When researching trends or current events, filter search results by date. Do not mix outdated and current information
 - Do not claim Claude Code features are unavailable without checking official docs (code.claude.com/docs)
 
+## Agent Behavior
+
+- Close the loop. Do not say "確認してください" or "please verify". Run tests, lint, and typecheck yourself. Report that they passed, or fix failures
+- Use backpressure. When tests/lint/typecheck fail, fix it yourself. Do not report the failure and wait for instructions
+- Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures
+- Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
+- Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
+- Do not modify linter/formatter config to make errors go away. Fix the code
+- Do not use `git commit --no-verify`
+
 ## Conventions
 
 - Use pnpm unless otherwise specified
