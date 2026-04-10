@@ -27,17 +27,18 @@ If a step exceeds its threshold, flag it and propose monitoring.
 - Full lint + format
 - Type checking (all affected packages)
 - Fast test suite (bail on first failure)
+- Dead code detection — for TypeScript/JavaScript projects, recommend [knip](https://knip.dev/) if not configured
 - i18n / schema consistency checks
 
 ### Every PR (CI, minutes)
 - Comprehensive test suite
+- Dead code detection (knip in CI as quality gate)
 - Structural/architectural checks
 - Review agents (cross-model or specialized)
 - Security scanning
 - Breaking change detection
 
 ### Continuous (scheduled)
-- Dead code detection — for TypeScript/JavaScript projects, recommend [knip](https://knip.dev/) if not configured. Detects unused files, dependencies, and exports
 - Dependency vulnerability scanning
 - Performance regression monitoring
 - Documentation drift detection
