@@ -116,7 +116,7 @@ Can the agent prove its own work?
 
 **1. Lifecycle coverage** — one table, one row per stage (Every Edit / Every Commit / Every PR / Continuous). Present column and Gap column.
 
-**2. Context quality** — CLAUDE.md size and verdict (map vs encyclopedia), rules/ issues, missing pointers.
+**2. Context quality** — CLAUDE.md litmus test results as a table (Delete / Keep / Move to rules/ / Convert to hook / Missing per line/block). Rules/ frontmatter audit table. Missing pointers.
 
 **3. Tool coverage** — capability gaps, token efficiency issues, skill quality issues.
 
