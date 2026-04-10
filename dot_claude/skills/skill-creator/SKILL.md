@@ -119,14 +119,10 @@ Three levels:
 
 Keep SKILL.md under 500 lines. Move detailed reference to separate files.
 
-When referencing supporting files from SKILL.md, use imperative "read" instructions, not passive "see" links. The model may skip passive references.
+When referencing supporting files from SKILL.md, use imperative instructions. The model may skip passive "see" links.
 
 ```markdown
-# Good — model reads the file before proceeding
-**Before evaluating, read `references/criteria.md`.**
-
-# Bad — model may skip this
-For details, see [references/criteria.md](references/criteria.md)
+**Before this step, read `references/criteria.md`.**
 ```
 
 #### context: fork
