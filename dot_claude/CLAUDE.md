@@ -22,8 +22,6 @@
 - Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures
 - Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
 - Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
-- Do not modify linter/formatter config to make errors go away. Fix the code
-- Do not use `git commit --no-verify`
 
 ## Conventions
 
