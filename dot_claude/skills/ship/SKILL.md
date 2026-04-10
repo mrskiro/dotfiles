@@ -89,16 +89,12 @@ If PR already exists: push only.
 
 ### 6. CI monitoring and fix
 
-Monitor CI:
+Wait for all checks to finish:
 ```bash
-gh run list --branch $(git branch --show-current) --limit 1 --json databaseId,status,conclusion
+gh pr checks --watch --fail-fast
 ```
 
-If empty, CI may not have started yet. Wait 10 seconds and retry up to 3 times before concluding no CI exists.
-
-Wait if in progress: `gh run watch <run-id>`
-
-If CI fails: diagnose from `gh run view --log-failed`, fix locally, verify, push. Maximum 3 rounds.
+If CI fails: identify the failed check from `gh pr checks` output, diagnose from `gh run view <run-id> --log-failed`, fix locally, verify, push. Maximum 3 rounds.
 
 If CI fails after 3 rounds: consider rework (discard branch, recreate from scratch) before reporting blocked.
 
