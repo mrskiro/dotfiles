@@ -8,15 +8,27 @@ Context is a scarce resource. CLAUDE.md is injected as a user message at session
 
 For each line, apply these questions in order:
 
-| Question | Action |
+**Delete if:**
+| Question | Reason |
 |---|---|
-| Does Claude already know this from training? | **Delete** |
-| Is this enforced by a hook or linter? | **Delete** (hook is source of truth) |
-| Only applies to specific file types/paths? | **Move to `.claude/rules/`** with `paths` frontmatter |
-| Inferable by reading code or config? | **Delete** |
-| A pointer to another file/resource? | **Keep** (pointers are cheap) |
-| A non-obvious gotcha that causes mistakes? | **Keep** |
-| A build/test/deploy command? | **Keep** |
+| Does Claude already know this from training? | Standard conventions don't need stating |
+| Is this enforced by a hook or linter? | Hook is source of truth |
+| Only applies to specific file types/paths? | **Move to `.claude/rules/`** with `paths` |
+| Inferable by reading code or config? | One `ls` or `cat` away |
+| A long explanation or tutorial? | Move to docs/, keep pointer |
+| Info that changes frequently? | Will go stale |
+
+**Keep if:**
+| Question | Reason |
+|---|---|
+| A build/test/deploy command? | Claude can't guess project-specific commands |
+| A pointer to docs/, rules/, ADR/? | Pointers are cheap (1 line) |
+| A non-obvious gotcha? | Prevents repeated mistakes |
+| A project convention that differs from defaults? | Claude will assume defaults otherwise |
+| An architectural decision or boundary? | "Always do / Ask first / Never do" |
+| A pattern example (1 snippet)? | One real example beats paragraphs of description |
+| A dev environment quirk? | Env vars, startup prerequisites |
+| A constraint that can't be enforced by hooks? | "Constitutional" rules (Block: constitutions, not suggestions) |
 
 ## CLAUDE.md structure
 
@@ -60,8 +72,9 @@ If these exist but CLAUDE.md doesn't mention them, the agent won't discover them
 ## Hook vs CLAUDE.md decision
 
 - Can it be checked mechanically? → **Hook** (deterministic, always runs)
-- Requires judgment? → **CLAUDE.md or rules/** (inferential, may be ignored)
-- Hook > Linter rule > CLAUDE.md (reliability order)
+- Applies to specific paths only? → **rules/** (loaded when relevant, fresher context position)
+- Requires judgment across all files? → **CLAUDE.md** (always loaded, but degrades over time)
+- Reliability order: **Hook > Linter > rules/ > CLAUDE.md**
 
 ## Output format
 
