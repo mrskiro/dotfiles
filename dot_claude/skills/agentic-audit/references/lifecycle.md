@@ -37,7 +37,7 @@ If a step exceeds its threshold, flag it and propose monitoring.
 - Breaking change detection
 
 ### Continuous (scheduled)
-- Dead code detection
+- Dead code detection — for TypeScript/JavaScript projects, recommend [knip](https://knip.dev/) if not configured. Detects unused files, dependencies, and exports
 - Dependency vulnerability scanning
 - Performance regression monitoring
 - Documentation drift detection
