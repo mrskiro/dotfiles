@@ -93,6 +93,11 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'terraform\s+apply' 2>/dev/nu
   WARN="Caution: terraform apply modifies infrastructure."
 fi
 
+# chezmoi apply --force
+if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'chezmoi\s+apply\s+.*--force' 2>/dev/null; then
+  WARN="Blocked: chezmoi apply --force overwrites local changes. Run 'chezmoi diff' first, then either: (1) show the diff to the user and ask whether to merge into source, or (2) save the local diff, apply, then restore it."
+fi
+
 # --- Output ---
 if [ -n "$WARN" ]; then
   WARN_ESCAPED=$(printf '%s' "$WARN" | sed 's/"/\\"/g')

@@ -64,10 +64,7 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "enabledPlugins": {
-    "feature-dev@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
-  },
+  "enabledPlugins": {},
   "autoMemoryEnabled": false,
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
