@@ -26,7 +26,6 @@ For each line, apply these questions in order:
 | A non-obvious gotcha? | Prevents repeated mistakes |
 | A project convention that differs from defaults? | Claude will assume defaults otherwise |
 | An architectural decision or boundary? | "Always do / Ask first / Never do" |
-| A pattern example (1 snippet)? | One real example beats paragraphs of description |
 | A dev environment quirk? | Env vars, startup prerequisites |
 | A constraint that can't be enforced by hooks? | "Constitutional" rules (Block: constitutions, not suggestions) |
 
