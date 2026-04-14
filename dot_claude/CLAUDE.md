@@ -6,6 +6,7 @@
 
 ## Information Accuracy
 
+- When fetching external articles via WebFetch, retrieve the full content — not a summary or excerpt. Include section structure, concrete examples, and quotes
 - Do not answer based on training knowledge alone. Always verify with up-to-date sources before responding
   - Web search for trends, news, ecosystem updates
   - context7 for library/framework docs
