@@ -1,11 +1,10 @@
 ---
 name: skill-creator
 description: >
-  Create, improve, and validate Claude Code skills following official best practices.
-  Use when creating a new skill, improving an existing skill, or turning a workflow into
-  a reusable skill. Also use when writing SKILL.md files, choosing frontmatter fields,
-  or designing skill structure. Triggers: "skill作って", "スキル作りたい", "create a skill",
-  "improve this skill", "スキル改善", "SKILL.md書いて".
+  "skill作って" "スキル作りたい" "create a skill" "improve this skill" "スキル改善" "SKILL.md書いて"
+  — MUST use before writing any SKILL.md or creating skills/ directories. Covers skill
+  creation, improvement, and workflow-to-skill conversion following official best practices.
+  Do NOT use for reading/referencing existing skills.
 ---
 
 # Skill Creator
