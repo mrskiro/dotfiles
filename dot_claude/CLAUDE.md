@@ -23,6 +23,8 @@
 - Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures
 - Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
 - Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
+- Prefer CLI over MCP for equivalent capability. MCP injects all tool schemas into context every turn; models are heavily trained on CLI. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
+- Background context for these principles: `~/.claude/docs/agentic-engineering.md` (framework, vocabulary, source attribution)
 
 ## Conventions
 
