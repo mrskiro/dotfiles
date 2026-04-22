@@ -11,7 +11,9 @@ For each line, apply these questions in order:
 **Delete if:**
 | Question | Reason |
 |---|---|
-| Does Claude already know this from training? | Standard conventions don't need stating |
+| Is this already in Claude Code's built-in system prompt? | Built-in is source of truth; CLAUDE.md duplication is dead weight |
+| Is this in the current chat model's system prompt (Opus/Sonnet/Haiku)? | Already enforced when using that model |
+| Standard training-level knowledge? | Conventions don't need stating |
 | Is this enforced by a hook or linter? | Hook is source of truth |
 | Only applies to specific file types/paths? | **Move to `.claude/rules/`** with `paths` |
 | Inferable by reading code or config? | One `ls` or `cat` away |
@@ -27,7 +29,32 @@ For each line, apply these questions in order:
 | A project convention that differs from defaults? | Claude will assume defaults otherwise |
 | An architectural decision or boundary? | "Always do / Ask first / Never do" |
 | A dev environment quirk? | Env vars, startup prerequisites |
-| A constraint that can't be enforced by hooks? | "Constitutional" rules (Block: constitutions, not suggestions) |
+| A constraint that can't be enforced by hooks or system prompts? | "Constitutional" rules (Block: constitutions, not suggestions) |
+
+## System prompt redundancy check
+
+Claude Code's built-in system prompt and chat model system prompts evolve. CLAUDE.md items duplicating these become dead weight.
+
+**Sources to check:**
+- **Claude Code built-in system prompt**: visible at session start in the active session — ask the user to paste the relevant sections (especially "Doing tasks", "Tone and style", "Executing actions with care") if they aren't already in context
+- **Chat model system prompt** (Opus 4.7, Sonnet 4.6, etc.): https://platform.claude.com/docs/en/release-notes/system-prompts — ask the user to fetch the latest if relevant
+
+**Common overlaps to flag:**
+- "KISS / YAGNI / Don't over-engineer" → Claude Code has "Don't add features...beyond what the task requires"
+- "No error handling for impossible scenarios" → Claude Code has this verbatim
+- "Don't add comments explaining what code does" → Claude Code has "Default to writing no comments"
+- "Avoid backwards-compatibility hacks" → Claude Code has this
+
+**Conflicts to flag (let user decide which wins):**
+- "Always confirm before acting" (CLAUDE.md) vs "Make a reasonable attempt now, not interviewed first" (Opus 4.7 chat `<acting_vs_clarifying>`)
+- "Caution over speed" (CLAUDE.md) vs "Throughput over perfection" (CLAUDE.md own existing principle) — same author may have inconsistencies
+- "Stop when confused" (CLAUDE.md) vs "see it through to a complete answer rather than stopping partway" (Opus 4.7 chat)
+
+**Process:**
+1. Get current built-in prompts (Claude Code session start + chat model release notes)
+2. For each CLAUDE.md line, check if it's duplicated by built-in → mark "Redundant with built-in"
+3. Check for items contradicting built-in → present the trade-off, let user decide which wins
+4. Note: this check should be redone whenever Claude Code or the model is updated (built-in prompts change)
 
 ## CLAUDE.md structure
 
@@ -83,12 +110,16 @@ For each CLAUDE.md file audited, classify every line/block into one of these cat
 |---|---|---|
 | `pnpm test` | **Keep** | Build command, not inferable |
 | `Use arrow functions` | **Delete** | Biome enforces this |
+| `Don't add features beyond requested` | **Redundant with built-in** | Claude Code system prompt covers this |
 | `Admin routing conventions` | **Move to rules/** | Only applies to apps/admin/ |
 | `No pointer to docs/testing.md` | **Missing** | Existing doc not discoverable |
 | `Format with biome` | **Convert to hook** | Should be PostToolUse, not CLAUDE.md |
+| `Always confirm before acting` | **Conflicts with built-in** | Opus 4.7 chat: "make a reasonable attempt now". Choose intentionally |
 
 Categories:
 - **Delete** — doesn't pass litmus test
+- **Redundant with built-in** — duplicated by Claude Code or chat model system prompt
+- **Conflicts with built-in** — contradicts a built-in instruction; flag for explicit user choice
 - **Move to rules/** — should be path-scoped with `paths` frontmatter
 - **Convert to hook** — should be mechanically enforced
 - **Keep** — earns its place

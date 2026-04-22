@@ -59,7 +59,16 @@ Report as **one row per stage** — group all controls into a single cell per st
 
 **Before evaluating context quality, read `references/context.md`.**
 
+**System prompt redundancy check** (do this first):
+- Get the current Claude Code built-in system prompt (visible at session start; ask user to paste relevant sections if not in context)
+- Get the current chat model system prompt from https://platform.claude.com/docs/en/release-notes/system-prompts (ask user to fetch if needed)
+- For each CLAUDE.md item, flag duplication or conflict with built-in
+- Redo this check whenever Claude Code or the model is updated — built-in prompts evolve
+
 **CLAUDE.md litmus test** — for each line:
+- In Claude Code built-in system prompt? → mark **Redundant with built-in**
+- In current chat model system prompt? → mark **Redundant with built-in** (note model dependency)
+- Conflicts with built-in instruction? → mark **Conflicts with built-in**, flag for user decision
 - Already known from training? → delete
 - Enforced by hook/linter? → delete (hook is source of truth)
 - Only applies to specific paths? → move to `.claude/rules/` with `paths`
@@ -72,7 +81,7 @@ Report as **one row per stage** — group all controls into a single cell per st
 
 **Rules audit** — read the frontmatter of every file in `.claude/rules/`. For each:
 - Does it have `paths`? If the content only applies to specific directories/file types, it should
-- Does the content overlap with CLAUDE.md or hooks? If so, one of them should be removed
+- Does the content overlap with CLAUDE.md, hooks, or built-in system prompts? If so, one of them should be removed
 - Is the content something Claude already knows from training? If so, delete
 
 ### 4. Tool coverage
