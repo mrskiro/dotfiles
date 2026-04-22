@@ -41,7 +41,9 @@ Read the plan. For each task, respecting dependency order:
 Implement directly in the current session on a feature branch.
 
 **Multiple independent tasks (AFK classified):**
-Dispatch each as a subagent with `isolation: "worktree"`. Each worker:
+ALWAYS dispatch each task as a separate subagent with `isolation: "worktree"`. Do not implement them sequentially in the main session. Newer Claude models (Opus 4.7+) tend to spawn fewer subagents by default — this instruction overrides that tendency.
+
+Each worker:
 1. Creates a feature branch
 2. Reads the task description and acceptance criteria
 3. Explores relevant codebase
