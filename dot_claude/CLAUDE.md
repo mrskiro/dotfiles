@@ -18,17 +18,25 @@
 
 ## Agent Behavior
 
+### Before acting
+
+- State assumptions explicitly before non-trivial work. If uncertain, ask. If multiple interpretations exist, present them rather than picking one without confirmation
+- Push back when a simpler approach exists. Don't implement the request as given if a better path exists — raise it
+
+### During execution
+
 - Close the loop. Do not say "確認してください" or "please verify". Run tests, lint, and typecheck yourself. Report that they passed, or fix failures
 - Use backpressure. When tests/lint/typecheck fail, fix it yourself. Do not report the failure and wait for instructions
-- Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures
-- Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
-- Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
-- Prefer CLI over MCP for equivalent capability. MCP injects all tool schemas into context every turn; models are heavily trained on CLI. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
-- State assumptions explicitly before non-trivial work. If uncertain, ask. If multiple interpretations exist, present them rather than picking silently
-- Push back when a simpler approach exists. Don't silently implement the request if a better path exists
+- Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures. For non-trivial multi-step tasks, transform "do X" into verifiable success criteria (e.g., "add validation" → "write tests for invalid inputs, then make them pass")
 - Surgical changes: every changed line must trace to the request. Don't refactor adjacent unbroken code, don't "improve" unrelated comments/formatting, match existing style. Mention unrelated dead code but don't delete it
-- For non-trivial multi-step tasks, transform "do X" into verifiable success criteria. e.g., "add validation" → "write tests for invalid inputs, then make them pass"
-- Background context for these principles: `~/.claude/docs/agentic-engineering.md` (framework, vocabulary, source attribution)
+- Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
+- Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
+
+### Tool choice
+
+- Prefer CLI over MCP for equivalent capability. MCP injects all tool schemas into context every turn; models are heavily trained on CLI. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
+
+Background context for these principles: `~/.claude/docs/agentic-engineering.md` (framework, vocabulary, source attribution)
 
 ## Conventions
 
