@@ -39,6 +39,16 @@
             "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$(basename \"$FILE\")\" in lefthook.yml|lefthook-local.yml|tsconfig.json) echo \"Blocked: $FILE is protected. Fix the code, not the config.\" >&2; exit 2 ;; esac; exit 0"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
