@@ -78,7 +78,7 @@
   "autoMemoryEnabled": false,
   "language": "Japanese",
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "skipAutoPermissionPrompt": true,
   "skipDangerousModePermissionPrompt": true,
   "feedbackSurveyRate": 0,
