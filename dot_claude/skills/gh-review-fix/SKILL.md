@@ -1,10 +1,10 @@
 ---
 name: gh-review-fix
 description: >
+  "レビューコメント対応" "review fix" "PR comments" "レビュー指摘直して" —
   Fix PR review comments autonomously. Fetches review comments, classifies as
-  auto-fixable or needs-human, fixes what it can, replies to reviewers.
-  Use when: "レビューコメント対応", "review fix", "PR comments", "レビュー指摘直して",
-  or when a PR has unresolved review comments.
+  auto-fixable or needs-human, fixes what it can, replies to reviewers. Use
+  when a PR has unresolved review comments.
 ---
 
 # PR Review Fix

@@ -3,7 +3,7 @@ name: flywheel
 description: >
   "フライホイール" "flywheel" "usage analysis" "harness improvement" —
   Analyze BigQuery usage data and propose harness improvements. Run periodically to drive the improvement cycle.
-allowed-tools: [Bash, Read, Glob, Grep]
+allowed-tools: Bash Read Glob Grep
 ---
 
 Cross-reference accumulated Claude Code usage data (BigQuery) with current harness state, detect Fowler's 4 signal types, and output concrete improvement proposals.

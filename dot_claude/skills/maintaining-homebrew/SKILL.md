@@ -1,6 +1,10 @@
 ---
-name: brew
-description: Periodic Homebrew maintenance — upgrade packages, remove orphaned dependencies, and review installed packages. Use when the user says "brew", "brew upgrade", "brew cleanup", "update packages", "brew outdated", or wants to do periodic Homebrew housekeeping.
+name: maintaining-homebrew
+description: >
+  "brew" "brew upgrade" "brew cleanup" "update packages" "brew outdated" —
+  Periodic Homebrew maintenance: upgrade packages, remove orphaned dependencies,
+  and review installed packages. Use when the user wants periodic Homebrew
+  housekeeping or mentions outdated/upgrade in a Homebrew context.
 ---
 
 # Brew Maintenance

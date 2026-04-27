@@ -1,10 +1,10 @@
 ---
 name: gh-ci-fix
 description: >
-  Fix CI failures locally until green. Monitors the CI run for the current branch,
-  diagnoses failures from logs, fixes locally, verifies, and pushes. Repeats up to 3 rounds.
-  Use when: "CIが落ちた", "CI fix", "CI直して", "make CI green", "CIグリーンにして",
-  or after pushing when CI might fail.
+  "CIが落ちた" "CI fix" "CI直して" "make CI green" "CIグリーンにして" —
+  Fix CI failures locally until green. Monitors the CI run for the current
+  branch, diagnoses failures from logs, fixes locally, verifies, and pushes.
+  Repeats up to 3 rounds. Also use after pushing when CI might fail.
 ---
 
 # CI Fix

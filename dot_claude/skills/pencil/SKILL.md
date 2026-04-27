@@ -1,7 +1,12 @@
 ---
 name: pencil
-description: Best practices for working with Pencil MCP tools on .pen design files. Use whenever creating, editing, or reviewing designs in Pencil — even for small updates like changing a color or moving a node. This skill ensures correct tool usage and prevents common pitfalls that waste time.
-user-invokable: false
+description: >
+  ".pen file" "Pencil MCP" "design in Pencil" "batch_design" "batch_get" —
+  Best practices for working with Pencil MCP tools on .pen design files. Use
+  whenever creating, editing, or reviewing designs in Pencil — even for small
+  updates like changing a color or moving a node. Prevents common pitfalls
+  (silent failures, property name mismatches, invisible text) that waste time.
+user-invocable: false
 ---
 
 # Pencil MCP Best Practices

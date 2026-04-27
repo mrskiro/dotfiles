@@ -1,6 +1,11 @@
 ---
-description: "Review and merge Dependabot PRs"
-allowed-tools: Bash(gh pr *), Bash(gh api *), Bash(git checkout *), Bash(git pull *), Bash(git branch *)
+name: gh-dependabot-review
+description: >
+  "dependabot" "Dependabot PR" "依存関係更新" "review dependabot" — Review and
+  merge open Dependabot PRs in the current repository, one at a time. Use when
+  the user wants to triage automated dependency update PRs, or after Dependabot
+  has opened multiple PRs that need attention.
+allowed-tools: Bash(gh:*) Bash(git:*)
 ---
 
 # Dependabot PR Review

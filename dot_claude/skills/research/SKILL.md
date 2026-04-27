@@ -1,6 +1,12 @@
 ---
 name: research
-description: Multi-source research combining web search, X (Twitter), and Reddit for well-rounded answers. Use when the user asks about trends, ecosystem comparisons, developer sentiment, tool adoption, "what are people using for...", "what's the latest on...", or any question that benefits from triangulating multiple information sources. Also trigger when the user says "research", "investigate", or "look into".
+description: >
+  "research" "investigate" "look into" "what are people using for"
+  "what's the latest on" "trends" "ecosystem comparison" — Multi-source
+  research combining web search, X (Twitter), and Reddit for well-rounded
+  answers. Use for trends, ecosystem comparisons, developer sentiment, tool
+  adoption questions, or any question that benefits from triangulating
+  multiple information sources.
 argument-hint: "<research topic>"
 ---
 

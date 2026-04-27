@@ -1,6 +1,11 @@
 ---
-name: repo-setup
-description: Apply standard GitHub repository settings via gh API. Use when creating a new repository, after "gh repo create", when the user says "setup the repo", "configure repo settings", "リポジトリの設定", "squash mergeにして", or when reviewing repository configuration. Also use when the user mentions branch protection, SHA pinning, or wants to align a repo with their standard settings.
+name: setting-up-repo
+description: >
+  "setup the repo" "configure repo settings" "リポジトリの設定" "squash mergeにして"
+  "branch protection" — Apply standard GitHub repository settings via gh API.
+  Use when creating a new repository, after "gh repo create", when reviewing
+  repository configuration, or when the user mentions branch protection, SHA
+  pinning, or wants to align a repo with their standard settings.
 argument-hint: "<owner/repo or repo URL>"
 ---
 

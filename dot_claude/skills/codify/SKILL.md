@@ -1,10 +1,10 @@
 ---
 name: codify
 description: >
-  Codify session learnings into docs/, rules/, or CLAUDE.md so future sessions
-  can discover them. Use when: a bug is fixed, a problem is solved, a design
-  decision is made, a non-obvious gotcha is discovered, a workflow is established,
-  or the user says "it works", "solved", "fixed", "なるほど", "わかった".
+  "codify" "なるほど" "わかった" "it works" "solved" "fixed" — Codify session
+  learnings into docs/, rules/, or CLAUDE.md so future sessions can discover
+  them. Use when a bug is fixed, a problem is solved, a design decision is
+  made, a non-obvious gotcha is discovered, or a workflow is established.
 ---
 
 # Codify

@@ -1,5 +1,5 @@
 ---
-name: chezmoi-sync
+name: syncing-chezmoi
 description: >
   "chezmoi update" "chezmoi pull" "chezmoi upgrade" "dotfiles sync" "chezmoi同期"
   "dotfiles更新" — Sync and upgrade chezmoi: pull dotfiles, resolve conflicts with
