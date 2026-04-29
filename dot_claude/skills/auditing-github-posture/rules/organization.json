@@ -1,0 +1,337 @@
+[
+  {
+    "id": "org-act-001",
+    "scope": "organization",
+    "severity": "high",
+    "category": "actions",
+    "title": "Default GITHUB_TOKEN permission is write",
+    "description": "The default permission for the GITHUB_TOKEN in GitHub Actions workflows is set to 'write'. This grants all workflows write access to repository contents, packages, and other resources unless explicitly restricted, violating the principle of least privilege.",
+    "recommendation": "Change the default workflow permission to 'read' in Organization → Settings → Actions → Workflow permissions. Grant write access only in individual workflows that explicitly require it.",
+    "learnMore": "https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token",
+    "tags": [
+      "actions",
+      "security",
+      "permissions"
+    ]
+  },
+  {
+    "id": "org-act-002",
+    "scope": "organization",
+    "severity": "high",
+    "category": "actions",
+    "title": "GitHub Actions allows all third-party actions",
+    "description": "GitHub Actions is configured to allow any third-party action from any source without restriction. This exposes all workflows to supply-chain attacks from malicious or compromised action repositories.",
+    "recommendation": "Restrict allowed actions to 'local_only' or 'selected' (trusted publishers and verified creators) to reduce supply-chain risk.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization",
+    "tags": [
+      "actions",
+      "security",
+      "supply_chain"
+    ]
+  },
+  {
+    "id": "org-act-003",
+    "scope": "organization",
+    "severity": "low",
+    "category": "actions",
+    "title": "Actions restricted to local repositories only",
+    "description": "GitHub Actions is restricted to local/internal repositories only. While this is more secure than 'all', it may block useful verified third-party actions (e.g. actions/checkout).",
+    "recommendation": "Consider using 'selected' to allow specific trusted third-party actions from verified creators, which provides a good balance of security and flexibility.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization",
+    "tags": [
+      "actions",
+      "security"
+    ]
+  },
+  {
+    "id": "org-alert-001",
+    "scope": "organization",
+    "severity": "critical",
+    "category": "dependencies",
+    "title": "Critical Dependabot alerts open across organization",
+    "description": "One or more critical-severity Dependabot alerts are open across repositories in this organization, indicating known critical security vulnerabilities in dependencies.",
+    "recommendation": "Immediately remediate critical dependency vulnerabilities across all affected repositories.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "org-alert-002",
+    "scope": "organization",
+    "severity": "high",
+    "category": "dependencies",
+    "title": "High-severity Dependabot alerts open across organization",
+    "description": "One or more high-severity Dependabot alerts are open across repositories in this organization.",
+    "recommendation": "Prioritize fixing high-severity dependency vulnerabilities across all affected repositories.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "org-alert-003",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "dependencies",
+    "title": "Open Dependabot alerts across organization",
+    "description": "There are open Dependabot alerts across the organization (no critical or high severity). These medium or lower-severity vulnerabilities should still be reviewed.",
+    "recommendation": "Review and remediate all remaining open Dependabot alerts across the organization.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "org-alert-004",
+    "scope": "organization",
+    "severity": "high",
+    "category": "security",
+    "title": "Code scanning alerts open across organization",
+    "description": "There are open code scanning alerts across repositories in this organization, indicating potential security vulnerabilities detected by static analysis.",
+    "recommendation": "Review and address all open code scanning findings across affected repositories.",
+    "learnMore": "https://docs.github.com/en/code-security/code-scanning/managing-code-scanning-alerts/managing-code-scanning-alerts-for-your-repository",
+    "tags": [
+      "code_scanning",
+      "security"
+    ]
+  },
+  {
+    "id": "org-alert-005",
+    "scope": "organization",
+    "severity": "critical",
+    "category": "security",
+    "title": "Secret scanning alerts open across organization",
+    "description": "There are open secret scanning alerts across repositories in this organization, indicating that secrets may have been exposed.",
+    "recommendation": "Immediately revoke and rotate any exposed secrets, then close the secret scanning alerts after confirming remediation.",
+    "learnMore": "https://docs.github.com/en/code-security/secret-scanning/managing-alerts-from-secret-scanning",
+    "tags": [
+      "secret_scanning",
+      "security"
+    ]
+  },
+  {
+    "id": "org-cop-001",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "copilot_cost",
+    "title": "Copilot seats assigned to all organization members",
+    "description": "GitHub Copilot seat assignment is set to 'assign_all', which grants Copilot access to every member of the organization. This can lead to unnecessary costs for members who do not use Copilot.",
+    "recommendation": "Switch to 'assign_selected' to control costs and limit Copilot access to members who actively use it.",
+    "learnMore": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-access-to-github-copilot-in-your-organization/granting-access-to-copilot-for-members-of-your-organization",
+    "tags": [
+      "copilot",
+      "cost"
+    ]
+  },
+  {
+    "id": "org-cop-002",
+    "scope": "organization",
+    "severity": "high",
+    "category": "copilot_security",
+    "title": "Copilot allowed to suggest code matching public repositories",
+    "description": "Copilot is configured to allow suggestions that match public repository content. This increases the risk of incorporating licensed open-source code without attribution, creating potential IP or compliance issues.",
+    "recommendation": "Set public code suggestions to 'blocked' to reduce IP and license risk from Copilot suggestions.",
+    "learnMore": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/managing-policies-for-copilot-in-your-organization",
+    "tags": [
+      "copilot",
+      "security",
+      "compliance"
+    ]
+  },
+  {
+    "id": "org-cop-003",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "copilot_cost",
+    "title": "High percentage of inactive Copilot seats",
+    "description": "More than 20% of Copilot seats were inactive during the most recent billing cycle, indicating potential wasteful spending.",
+    "recommendation": "Reclaim unused Copilot seats to reduce costs. Review seat assignments and remove seats for members who are not actively using Copilot.",
+    "learnMore": "https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-activity-related-to-github-copilot-in-your-organization/reviewing-your-organization-s-copilot-seat-assignments",
+    "tags": [
+      "copilot",
+      "cost"
+    ]
+  },
+  {
+    "id": "org-sec-001",
+    "scope": "organization",
+    "severity": "high",
+    "category": "security",
+    "title": "Two-factor authentication not required",
+    "description": "The organization does not require two-factor authentication (2FA) for all members. This means any member account without 2FA is an easy target for credential-based attacks.",
+    "recommendation": "Enable the 2FA requirement in organization security settings to ensure all members must use two-factor authentication.",
+    "learnMore": "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization",
+    "tags": [
+      "security",
+      "authentication"
+    ]
+  },
+  {
+    "id": "org-sec-002",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "security",
+    "title": "Web commit signoff not required",
+    "description": "The organization does not require commit signoff for commits made through the GitHub web interface. Signoff creates an auditable record of who approved each change.",
+    "recommendation": "Consider enabling web commit signoff to improve the audit trail for changes made directly through the GitHub UI.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-organization-settings/managing-the-commit-signoff-policy-for-your-organization",
+    "tags": [
+      "security",
+      "audit"
+    ]
+  },
+  {
+    "id": "org-sec-003",
+    "scope": "organization",
+    "severity": "high",
+    "category": "access_control",
+    "title": "Default repository permission set to admin",
+    "description": "The organization's default repository permission is set to 'admin', which grants all members admin access to every repository by default. This violates the principle of least privilege.",
+    "recommendation": "Change the default repository permission to 'read' or 'write' to ensure members only have the minimum access required.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/setting-base-permissions-for-an-organization",
+    "tags": [
+      "access_control",
+      "permissions"
+    ]
+  },
+  {
+    "id": "org-sec-004",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "access_control",
+    "title": "Members can create public repositories",
+    "description": "Organization members are allowed to create public repositories. This increases the risk of accidental public exposure of proprietary code.",
+    "recommendation": "Consider restricting public repository creation to organization owners or admins to prevent accidental data exposure.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-organization-settings/restricting-repository-creation-in-your-organization",
+    "tags": [
+      "access_control",
+      "visibility"
+    ]
+  },
+  {
+    "id": "org-sec-005",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "access_control",
+    "title": "No security manager team assigned",
+    "description": "No security manager team is assigned to this organization. Without designated security managers, security alerts and configurations may not be actively monitored.",
+    "recommendation": "Assign a security manager team to ensure that security alerts and configurations are reviewed by the right people.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization",
+    "tags": [
+      "access_control",
+      "security"
+    ]
+  },
+  {
+    "id": "org-sec-006",
+    "scope": "organization",
+    "severity": "info",
+    "category": "security",
+    "title": "EMU enabled: two-factor authentication is controlled by your identity provider",
+    "description": "This organization belongs to an Enterprise Managed Users (EMU) enterprise. GitHub's organization-level 2FA setting does not apply because all authentication, including multi-factor authentication, is managed by the external identity provider (e.g. Microsoft Entra ID).",
+    "recommendation": "Ensure MFA is enforced in your identity provider. For Microsoft Entra ID, configure a Conditional Access policy requiring MFA for all users.",
+    "learnMore": "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-getstarted",
+    "tags": [
+      "security",
+      "authentication",
+      "emu"
+    ]
+  },
+  {
+    "id": "org-def-001",
+    "scope": "organization",
+    "severity": "high",
+    "category": "dependencies",
+    "title": "Dependabot alerts not enabled by default for new repositories",
+    "description": "Dependabot alerts are not automatically enabled for new repositories created in this organization. New repositories will not receive vulnerability notifications until manually configured.",
+    "recommendation": "Enable 'Dependabot alerts' in Organization → Settings → Code security and analysis to apply this protection automatically to all new repositories.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/configuring-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "defaults"
+    ]
+  },
+  {
+    "id": "org-def-002",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "dependencies",
+    "title": "Dependabot security updates not enabled by default for new repositories",
+    "description": "Dependabot security updates are not automatically enabled for new repositories. Without this, Dependabot will alert on vulnerabilities but will not automatically open pull requests to fix them.",
+    "recommendation": "Enable 'Dependabot security updates' in Organization → Settings → Code security and analysis.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates",
+    "tags": [
+      "dependabot",
+      "security",
+      "defaults"
+    ]
+  },
+  {
+    "id": "org-def-003",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "dependencies",
+    "title": "Dependency graph not enabled by default for new repositories",
+    "description": "The dependency graph is not automatically enabled for new repositories. The dependency graph is required for Dependabot alerts and dependency review to function.",
+    "recommendation": "Enable the dependency graph in Organization → Settings → Code security and analysis.",
+    "learnMore": "https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-the-dependency-graph",
+    "tags": [
+      "dependabot",
+      "security",
+      "defaults"
+    ]
+  },
+  {
+    "id": "org-def-004",
+    "scope": "organization",
+    "severity": "high",
+    "category": "security",
+    "title": "Secret scanning not enabled by default for new repositories",
+    "description": "Secret scanning is not automatically enabled for new repositories, leaving newly created repositories without protection against accidentally committed secrets.",
+    "recommendation": "Enable 'Secret scanning' in Organization → Settings → Code security and analysis to protect all new repositories from the moment they are created.",
+    "learnMore": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+    "tags": [
+      "secret_scanning",
+      "security",
+      "defaults"
+    ]
+  },
+  {
+    "id": "org-def-005",
+    "scope": "organization",
+    "severity": "high",
+    "category": "security",
+    "title": "Secret scanning push protection not enabled by default for new repositories",
+    "description": "Push protection for secret scanning is not automatically enabled for new repositories, meaning secrets can be committed before they are detected.",
+    "recommendation": "Enable 'Push protection' in Organization → Settings → Code security and analysis to block commits containing secrets before they reach the repository.",
+    "learnMore": "https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection",
+    "tags": [
+      "secret_scanning",
+      "security",
+      "defaults"
+    ]
+  },
+  {
+    "id": "org-def-006",
+    "scope": "organization",
+    "severity": "medium",
+    "category": "security",
+    "title": "GitHub Advanced Security not enabled by default for new repositories",
+    "description": "GitHub Advanced Security (GHAS) is not automatically enabled for new repositories. GHAS is required for code scanning, advanced secret scanning, and dependency review.",
+    "recommendation": "Enable 'GitHub Advanced Security' in Organization → Settings → Code security and analysis (requires a GHAS license).",
+    "learnMore": "https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security",
+    "tags": [
+      "ghas",
+      "security",
+      "defaults"
+    ]
+  }
+]

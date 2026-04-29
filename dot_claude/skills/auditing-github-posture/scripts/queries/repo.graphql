@@ -1,0 +1,94 @@
+query RepoData($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    name
+    description
+    pushedAt
+    isPrivate
+    visibility
+    isFork
+    isArchived
+    isTemplate
+
+    hasIssuesEnabled
+    hasProjectsEnabled
+    hasWikiEnabled
+    hasDiscussionsEnabled
+
+    primaryLanguage { name }
+    licenseInfo { name key spdxId }
+
+    repositoryTopics(first: 50) { nodes { topic { name } } }
+
+    deleteBranchOnMerge
+    hasVulnerabilityAlertsEnabled
+
+    defaultBranchRef {
+      name
+      branchProtectionRule {
+        pattern
+        requiredApprovingReviewCount
+        requiresStrictStatusChecks
+        requiresStatusChecks
+        requiresCodeOwnerReviews
+        requiresCommitSignatures
+        requiresLinearHistory
+        allowsForcePushes
+        allowsDeletions
+        dismissesStaleReviews
+        requiredStatusChecks { context }
+      }
+    }
+
+    vulnerabilityAlerts(first: 100, states: OPEN) {
+      nodes {
+        dismissedAt
+        securityVulnerability { severity }
+      }
+    }
+
+    collaborators(first: 100) {
+      edges {
+        permission
+        node { login }
+      }
+    }
+
+    deployKeys(first: 100) {
+      nodes { title readOnly verified }
+    }
+
+    codeownersFile: object(expression: "HEAD:CODEOWNERS") { ... on Blob { oid } }
+    githubCodeownersFile: object(expression: "HEAD:.github/CODEOWNERS") { ... on Blob { oid } }
+    docsCodeownersFile: object(expression: "HEAD:docs/CODEOWNERS") { ... on Blob { oid } }
+    securityMdFile: object(expression: "HEAD:SECURITY.md") { ... on Blob { oid } }
+    dependabotYmlFile: object(expression: "HEAD:.github/dependabot.yml") { ... on Blob { oid } }
+    dependabotYamlFile: object(expression: "HEAD:.github/dependabot.yaml") { ... on Blob { oid } }
+    codeqlConfigFile: object(expression: "HEAD:.github/codeql/config.yml") { ... on Blob { oid } }
+    codeqlAltConfigFile: object(expression: "HEAD:.github/codeql-config.yml") { ... on Blob { oid } }
+
+    rulesets(first: 25, includeParents: true) {
+      totalCount
+      nodes {
+        name
+        enforcement
+        target
+        rules(first: 30) {
+          nodes {
+            type
+            parameters {
+              ... on PullRequestParameters {
+                requiredApprovingReviewCount
+                dismissStaleReviewsOnPush
+                requireCodeOwnerReview
+              }
+              ... on RequiredStatusChecksParameters {
+                strictRequiredStatusChecksPolicy
+                requiredStatusChecks { context }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

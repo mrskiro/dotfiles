@@ -1,0 +1,488 @@
+[
+  {
+    "id": "repo-acc-001",
+    "scope": "repository",
+    "severity": "high",
+    "category": "access_control",
+    "title": "Excessive admin collaborators",
+    "description": "More than 3 users have direct admin access to this repository, which increases the blast radius of a compromised account and makes access auditing harder.",
+    "recommendation": "Review admin access and apply the principle of least privilege. Consider using teams with limited permissions instead of direct admin grants.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization",
+    "tags": [
+      "access_control",
+      "permissions"
+    ]
+  },
+  {
+    "id": "repo-acc-002",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "access_control",
+    "title": "Direct collaborators instead of teams",
+    "description": "The repository has direct collaborator access grants. Direct collaborator access is harder to audit and manage compared to team-based access.",
+    "recommendation": "Prefer team-based access over direct collaborators for better auditability and easier access management.",
+    "learnMore": "https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-outside-collaborators/about-outside-collaborators",
+    "tags": [
+      "access_control",
+      "permissions"
+    ]
+  },
+  {
+    "id": "repo-acc-003",
+    "scope": "repository",
+    "severity": "high",
+    "category": "security",
+    "title": "Deploy keys with write access",
+    "description": "One or more deploy keys have write access to this repository. Write deploy keys allow the key holder to push code, which poses a risk if the key is compromised.",
+    "recommendation": "Use read-only deploy keys where possible. For write operations, prefer GitHub Apps or OIDC federation, which provide better auditability and can be rotated more easily.",
+    "learnMore": "https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys",
+    "tags": [
+      "access_control",
+      "security",
+      "deploy_keys"
+    ]
+  },
+  {
+    "id": "repo-acc-004",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "security",
+    "title": "Unverified deploy keys",
+    "description": "One or more deploy keys are unverified. Unverified keys may not belong to authorized systems.",
+    "recommendation": "Verify all deploy keys to ensure they are associated with authorized systems and remove any unknown keys.",
+    "learnMore": "https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys",
+    "tags": [
+      "access_control",
+      "security",
+      "deploy_keys"
+    ]
+  },
+  {
+    "id": "repo-acc-005",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "security",
+    "title": "Deploy keys present — consider GitHub Apps or OIDC",
+    "description": "Deploy keys are configured for this repository. While functional, deploy keys are less auditable and harder to rotate than modern alternatives.",
+    "recommendation": "Consider migrating to GitHub Apps or OIDC federation for automated deployment credentials, which offer better security, auditability, and key rotation.",
+    "learnMore": "https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys",
+    "tags": [
+      "access_control",
+      "security",
+      "deploy_keys"
+    ]
+  },
+  {
+    "id": "repo-bp-001",
+    "scope": "repository",
+    "severity": "critical",
+    "category": "branch_protection",
+    "title": "No branch protection configured on default branch",
+    "description": "The default branch has no branch protection rule, meaning anyone with write access can push directly, force-push, or delete it.",
+    "recommendation": "CRITICAL: Enable comprehensive branch protection on production branches to prevent direct pushes, require code review, and enforce CI checks.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "tags": [
+      "branch_protection",
+      "security"
+    ]
+  },
+  {
+    "id": "repo-bp-002",
+    "scope": "repository",
+    "severity": "critical",
+    "category": "branch_protection",
+    "title": "No approving reviews required before merge",
+    "description": "The branch protection rule requires zero approving reviews, allowing pull requests to be merged without any peer review.",
+    "recommendation": "CRITICAL: Require at least 1 approving review before merge to enforce code review and catch errors or malicious changes.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging",
+    "tags": [
+      "branch_protection",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-bp-003",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "branch_protection",
+    "title": "Only 1 approving review required",
+    "description": "The branch protection rule requires only 1 approving review, which may be insufficient for high-risk changes on production branches.",
+    "recommendation": "Consider requiring 2 or more reviews for production branches to reduce the risk of unreviewed code reaching production.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging",
+    "tags": [
+      "branch_protection",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-bp-004",
+    "scope": "repository",
+    "severity": "high",
+    "category": "branch_protection",
+    "title": "Stale reviews not dismissed on new commits",
+    "description": "When new commits are pushed to a pull request, existing approvals are not automatically dismissed, so stale approvals remain valid even after the code changes.",
+    "recommendation": "Enable stale review dismissal so that existing approvals are invalidated when new commits are pushed, ensuring reviewers always see the latest code.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#dismiss-stale-pull-request-approvals-when-new-commits-are-pushed",
+    "tags": [
+      "branch_protection",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-bp-005",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "branch_protection",
+    "title": "Code owner review not required",
+    "description": "The branch protection rule does not require a review from a designated code owner, allowing changes to critical paths without expert oversight.",
+    "recommendation": "Enable the code owner review requirement so changes to paths defined in CODEOWNERS must be approved by the designated owner.",
+    "learnMore": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+    "tags": [
+      "branch_protection",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-bp-006",
+    "scope": "repository",
+    "severity": "critical",
+    "category": "branch_protection",
+    "title": "Pull request reviews not configured",
+    "description": "The branch protection rule exists but does not include any pull request review requirements, making it possible to merge without peer review.",
+    "recommendation": "CRITICAL: Configure PR review requirements including required approver count, stale review dismissal, and code owner reviews.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging",
+    "tags": [
+      "branch_protection",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-bp-007",
+    "scope": "repository",
+    "severity": "high",
+    "category": "branch_protection",
+    "title": "Strict status checks not enabled",
+    "description": "The required status checks configuration does not enforce that the branch is up-to-date with the base branch before merging, which can allow merging code that has not been tested against the latest state.",
+    "recommendation": "Enable strict status checks to require branches to be up-to-date before merging.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging",
+    "tags": [
+      "branch_protection",
+      "ci_cd"
+    ]
+  },
+  {
+    "id": "repo-bp-008",
+    "scope": "repository",
+    "severity": "high",
+    "category": "branch_protection",
+    "title": "No specific status checks required",
+    "description": "Required status checks are enabled but no specific checks are listed, which means no CI/CD jobs are required to pass before merging.",
+    "recommendation": "Configure specific required CI/CD checks (e.g. build, test, lint) that must pass before a pull request can be merged.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging",
+    "tags": [
+      "branch_protection",
+      "ci_cd"
+    ]
+  },
+  {
+    "id": "repo-bp-009",
+    "scope": "repository",
+    "severity": "high",
+    "category": "branch_protection",
+    "title": "No required status checks configured",
+    "description": "The branch protection rule has no status check requirement, allowing pull requests to be merged even if CI/CD jobs fail.",
+    "recommendation": "Configure CI/CD checks that must pass before any pull request can be merged.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging",
+    "tags": [
+      "branch_protection",
+      "ci_cd"
+    ]
+  },
+  {
+    "id": "repo-bp-010",
+    "scope": "repository",
+    "severity": "critical",
+    "category": "branch_protection",
+    "title": "Force pushes allowed on protected branch",
+    "description": "Force pushes are permitted on the protected branch, which allows any authorized user to rewrite history, potentially destroying audit trails and causing data loss for collaborators.",
+    "recommendation": "CRITICAL: Disable force pushes on all protected branches to prevent history rewriting.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "tags": [
+      "branch_protection",
+      "security"
+    ]
+  },
+  {
+    "id": "repo-bp-011",
+    "scope": "repository",
+    "severity": "high",
+    "category": "branch_protection",
+    "title": "Branch deletion allowed on protected branch",
+    "description": "The protected branch can be deleted by users with write access, risking accidental or malicious deletion of the main branch.",
+    "recommendation": "Disable branch deletion for all protected branches.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "tags": [
+      "branch_protection",
+      "security"
+    ]
+  },
+  {
+    "id": "repo-bp-012",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "branch_protection",
+    "title": "Signed commits not required",
+    "description": "Commits are not required to be cryptographically signed, making it impossible to verify whether commits genuinely came from the stated author.",
+    "recommendation": "Enable required commit signing to verify the authorship and integrity of every commit merged into the default branch.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "tags": [
+      "branch_protection",
+      "security"
+    ]
+  },
+  {
+    "id": "repo-bp-013",
+    "scope": "repository",
+    "severity": "low",
+    "category": "branch_protection",
+    "title": "Linear history not required",
+    "description": "Merge commits are allowed, which can result in a complex, non-linear commit history that is harder to read and bisect.",
+    "recommendation": "Consider requiring squash or rebase merges to maintain a clean, linear commit history.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "tags": [
+      "branch_protection",
+      "maintenance"
+    ]
+  },
+  {
+    "id": "repo-bp-014",
+    "scope": "repository",
+    "severity": "info",
+    "category": "branch_protection",
+    "title": "Branch protected by repository rulesets (not legacy branch protection)",
+    "description": "The default branch is not protected by a legacy branch protection rule, but is protected by one or more repository rulesets. Rulesets are the recommended mechanism and provide equivalent or better protection.",
+    "recommendation": "No action required. Repository rulesets are the modern, recommended approach. Consider migrating any remaining legacy branch protection rules to rulesets for a unified configuration.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets",
+    "tags": [
+      "branch_protection",
+      "rulesets"
+    ]
+  },
+  {
+    "id": "repo-comm-001",
+    "scope": "repository",
+    "severity": "info",
+    "category": "community",
+    "title": "GitHub Discussions not enabled",
+    "description": "GitHub Discussions is not enabled for this repository. Discussions provide a structured forum for questions, announcements, and community conversation separate from the issue tracker.",
+    "recommendation": "Consider enabling GitHub Discussions to provide a dedicated channel for community Q&A and to reduce noise in the issue tracker.",
+    "learnMore": "https://docs.github.com/en/discussions/quickstart",
+    "tags": [
+      "community",
+      "features"
+    ]
+  },
+  {
+    "id": "repo-feat-001",
+    "scope": "repository",
+    "severity": "low",
+    "category": "features",
+    "title": "Issues and Discussions both disabled",
+    "description": "Both GitHub Issues and GitHub Discussions are disabled for this repository, leaving contributors with no built-in channel for feedback, bug reports, or questions.",
+    "recommendation": "Consider enabling Issues or Discussions to provide a structured channel for community feedback and bug reports.",
+    "learnMore": "https://docs.github.com/en/discussions/quickstart",
+    "tags": [
+      "features",
+      "community"
+    ]
+  },
+  {
+    "id": "repo-feat-002",
+    "scope": "repository",
+    "severity": "low",
+    "category": "maintenance",
+    "title": "Auto-delete branches on merge not enabled",
+    "description": "Branches are not automatically deleted after a pull request is merged. This leads to accumulation of stale branches over time.",
+    "recommendation": "Enable auto-delete branch after merge in repository settings to keep the repository clean.",
+    "learnMore": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches",
+    "tags": [
+      "maintenance",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "repo-meta-001",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "community",
+    "title": "Repository has no description",
+    "description": "The repository has no description set, making it harder for developers to understand its purpose at a glance when browsing the organization.",
+    "recommendation": "Add a concise description to every repository to improve discoverability and help new contributors understand the project's purpose quickly.",
+    "learnMore": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-repository-metadata",
+    "tags": [
+      "metadata",
+      "community",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "repo-meta-002",
+    "scope": "repository",
+    "severity": "low",
+    "category": "community",
+    "title": "Repository has no topics",
+    "description": "The repository has no GitHub topics assigned. Topics improve searchability and enable org-wide filtering via custom properties or ruleset targeting.",
+    "recommendation": "Add relevant GitHub topics to this repository to improve searchability and enable org-wide automation based on topics.",
+    "learnMore": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics",
+    "tags": [
+      "metadata",
+      "community",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "repo-meta-003",
+    "scope": "repository",
+    "severity": "low",
+    "category": "maintenance",
+    "title": "Repository appears dormant but is not archived",
+    "description": "No commits have been pushed to this repository in over a year, but it has not been archived. Dormant, unarchived repositories add maintenance burden and may confuse developers about whether the project is still active.",
+    "recommendation": "Archive inactive repositories to reduce maintenance burden and signal to developers that the project is no longer actively maintained.",
+    "learnMore": "https://docs.github.com/en/repositories/archiving-a-github-repository/archiving-repositories",
+    "tags": [
+      "maintenance",
+      "hygiene"
+    ]
+  },
+  {
+    "id": "repo-sec-001",
+    "scope": "repository",
+    "severity": "high",
+    "category": "security",
+    "title": "Dependabot alerts not enabled",
+    "description": "Dependabot alerts are disabled for this repository. GitHub will not notify you when dependencies have known security vulnerabilities.",
+    "recommendation": "Enable Dependabot alerts in repository settings to receive security vulnerability notifications for your dependencies.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "repo-sec-002",
+    "scope": "repository",
+    "severity": "critical",
+    "category": "security",
+    "title": "Critical Dependabot alerts open",
+    "description": "One or more critical-severity Dependabot alerts are currently open in this repository, indicating known critical security vulnerabilities in dependencies.",
+    "recommendation": "Immediately address critical security vulnerabilities by updating the affected dependencies or applying patches.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "repo-sec-003",
+    "scope": "repository",
+    "severity": "high",
+    "category": "security",
+    "title": "High-severity Dependabot alerts open",
+    "description": "One or more high-severity Dependabot alerts are currently open in this repository.",
+    "recommendation": "Prioritize fixing high-severity dependency vulnerabilities to reduce the attack surface of this repository.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "repo-sec-004",
+    "scope": "repository",
+    "severity": "low",
+    "category": "security",
+    "title": "No SECURITY.md file found",
+    "description": "The repository does not have a SECURITY.md file, which means there is no documented process for reporting security vulnerabilities.",
+    "recommendation": "Add a SECURITY.md file to document how security vulnerabilities should be reported for this project.",
+    "learnMore": "https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository",
+    "tags": [
+      "security",
+      "community"
+    ]
+  },
+  {
+    "id": "repo-sec-005",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "access_control",
+    "title": "No CODEOWNERS file found",
+    "description": "The repository does not have a CODEOWNERS file, so changes to critical paths have no designated reviewer requirement.",
+    "recommendation": "Add a CODEOWNERS file to assign code ownership and ensure that changes to sensitive paths require review from the appropriate team.",
+    "learnMore": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+    "tags": [
+      "access_control",
+      "code_review"
+    ]
+  },
+  {
+    "id": "repo-sec-006",
+    "scope": "repository",
+    "severity": "medium",
+    "category": "security",
+    "title": "Dependabot alerts enabled but no dependabot.yml found",
+    "description": "Dependabot vulnerability alerts are enabled but there is no .github/dependabot.yml configuration file, so automated dependency update pull requests are not configured.",
+    "recommendation": "Create a .github/dependabot.yml file to enable automated dependency version update pull requests in addition to alerts.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "repo-sec-007",
+    "scope": "repository",
+    "severity": "high",
+    "category": "security",
+    "title": "Dependabot not configured",
+    "description": "Dependabot is not configured for this repository. Neither alerts nor automated dependency updates are enabled.",
+    "recommendation": "Enable Dependabot alerts and create .github/dependabot.yml for automated security and version updates of dependencies.",
+    "learnMore": "https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts",
+    "tags": [
+      "dependabot",
+      "security",
+      "dependencies"
+    ]
+  },
+  {
+    "id": "repo-sec-008",
+    "scope": "repository",
+    "severity": "high",
+    "category": "security",
+    "title": "Code scanning (CodeQL) not configured",
+    "description": "GitHub code scanning (CodeQL) has not been configured for this repository, leaving it without automated static analysis for security vulnerabilities.",
+    "recommendation": "Enable GitHub code scanning with CodeQL to automatically detect security vulnerabilities in your source code on every pull request.",
+    "learnMore": "https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning",
+    "tags": [
+      "code_scanning",
+      "security"
+    ]
+  },
+  {
+    "id": "repo-sec-009",
+    "scope": "repository",
+    "severity": "info",
+    "category": "security",
+    "title": "No custom CodeQL configuration file",
+    "description": "No custom CodeQL configuration file was found. The default CodeQL configuration may miss some project-specific security queries.",
+    "recommendation": "Consider creating a custom CodeQL configuration file to extend scanning with additional security queries or to exclude false-positive paths.",
+    "learnMore": "https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning",
+    "tags": [
+      "code_scanning",
+      "security"
+    ]
+  }
+]
