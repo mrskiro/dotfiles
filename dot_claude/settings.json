@@ -82,5 +82,8 @@
   "skipAutoPermissionPrompt": true,
   "skipDangerousModePermissionPrompt": true,
   "feedbackSurveyRate": 0,
-  "showThinkingSummaries": true
+  "showThinkingSummaries": true,
+  "autoCompactEnabled": false,
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true
 }
