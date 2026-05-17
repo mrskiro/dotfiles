@@ -52,9 +52,6 @@ brew bundle --file ~/.local/share/chezmoi/brew/Brewfile
 ## 5. chezmoi で dotfiles を apply
 
 ```sh
-# Bitwarden CLI を unlock (templates が bw を参照する場合)
-export BW_SESSION=$(bw unlock --raw)
-
 chezmoi apply
 ```
 
