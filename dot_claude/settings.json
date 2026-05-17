@@ -75,15 +75,15 @@
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {},
-  "autoMemoryEnabled": false,
   "language": "Japanese",
+  "feedbackSurveyRate": 0,
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
-  "skipAutoPermissionPrompt": true,
-  "skipDangerousModePermissionPrompt": true,
-  "feedbackSurveyRate": 0,
+  "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
+  "skipDangerousModePermissionPrompt": true,
   "autoCompactEnabled": false,
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }

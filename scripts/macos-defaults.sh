@@ -17,7 +17,7 @@ defaults write -g com.apple.trackpad.scaling -float 3.0
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults write -g com.apple.mouse.tapBehavior -int 1
-defaults write -g com.apple.swipescrolldirection -bool true
+defaults write -g com.apple.swipescrolldirection -bool false   # ナチュラルスクロール OFF
 
 echo "==> Keyboard / Input"
 defaults write com.apple.HIToolbox AppleFnUsageType -int 0
