@@ -15,39 +15,24 @@
 - Touch ID 登録
 - FileVault 有効化（回復キーは Bitwarden へ）
 
-## 2. ブラウザ + Bitwarden（最優先）
+## 2. Bootstrap（Homebrew + Chrome + Bitwarden + Claude Code）
 
-`brew bundle` を最初に走らせると時間がかかるうえ、その間ブラウザが使えない。
-**Chrome と Bitwarden だけ先に手で入れる**。
-
-```sh
-# 1. Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# 2. Chrome 単独
-brew install --cask google-chrome
-
-# 3. Bitwarden デスクトップ単独
-brew install --cask bitwarden
-```
-
-- Chrome 起動 → メインアカウントでログイン
-- Bitwarden デスクトップ起動 → ログイン
-- Chrome 拡張 Bitwarden を入れてログイン
-
-ここまでで以降に必要なパスワードを取り出せる状態になる。
-
-## 3. Claude Code
-
-公式の curl インストールを使う（brew は使わない）:
+Safari から dotfiles リポを開き、bootstrap スクリプトをワンライナーで実行:
 
 ```sh
-curl -fsSL https://claude.ai/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mrskiro/dotfiles/main/scripts/bootstrap.sh | bash
 ```
 
-> インストール後に `claude` 起動 → 初回ログインだけ済ませておく。
+このスクリプトの中で:
 
-## 4. dotfiles を clone
+1. Homebrew install
+2. Chrome / Bitwarden を単独 install（`brew bundle` より先に）
+3. **手動で待ち**: Chrome ログイン / Bitwarden デスクトップ + Chrome拡張ログイン
+4. Claude Code を curl 公式インストーラーで install（brew は使わない）
+
+ここまでで必要なパスワードを Bitwarden から取り出せる + Claude Code が `claude` で起動できる状態。
+
+## 3. dotfiles を clone
 
 ```sh
 gh auth login   # まだなら
@@ -58,27 +43,34 @@ git clone https://github.com/mrskiro/dotfiles.git ~/.local/share/chezmoi
 
 > 以降のコマンドは `~/.local/share/chezmoi` を chezmoi の source として参照する前提。
 
-## 5. 残りのアプリを brew bundle
+## 4. 残りのアプリを brew bundle
 
 ```sh
 brew bundle --file ~/.local/share/chezmoi/brew/Brewfile
 ```
 
-## 6. chezmoi で dotfiles を apply
+## 5. chezmoi で dotfiles を apply
 
 ```sh
 # Bitwarden CLI を unlock (templates が bw を参照する場合)
 export BW_SESSION=$(bw unlock --raw)
 
-chezmoi init --apply mrskiro/dotfiles
-# 既に clone 済みなので: chezmoi apply
+chezmoi apply
 ```
 
-## 7. mise
+## 6. mise
 
 ```sh
 mise upgrade            # mise 本体を最新化
 mise install            # ~/.mise.toml があれば言語ランタイムを一括 install
+```
+
+## 7. yazi プラグイン
+
+`package.toml` は chezmoi apply で配置済みだが、プラグイン本体（`~/.config/yazi/plugins/`）は別途取得が必要:
+
+```sh
+ya pkg install
 ```
 
 ## 8. macOS 設定 (defaults / pmset)
