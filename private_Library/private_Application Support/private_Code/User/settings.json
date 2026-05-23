@@ -58,5 +58,6 @@
     "path": "/usr/bin/zsh",
     "args": ["--login"]
   },
-  "explorer.confirmPasteNative": false
+  "explorer.confirmPasteNative": false,
+  "git.detectWorktrees": true
 }

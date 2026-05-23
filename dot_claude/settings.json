@@ -9,7 +9,10 @@
       "Bash(sudo:*)",
       "Bash(gh secret set *)"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "mcp__pencil"
+    ]
   },
   "hooks": {
     "PreToolUse": [
