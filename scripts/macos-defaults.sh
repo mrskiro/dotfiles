@@ -38,5 +38,8 @@ killall Dock
 echo "==> Power (sudo required)"
 sudo pmset -b displaysleep 30
 sudo pmset -c displaysleep 0
+# 明るさを動的にしない: 無操作時の自動調光を無効化 (バッテリー/AC両方)
+# 自動明るさ調節・True Tone は CLI で確実に制御できないため、システム設定 > ディスプレイ で手動オフにする
+sudo pmset -a lessbright 0
 
 echo "Done. 再ログインで全項目反映されます。"
