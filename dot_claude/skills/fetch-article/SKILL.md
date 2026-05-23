@@ -18,15 +18,17 @@ The main model never sees the original text. `defuddle` extracts clean Markdown 
 ## Default
 
 ```bash
-defuddle parse <URL> --md
+npx -y defuddle-cli parse <URL> --md
 ```
 
 Works for articles, blog posts, and YouTube (returns transcript). Output is plain Markdown.
 
+`defuddle` is not installed globally on this machine — `npx -y` downloads `defuddle-cli` on demand. If `defuddle` is available on `PATH`, calling it directly is fine.
+
 For pages longer than a few thousand lines, write to a temp file and Read it in chunks instead of dumping into context:
 
 ```bash
-defuddle parse <URL> --md > /tmp/fetch-$$.md && wc -l /tmp/fetch-$$.md
+npx -y defuddle-cli parse <URL> --md > /tmp/fetch-$$.md && wc -l /tmp/fetch-$$.md
 ```
 
 ## Fallbacks
