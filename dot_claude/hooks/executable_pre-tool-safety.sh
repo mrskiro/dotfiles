@@ -58,11 +58,6 @@ if [ -z "$WARN" ] && printf '%s' "$CMD_LOWER" | grep -qE '\btruncate\b' 2>/dev/n
   WARN="Destructive: SQL TRUNCATE detected. This deletes all rows from a table."
 fi
 
-# git push --force / git push -f
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+push\s+.*(-f\b|--force)' 2>/dev/null; then
-  WARN="Destructive: git force-push rewrites remote history."
-fi
-
 # git reset --hard
 if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+reset\s+--hard' 2>/dev/null; then
   WARN="Destructive: git reset --hard discards all uncommitted changes."
