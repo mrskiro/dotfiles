@@ -18,22 +18,29 @@ cd "$ROOT"
 
 ERRORS=""
 
-# pinact: auto-fix SHA pins
+# pinact: auto-fix SHA pins.
+# Authenticate via gh's token so GitHub API tag lookups use the 5000/h limit
+# instead of the unauthenticated 60/h that pinact otherwise hits.
+export GITHUB_TOKEN="${GITHUB_TOKEN:-$(gh auth token 2>/dev/null || true)}"
 P=$(pinact run -u --min-age 7 2>&1) || ERRORS="pinact: $P"
 
 # ghalint: security policy check (non-zero exit = violations found, not a failure)
 # strip noise: timestamp, ERR prefix, program, version, reference URL
-G=$(ghalint run --log-color auto 2>&1 \
-  | sed 's/^.* ERR [^ ]* //; s/ program=[^ ]*//; s/ version=[^ ]*//; s/ reference=[^ ]*//' \
-  || true)
-if [ -n "$G" ]; then
-  ERRORS="${ERRORS:+$ERRORS | }ghalint: $G"
+if command -v ghalint >/dev/null 2>&1; then
+  G=$(ghalint run --log-color auto 2>&1 \
+    | sed 's/^.* ERR [^ ]* //; s/ program=[^ ]*//; s/ version=[^ ]*//; s/ reference=[^ ]*//' \
+    || true)
+  if [ -n "$G" ]; then
+    ERRORS="${ERRORS:+$ERRORS | }ghalint: $G"
+  fi
 fi
 
 # actionlint: syntax check (non-zero exit = errors found)
-A=$(actionlint -format '{{range .}}{{.Filepath}}:{{.Line}}: {{.Message}} {{end}}' 2>&1 || true)
-if [ -n "$A" ]; then
-  ERRORS="${ERRORS:+$ERRORS | }actionlint: $A"
+if command -v actionlint >/dev/null 2>&1; then
+  A=$(actionlint -format '{{range .}}{{.Filepath}}:{{.Line}}: {{.Message}} {{end}}' 2>&1 || true)
+  if [ -n "$A" ]; then
+    ERRORS="${ERRORS:+$ERRORS | }actionlint: $A"
+  fi
 fi
 
 if [ -n "$ERRORS" ]; then
