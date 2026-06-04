@@ -22,8 +22,7 @@
 
 ### During execution
 
-- Close the loop. Do not say "確認してください" or "please verify". Run tests, lint, and typecheck yourself. Report that they passed, or fix failures
-- Use backpressure. When tests/lint/typecheck fail, fix it yourself. Do not report the failure and wait for instructions
+- Close the loop. Do not say "確認してください" or "please verify". Run tests, lint, and typecheck yourself; report they passed, or fix the failures yourself rather than reporting them and waiting for instructions
 - Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures. For non-trivial multi-step tasks, transform "do X" into verifiable success criteria (e.g., "add validation" → "write tests for invalid inputs, then make them pass")
 - Surgical changes: every changed line must trace to the request. Don't refactor adjacent unbroken code, don't "improve" unrelated comments/formatting, match existing style. Mention unrelated dead code but don't delete it
 - Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
