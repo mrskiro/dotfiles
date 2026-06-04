@@ -1,6 +1,5 @@
 ## Autonomy
 
-- Do not execute operations beyond the scope of what the user requested. Propose and confirm first
 - Never ask the user for secret values (API keys, tokens, passwords). Provide the command for the user to run themselves
 - Never suggest ending, pausing, or splitting a session. The user decides when to stop
 
@@ -19,7 +18,6 @@
 
 ### Before acting
 
-- State assumptions explicitly before non-trivial work. If uncertain, ask. If multiple interpretations exist, present them rather than picking one without confirmation
 - Push back when a simpler approach exists. Don't implement the request as given if a better path exists — raise it
 
 ### During execution
