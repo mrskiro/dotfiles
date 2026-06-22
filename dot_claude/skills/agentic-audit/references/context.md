@@ -2,7 +2,61 @@
 
 ## Concept
 
-Context is a scarce resource. CLAUDE.md is injected as a user message at session start and degrades over time (context rot). Every token must earn its place.
+Context is a scarce resource — the "attention budget" of a transformer (n² pairwise relationships). CLAUDE.md is injected at session start and degrades as the window fills (context rot). Every token must earn its place.
+
+**Context engineering** (Anthropic): "finding the smallest set of high-signal tokens that maximize the likelihood of a desired outcome." Each turn, decide what enters and what doesn't. As models improve, smarter models require *less* prescriptive engineering.
+
+## Just-in-time context (the 2026 default)
+
+Instead of pre-processing all relevant data upfront, agents maintain **lightweight identifiers** — file paths, stored queries, web links, table descriptions — and use tools to load data on demand at runtime. Folder hierarchies, naming conventions, and timestamps become signals (`test_utils.py` in `/tests` implies different purpose than the same name in `/src/core_logic/`).
+
+A hybrid strategy is often best: some context preloaded (CLAUDE.md), the rest discovered through exploration (glob, grep, just-in-time file reads).
+
+When auditing, ask: is the agent forced to swallow large blobs upfront, or given lightweight indices + the means to navigate?
+
+## Long-horizon context techniques
+
+For tasks that exceed a single context window:
+
+1. **Compaction** — summarize older messages and reinitialize with the summary. Native compaction now exists server-side. `PreCompact` hooks can save artifacts before, `PostCompact` after. The lightest touch: tool result clearing.
+2. **Structured note-taking** (agentic memory) — agent writes notes to disk outside context. NOTES.md / SQLite / `${CLAUDE_PLUGIN_DATA}`. Anthropic's memory tool gives agents a file-based memory store; **dreaming** scheduled processes review past sessions and curate memories between runs.
+3. **Sub-agent architectures** — specialized sub-agents with fresh context handle focused tasks. Lead coordinates; sub-agents return only condensed summaries (1-2K tokens). Sub-agents can nest up to 5 levels deep.
+4. **Initializer + Coding agent split** (Anthropic's long-running harness) — first session writes `init.sh`, `claude-progress.txt`, a JSON feature list (all initially "failing"), and an initial git commit. Every subsequent session: run `pwd`, read progress + git log + feature list, choose ONE highest-priority unfinished feature, commit + update progress. JSON over Markdown (less likely to be overwritten).
+
+## Context forking (rewind / branch / preserve)
+
+Treat the context window as a downwards-growing stack: push/pop only at user-message boundaries. Random access in the middle is forbidden (cache misses, breaks agent's internal file-tracking state).
+
+Three uses, built into modern CLIs (Claude Code `/rewind` / Esc-Esc):
+1. **Rewind to course-correct** — agent missed something
+2. **Fork to explore design paths** — accumulate research, then fork into multiple architectures
+3. **Fork to salvage context** — after a 40K-token blob enters context, rewind and approach differently
+
+## Code as harness (the most important context)
+
+Joshi via Fowler: "well-structured code with abstractions forming a well-defined vocabulary itself acts as the most important part of the harness and context." When code has stable abstractions with clear semantics, you can swap LLM models freely and stop worrying about prompt precision.
+
+**Cognitive debt** (Joshi, arxiv:2603.22106): words/abstractions/structures used without their meaning being understood. LLMs amplify this — they generate plausible code with familiar-looking structures that compiles and passes basic tests, but the team doesn't understand the conceptual model behind them. **Generative debt** (Voronin via Fowler): cruft the model reproduces because it sees it as precedent.
+
+Audit signal: does the codebase teach the agent its vocabulary, or does the agent have to invent one?
+
+## VibeSec: security context file pattern
+
+For things that absolutely must not happen (no public buckets, no excessive token permissions, no secrets in code), prompt instructions are not enough — under pressure / injection / ambiguity, the model can ignore them.
+
+The **security context file** (Thoughtworks via Fowler) is a structured rules document loaded into every session by default, versioned, reviewed like code, and paired with deterministic gates (SAST, credential scanning, infra validation). Audit: when something dangerous must not happen, is the rule backed by a deterministic gate, or only by prompt prose?
+
+## 4 conversation registers (Chelsea Troy via Fowler)
+
+When auditing CLAUDE.md and skills, distinguish which register each piece is written for:
+- **Exploring** — "I want to understand before touching anything"
+- **Brainstorming** — "Generate options, I'll evaluate them separately"
+- **Deciding** — "I need a recommendation with a rationale, not a list"
+- **Implementing** — "The decision is made, help me build it"
+
+A CLAUDE.md that conflates all four registers creates whiplash. Register-changes warrant new conversations with fresh context.
+
+
 
 ## CLAUDE.md litmus test
 
