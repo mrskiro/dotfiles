@@ -70,6 +70,19 @@ Run the project's test/lint/typecheck commands. Read CI workflow or CLAUDE.md if
 
 If any check fails: fix, re-verify. Do not proceed with failing checks.
 
+### 3.5. Runtime smoke (the "Step 8" gate)
+
+**Build green ≠ DB up. Test green ≠ dev server up. E2E green ≠ user can touch the change.** All three are common reality at Shogun-style autonomous-loop sites where the agent reports "complete" while the stack is actually down.
+
+For changes that affect runtime behavior (anything UI-facing, anything that touches a service boundary, anything that loads at startup), gate the merge on actual runtime smoke before pushing further:
+
+- DB / dependent services up? (`docker ps | grep <container>` or equivalent)
+- Dev server up and serving? (`curl -sf http://127.0.0.1:<port>/<entry>` returns 200)
+- Smoke connectivity through the change (login flow, the specific button, the specific request) actually exercises the new code path
+- For UI: real-browser interaction against the running server, not just E2E test green
+
+If any of this fails, the change isn't done — even with all CI green. Pure-code refactors / docs changes / non-runtime config changes can skip this step, but flag the skip explicitly in the commit message ("docs-only, skipped runtime smoke").
+
 ### 4. Commit
 
 - Each logical change = one atomic commit
@@ -146,6 +159,19 @@ Action needed: <what the user should do>
 
 After completion, suggest `/codify` if design decisions or learnings emerged during implementation.
 
+## Anti-rationalization table
+
+LLMs are excellent at rationalization. Before declaring a ship done, recognize and reject these excuses (Osmani):
+
+| Excuse the agent (or a tired engineer) might generate | Rebuttal |
+|---|---|
+| "Tests pass, ship it" | Passing tests are *evidence*, not *proof*. Did you check runtime? Did you verify user-visible behavior? Did a human read the diff? |
+| "I'll do the runtime smoke after merge" | "After" is the load-bearing word. There is no after. If the change can break user-visible behavior, smoke before merge |
+| "This change is too small for a review" | Run /review anyway — it costs cents and catches the off-by-one you didn't see |
+| "Re-running CI will fix the flake" | A flake unexamined is a bug shipped. Note the flake explicitly even when retrying |
+| "I'll write the test later — the impl is obvious" | If it were obvious, you wouldn't have changed it. Write the failing test first |
+| "The CI failure isn't related to my change" | Prove it. Reproduce, isolate, comment. Don't merge until the proof exists |
+
 ## Principles
 
 - Goal is MERGED, not just PR created.
@@ -158,3 +184,6 @@ After completion, suggest `/codify` if design decisions or learnings emerged dur
 - AUTO-FIX review comments without asking. NEEDS-HUMAN = stop and report.
 - Squash merge with branch deletion.
 - **Context anxiety**: When context is running low, do NOT skip verification steps. Report "blocked due to context limits" rather than cutting corners.
+- **Evidence over claim** (Osmani): every step terminates in concrete evidence — passing test output, build exit code, runtime smoke output, reviewer sign-off. "Seems right" never closes the loop.
+- **Capture intent for the reviewer** when dispatching subagents to worktrees. Each worker should leave a decision log on its PR body (alternatives weighed, constraints honored, out of scope) so the eventual reviewer isn't "the first human to ever lay eyes on this code"
+- **Auto mode `-p` abort behavior**: in headless mode (which is how worktree subagents run), Anthropic auto mode terminates the process after 3 consecutive classifier denials or 20 total. Don't dispatch tasks that are likely to trip the classifier (broad shell access, force-push, prod credentials) — the worker will die mid-task with no human to fall back to.
