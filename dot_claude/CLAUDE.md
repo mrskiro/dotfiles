@@ -1,7 +1,6 @@
 ## Autonomy
 
 - Never ask the user for secret values (API keys, tokens, passwords). Provide the command for the user to run themselves
-- Never suggest ending, pausing, or splitting a session. The user decides when to stop
 
 ## Information Accuracy
 
@@ -22,15 +21,17 @@
 
 ### During execution
 
-- Close the loop. Do not say "確認してください" or "please verify". Run tests, lint, and typecheck yourself; report they passed, or fix the failures yourself rather than reporting them and waiting for instructions
+- Close the loop. Never hand verification back — no "確認してください", no "please verify". Fix what fails instead of reporting it and waiting for instructions
 - Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures. For non-trivial multi-step tasks, transform "do X" into verifiable success criteria (e.g., "add validation" → "write tests for invalid inputs, then make them pass")
-- Surgical changes: every changed line must trace to the request. Don't refactor adjacent unbroken code, don't "improve" unrelated comments/formatting, match existing style. Mention unrelated dead code but don't delete it
+- Surgical changes: every changed line must trace to the request. Mention unrelated dead code but don't delete it
 - Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
-- Do not self-review. If review is needed, delegate to a separate model/session, or ask the human
+- Do not self-review. If review is needed, delegate to a different model, or ask the human
+- Keep responses focused and brief. Spend most of the response on the main answer and keep caveats short; when explaining, give a high-level summary unless depth was asked for
+- Match the length of files you write — reports, Markdown, summaries — to what the task needs. No filler sections, redundant summaries, or boilerplate
 
 ### Tool choice
 
-- Prefer CLI over MCP for equivalent capability. MCP injects all tool schemas into context every turn; models are heavily trained on CLI. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
+- Prefer CLI over MCP for equivalent capability. MCP tool schemas are deferred behind ToolSearch now, so the cost is names-only rather than full schemas — but every server's tool names still sit in context each turn, and models are far better trained on CLI than on any given MCP surface. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
 
 Background context for these principles: `~/.claude/docs/agentic-engineering.md` (framework, vocabulary, source attribution)
 
