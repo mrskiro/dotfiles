@@ -44,13 +44,23 @@ the codebase itself, and the broad "is this setup any good" question. **If you
 cannot name the upstream change that motivates an edit, it belongs in a different
 pass.**
 
-## 1. List what is actually loaded
+## 1. Read the last baseline, then list what is loaded
 
-Enumerate before diffing. Past the obvious `~/.claude/CLAUDE.md`, look for the
-project `CLAUDE.md` and any nested ones, `rules/` entries whose `paths:`
+Start at `~/.local/state/sync-upstream/last-sync.md` if it exists. It names the model
+and Claude Code version audited last time, which is the range you need release
+notes for. Without it, treat the run as a cold start and say so in the report.
+
+Then enumerate what is loaded. Past the obvious `~/.claude/CLAUDE.md`, look for
+the project `CLAUDE.md` and any nested ones, `rules/` entries whose `paths:`
 frontmatter means they load only for matching files, and skills whose bodies load
 only on invocation. Something you did not enumerate is something you cannot audit;
 something you assume is loaded but is not produces findings that change nothing.
+
+**Resolve the write target before you plan any edit.** Dotfiles are often
+generated from a source tree by a manager such as chezmoi, stow, yadm, or Nix, and
+editing the deployed copy means the next apply silently reverts your work. Check
+whether each file is managed, and record the source path you will actually edit
+alongside it. A run whose edits get reverted reports success and changes nothing.
 
 ## 2. Pin what you are diffing against
 
@@ -87,6 +97,13 @@ vocabulary while meaning different things. Read for what each one *causes*.
 
 ## 4. Release documentation — the adopt side
 
+**None of this is in your context; go and fetch it.** Search the vendor's
+documentation and engineering blog for the two versions pinned in step 2, and read
+what covers the span since the last baseline. Do not answer from training
+knowledge about anything released after your cutoff, and do not assume a document
+still sits at the address it used to — find it by searching for the release, not
+by recalling a URL.
+
 Source classes, in descending value:
 
 | Source | Yields |
@@ -114,12 +131,14 @@ covers it.
 **Adopt** — what changed upstream, which file should absorb it, and the concrete
 edit.
 
-Then apply only what is approved, one file at a time.
+Then apply only what is approved, one file at a time — to the write target
+resolved in step 1, not to the deployed copy.
 
-Close by recording the baseline in `${CLAUDE_PLUGIN_DATA}/last-sync.md`: the two
-versions from step 2, the date, and one line per accepted change. The next run
-reads it first and diffs forward instead of starting cold. Record the baseline
-only — do not keep per-model guidance files (see Gotchas).
+Close by recording the baseline in `~/.local/state/sync-upstream/last-sync.md`:
+the two versions from step 2, the date, and one line per accepted change. Step 1
+of the next run reads it, which is what makes the second run cheaper than the
+first. Record the baseline only — do not keep per-model guidance files (see
+Gotchas).
 
 ## Stop and ask
 
