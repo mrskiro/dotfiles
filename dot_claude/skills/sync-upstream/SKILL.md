@@ -44,13 +44,9 @@ the codebase itself, and the broad "is this setup any good" question. **If you
 cannot name the upstream change that motivates an edit, it belongs in a different
 pass.**
 
-## 1. Read the last baseline, then list what is loaded
+## 1. List what is loaded, and where it is really written
 
-Start at `~/.local/state/sync-upstream/last-sync.md` if it exists. It names the model
-and Claude Code version audited last time, which is the range you need release
-notes for. Without it, treat the run as a cold start and say so in the report.
-
-Then enumerate what is loaded. Past the obvious `~/.claude/CLAUDE.md`, look for
+Enumerate before diffing. Past the obvious `~/.claude/CLAUDE.md`, look for
 the project `CLAUDE.md` and any nested ones, `rules/` entries whose `paths:`
 frontmatter means they load only for matching files, and skills whose bodies load
 only on invocation. Something you did not enumerate is something you cannot audit;
@@ -64,8 +60,8 @@ alongside it. A run whose edits get reverted reports success and changes nothing
 
 ## 2. Pin what you are diffing against
 
-Fix both before reading anything else — every finding is scoped to them, and a
-wrong baseline invalidates the run.
+Fix both before reading anything else — every finding is scoped to them, and
+pinning the wrong pair invalidates the run.
 
 - **Model**: the exact ID from the environment block of your system prompt,
   including any context-window suffix
@@ -98,9 +94,9 @@ vocabulary while meaning different things. Read for what each one *causes*.
 ## 4. Release documentation — the adopt side
 
 **None of this is in your context; go and fetch it.** Search the vendor's
-documentation and engineering blog for the two versions pinned in step 2, and read
-what covers the span since the last baseline. Do not answer from training
-knowledge about anything released after your cutoff, and do not assume a document
+documentation and engineering blog for the two versions pinned in step 2. Do not
+answer from training knowledge about anything released after your cutoff, and do
+not assume a document
 still sits at the address it used to — find it by searching for the release, not
 by recalling a URL.
 
@@ -134,11 +130,10 @@ edit.
 Then apply only what is approved, one file at a time — to the write target
 resolved in step 1, not to the deployed copy.
 
-Close by recording the baseline in `~/.local/state/sync-upstream/last-sync.md`:
-the two versions from step 2, the date, and one line per accepted change. Step 1
-of the next run reads it, which is what makes the second run cheaper than the
-first. Record the baseline only — do not keep per-model guidance files (see
-Gotchas).
+Keep no state of your own. The artifacts carry it: a line you deleted stays
+deleted, a setting you adopted stays adopted, so a second run over an unchanged
+setup finds nothing and stops. Version history belongs to whatever already tracks
+these files.
 
 ## Stop and ask
 
@@ -174,8 +169,9 @@ Gotchas).
   describe the same thing before calling it a contradiction.
 - **Per-model files rot.** Checked-in per-model overlays look tidy and fall behind
   within one or two releases; large, actively maintained public setups carry
-  overlays for models nobody runs anymore. Keep the baseline record and re-derive
-  judgements each run instead.
+  overlays for models nobody runs anymore. The same applies to any record this
+  skill might keep of its own past runs. Re-derive every judgement from what is
+  in front of you.
 - **The local health check is a different job.** Tooling that audits usage counts,
   unused extensions, and context cost works from local data and never fetches
   upstream, so it cannot see redundancy against a system prompt. Run both; they do
