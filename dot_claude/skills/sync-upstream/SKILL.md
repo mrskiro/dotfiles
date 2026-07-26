@@ -1,20 +1,18 @@
 ---
 name: sync-upstream
 description: >
-  "新しいモデルが出た" "モデル更新された" "アップデートした" "新しいバージョン出た"
-  "システムプロンプト変わった" "何が削れる" "設定が古い" "前提が古くない"
-  "new model shipped" "sync upstream" — When a new model or a new version of the
-  agent runtime ships, re-fit the local setup to it. Reads the runtime's built-in
-  system prompt to find local guidance the runtime now covers on its own (delete),
-  and the release notes, migration guide, and format specs to find capabilities and
-  behavioural shifts worth taking up (adopt). Use when a release lands, when a
-  rule's stated rationale no longer matches how the tool actually behaves, or when
-  guidance is suspected stale — including indirect prompts like "この指示まだ要る？".
-  Do NOT use for a general health check of the setup, for usage-log analysis, or
-  for authoring configuration from scratch.
-compatibility: >
-  Requires a runtime whose own system prompt is visible in the session, and network
-  access to the vendor's release and specification documentation.
+  "新しいモデルが出た" "モデル更新された" "CCアップデートした" "新しいバージョン出た"
+  "システムプロンプト変わった" "何が削れる" "CLAUDE.mdが古い" "前提が古くない"
+  "new model shipped" "sync upstream" — When a new Claude model or Claude Code
+  version ships, re-fit the local environment to it. Reads the built-in system
+  prompt to find guidance Claude Code now covers on its own (delete), and the
+  release notes, migration guide, and specs to find capabilities and behavioural
+  shifts worth taking up (adopt). Covers `~/.claude/` and the project's loaded
+  configuration — guidance, skills, and settings alike. Use when a release lands,
+  when a rule's stated rationale no longer matches how the tool actually behaves,
+  or when guidance is suspected stale — including indirect prompts like
+  "この指示まだ要る？". Do NOT use for a general health check of the setup, for
+  usage-log analysis, or for authoring configuration from scratch.
 ---
 
 Reconcile the local environment against what upstream now provides. Two source
@@ -24,52 +22,53 @@ that only prunes has done half the job.
 
 ## Scope
 
+`~/.claude/` and whatever the current project loads: guidance (`CLAUDE.md`,
+`rules/`, `docs/`), skills, and configuration (`settings.json` — model and effort
+selection, hooks, permissions — plus `.mcp.json`).
+
 **The boundary is a question, not a file list.** In scope means a release changed
 something that makes this wrong, or newly possible:
 
-- A pinned model, effort level, or similar selection that a later release supersedes
-- A permission or event-hook rule naming a capability that was added, renamed, or removed
-- An external-tool decision whose cost basis moved when the runtime changed how tools load
-- Guidance whose stated rationale describes behaviour the runtime no longer has
+- A pinned model or effort level that a later release supersedes
+- A permission or hook rule naming a tool that was added, renamed, or removed
+- An MCP decision whose cost basis moved when the runtime changed how tools load
+- Guidance whose stated rationale describes behaviour Claude Code no longer has
 
 Configuration matters as much as prose here, and often more: the fix for guidance
 that asks the model not to do something is frequently a rule that makes it
-impossible, which means the destination is a config file. A pass that can read the
-prose but not touch the mechanism can only ever half-finish.
+impossible, which means the destination is a settings file. A pass that can read
+the prose but not touch the mechanism can only ever half-finish.
 
 Out of scope is anything you would change for reasons unrelated to a release —
 the codebase itself, and the broad "is this setup any good" question. **If you
 cannot name the upstream change that motivates an edit, it belongs in a different
 pass.**
 
-## 1. Enumerate what the runtime actually loads
+## 1. List what is actually loaded
 
-Before diffing anything, list the artifacts this setup loads: always-loaded
-guidance, path-scoped or conditionally-loaded rules, skills or commands, and
-runtime configuration (model and effort selection, permission rules, event hooks,
-external tool wiring).
-
-They live in two places: the user-level configuration directory and the project
-root. Read the runtime's own documentation for which files it loads and in what
-order. An artifact you did not enumerate is one you cannot audit, and a file you
-assume is loaded but is not will produce findings that change nothing.
+Enumerate before diffing. Past the obvious `~/.claude/CLAUDE.md`, look for the
+project `CLAUDE.md` and any nested ones, `rules/` entries whose `paths:`
+frontmatter means they load only for matching files, and skills whose bodies load
+only on invocation. Something you did not enumerate is something you cannot audit;
+something you assume is loaded but is not produces findings that change nothing.
 
 ## 2. Pin what you are diffing against
 
 Fix both before reading anything else — every finding is scoped to them, and a
 wrong baseline invalidates the run.
 
-- **Model**: the exact identifier for the session you are in, including any
-  variant suffix
-- **Runtime**: its version string
+- **Model**: the exact ID from the environment block of your system prompt,
+  including any context-window suffix
+- **Claude Code**: `claude --version`
 
-Prefer what the session reports over what the configuration requests. When they
-disagree, say so and audit against the one that is actually running.
+Prefer what the session reports over what `settings.json` requests. When they
+disagree, say so and audit against the one that is actually running — that
+disagreement is itself a finding.
 
 ## 3. Built-in system prompt — the delete side
 
-**Your own context is the ground truth.** The runtime's system prompt for this
-session is already loaded; read it there. Fetched or mirrored copies describe
+**Your own context is the ground truth.** Claude Code's system prompt for this
+session is already loaded; read it there. Mirrored copies on the web describe
 versions you are not running — reach for them only to diff *across* versions, and
 say so when you do.
 
@@ -93,8 +92,8 @@ Source classes, in descending value:
 | Source | Yields |
 |---|---|
 | Model migration guide | Behavioural shifts to re-tune for — verbosity, delegation, verification, scope discipline |
-| Runtime release notes and feature docs | New fields, settings, and mechanisms the setup should start using |
-| Format and specification docs | Constraints that changed under the artifacts being maintained |
+| Claude Code release notes and docs | New settings, frontmatter fields, tools, and hook events the setup should start using |
+| Format and spec docs | Constraints that changed under the artifacts being maintained |
 | Published system prompts | How the vendor phrases things now. A style reference, not a mandate |
 
 Beyond "what is new", two failure modes are worth hunting specifically:
@@ -110,18 +109,17 @@ Beyond "what is new", two failure modes are worth hunting specifically:
 
 Report before editing. One table per direction:
 
-**Delete** — the artifact, the quoted local line, and the quoted built-in line
-that covers it.
-**Adopt** — what changed upstream, which artifact should absorb it, and the
-concrete edit.
+**Delete** — the file, the quoted local line, and the quoted built-in line that
+covers it.
+**Adopt** — what changed upstream, which file should absorb it, and the concrete
+edit.
 
-Then apply only what is approved, one artifact at a time.
+Then apply only what is approved, one file at a time.
 
-Close by recording the baseline somewhere durable — the runtime's persistent data
-location for the skill if it has one, otherwise a file alongside the configuration:
-the two versions from step 2, the date, and one line per accepted change. The next
-run reads it first and diffs forward instead of starting cold. Record the baseline
-only; do not keep per-model guidance files (see Gotchas).
+Close by recording the baseline in `${CLAUDE_PLUGIN_DATA}/last-sync.md`: the two
+versions from step 2, the date, and one line per accepted change. The next run
+reads it first and diffs forward instead of starting cold. Record the baseline
+only — do not keep per-model guidance files (see Gotchas).
 
 ## Stop and ask
 
@@ -130,31 +128,31 @@ only; do not keep per-model guidance files (see Gotchas).
   appears to cover. The built-in can change without warning; an explicit
   prohibition is cheap insurance
 - The proposed edit falls outside the scope question above
-- More than half of one artifact is proposed for deletion. That is a rewrite, and
-  it should be chosen deliberately rather than arrived at
+- More than half of one file is proposed for deletion. That is a rewrite, and it
+  should be chosen deliberately rather than arrived at
 
 ## Never
 
 - Edit before the report is shown and approved
-- Read a configuration or credential-bearing file whole. Settings and tool wiring
-  carry secrets in environment blocks, request headers, and command strings. Read
-  only the keys the check needs, and never quote a value you did not need to read
+- Read `settings.json` or `.mcp.json` whole. They carry secrets in `env` blocks,
+  request headers, and hook command strings. Read only the keys the check needs,
+  and never quote a value you did not need to read
 - Delete guidance because it looks generic. Only because the built-in demonstrably
   covers it
 - Trust a mirrored system prompt over the one loaded in your own context
-- Claim a concept is missing from an artifact because a keyword search came back empty
+- Claim a concept is missing from a file because a keyword search came back empty
 
 ## Gotchas
 
 - **String absence is not concept absence.** Searching for a term and finding
   nothing proves the term is absent, and nothing more. The concept is routinely
   present under different words, in a section titled something else. Read the
-  artifact's structure before concluding anything is missing — this is the single
+  file's structure before concluding anything is missing — this is the single
   most common way a run produces confident, wrong findings.
-- **Two layers get conflated.** A portable format specification and the runtime
-  implementing it will both define limits, and those limits will differ without
-  either being wrong. When two numbers disagree, establish that they describe the
-  same thing before calling it a contradiction.
+- **Two layers get conflated.** A portable format spec and the Claude Code
+  implementation of it will both define limits, and those limits will differ
+  without either being wrong. When two numbers disagree, establish that they
+  describe the same thing before calling it a contradiction.
 - **Per-model files rot.** Checked-in per-model overlays look tidy and fall behind
   within one or two releases; large, actively maintained public setups carry
   overlays for models nobody runs anymore. Keep the baseline record and re-derive
