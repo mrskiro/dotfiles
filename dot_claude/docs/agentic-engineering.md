@@ -68,7 +68,7 @@ What is not in the repository does not exist for the agent. Slack discussions, i
 Source: OpenAI Harness Engineering.
 
 ### Prefer CLI over MCP
-MCP injects all tool schemas into the system prompt every turn — high context cost, interferes with auto-compaction. Models are heavily trained on bash and CLI. The exception is multi-surface tools (same binary exposes both CLI and MCP), where MCP is fine for use cases like authenticated external services.
+MCP tool schemas are deferred behind ToolSearch and fetched on demand, so the old "every schema, every turn" cost no longer applies — but each server's tool *names* remain resident, and models are trained far more heavily on bash and CLI than on any given MCP surface. The exception is multi-surface tools (same binary exposes both CLI and MCP), where MCP is fine for use cases like authenticated external services.
 Sources: Lopopolo (Latent Space), HumanLayer, Justin Poehnelt.
 
 ## Primary sources
