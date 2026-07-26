@@ -3,9 +3,9 @@ name: sync-upstream
 description: >
   "Opus 5出た" "新しいモデルが出た" "モデル更新された" "CCアップデートした"
   "システムプロンプト変わった" "何が削れる" "CLAUDE.mdが古い" "前提が古くない"
-  "new model shipped" "sync upstream" — Re-fit the local context engineering
-  (`~/.claude/CLAUDE.md`, `rules/`, `skills/`, `docs/`) to a newly shipped Claude
-  model or Claude Code version. Reads the built-in system prompt to find guidance
+  "new model shipped" "sync upstream" — Re-fit everything under `~/.claude/` that
+  a release can invalidate — guidance, skills, and configuration — to a newly
+  shipped Claude model or Claude Code version. Reads the built-in system prompt to find guidance
   the runtime now covers on its own (delete), and the migration guide, spec, and
   feature docs to find capabilities and behavioral shifts worth taking up (adopt).
   Use when a release lands, when a rule's stated rationale no longer matches how
@@ -21,12 +21,27 @@ A run that only prunes has done half the job.
 
 ## Scope
 
-In scope: `~/.claude/CLAUDE.md`, `~/.claude/rules/`, `~/.claude/skills/`,
-`~/.claude/docs/`, and the project `CLAUDE.md` when one is loaded.
+Everything under `~/.claude/` that a release can invalidate, plus the project
+`CLAUDE.md` when one is loaded: guidance (`CLAUDE.md`, `rules/`, `docs/`), skills,
+and configuration (model and effort pins, hook definitions, permission rules, MCP
+server config).
 
-Out of scope: hooks, sandbox, MCP server config, permissions. Those are harness,
-not context engineering. A release rarely invalidates them, and pulling them in
-makes this skill too broad to activate precisely.
+**The boundary is the question, not a file list.** In scope means a release
+changed something that makes this wrong, or newly possible:
+
+- A pinned model or effort level that a later release supersedes
+- A permission or hook rule naming a tool that was added, renamed, or removed
+- An MCP decision whose cost basis moved when the runtime changed how tools load
+- Guidance whose stated rationale describes behaviour the runtime no longer has
+
+Config matters as much as prose here, and often more: the fix for guidance that
+asks the model not to do something is frequently a rule that makes it impossible,
+which means the destination file is a config file. A pass that can read the prose
+but not touch the mechanism can only ever half-finish.
+
+Out of scope is anything you would change for reasons unrelated to a release —
+project source, and the broad "is this setup healthy" question. If you cannot name
+the upstream change that motivates an edit, it belongs in a different pass.
 
 ## 1. Pin what you are diffing against
 
@@ -105,6 +120,9 @@ keep per-model guidance files — see gotchas.
 ## Never
 
 - Edit before the report is shown and approved
+- Read a settings or MCP config file whole. They carry credentials in `env` blocks,
+  request headers, and hook command strings. Read only the keys the check needs,
+  and never quote a value you did not need to read
 - Delete guidance because it looks generic. Only because the built-in demonstrably covers it
 - Trust a mirrored system prompt over your own loaded context
 - Claim a concept is missing from a file because a keyword search came back empty
