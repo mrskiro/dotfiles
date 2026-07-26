@@ -58,6 +58,11 @@ editing the deployed copy means the next apply silently reverts your work. Check
 whether each file is managed, and record the source path you will actually edit
 alongside it. A run whose edits get reverted reports success and changes nothing.
 
+Check which side is ahead, not just which side is canonical. A deployed copy that
+was edited in place holds content the source has never seen, and writing to the
+source and applying destroys it. When they diverge, say so and stop: reconciling
+them is the owner's call, and it is not what this run was asked to do.
+
 ## 2. Pin what you are diffing against
 
 Fix both before reading anything else — every finding is scoped to them, and
@@ -126,6 +131,13 @@ covers it.
 **Adopt** — what changed upstream, which file should absorb it, and the concrete
 edit.
 
+**Account for every artifact step 1 enumerated**, in a third table: audited with
+findings, audited with none, or skipped and why. An artifact you looked at and
+found clean is a result and belongs in the report; silence about it is
+indistinguishable from never having opened it, and the reader cannot tell which
+they are getting. Skipping is allowed — running out of room, or a surface the
+request excluded — but only when named.
+
 Then apply only what is approved, one file at a time — to the write target
 resolved in step 1, not to the deployed copy.
 
@@ -149,6 +161,11 @@ resolved in step 1, not to the deployed copy.
   covers it
 - Trust a mirrored system prompt over the one loaded in your own context
 - Claim a concept is missing from a file because a keyword search came back empty
+- Call a setting, field, or flag removed because it is absent from a schema, a
+  reference table, or any other list you did not have to be the vendor to publish.
+  Absence there is equally consistent with never having been documented. Removal
+  needs positive evidence — a changelog entry, a migration note, or the product's
+  own source — and without it the entry stays
 
 ## Gotchas
 
@@ -161,6 +178,11 @@ resolved in step 1, not to the deployed copy.
   implementation of it will both define limits, and those limits will differ
   without either being wrong. When two numbers disagree, establish that they
   describe the same thing before calling it a contradiction.
+- **A file updated once is rarely updated everywhere.** The most common shape of
+  stale guidance is not a wholly outdated file but a current claim and an obsolete
+  one sitting in the same document, because a past pass fixed the prose and missed
+  the table, the example, or the summary line. Grep every file you touch for its
+  own key terms and read all the hits, not the first.
 - **Per-model files rot.** Checked-in per-model overlays look tidy and fall behind
   within one or two releases; large, actively maintained public setups carry
   overlays for models nobody runs anymore. Re-derive every judgement from what is
