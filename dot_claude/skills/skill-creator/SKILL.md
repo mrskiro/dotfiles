@@ -38,9 +38,10 @@ Skills are over-used (Pritchard via Fowler). Before writing one, ask:
 Reach for the simplest mechanism that fits. A skill that should have been a hook
 either doesn't fire reliably or fires when it shouldn't.
 
-Before adding one, run `/doctor` (bundled with Claude Code). Its Check 1 lists
-installed skills with usage counts — if a similar skill already exists and is
-going unused, a new one inherits the same trigger problem instead of fixing it.
+List the existing skills before adding one. A near-duplicate that already exists
+and never fires doesn't need a sibling — it needs its description fixed, and a new
+skill inherits the same trigger problem. (`skillUsage` in `~/.claude.json` holds
+per-skill invocation counts; `/doctor` and `flywheel` read it for you.)
 
 ### Categories that warrant a skill (Anthropic, "Lessons from building Claude Code")
 
