@@ -96,9 +96,8 @@ vocabulary while meaning different things. Read for what each one *causes*.
 **None of this is in your context; go and fetch it.** Search the vendor's
 documentation and engineering blog for the two versions pinned in step 2. Do not
 answer from training knowledge about anything released after your cutoff, and do
-not assume a document
-still sits at the address it used to — find it by searching for the release, not
-by recalling a URL.
+not assume a document still sits at the address it used to — find it by searching
+for the release, not by recalling a URL.
 
 Source classes, in descending value:
 
@@ -129,11 +128,6 @@ edit.
 
 Then apply only what is approved, one file at a time — to the write target
 resolved in step 1, not to the deployed copy.
-
-Keep no state of your own. The artifacts carry it: a line you deleted stays
-deleted, a setting you adopted stays adopted, so a second run over an unchanged
-setup finds nothing and stops. Version history belongs to whatever already tracks
-these files.
 
 ## Stop and ask
 
@@ -169,8 +163,7 @@ these files.
   describe the same thing before calling it a contradiction.
 - **Per-model files rot.** Checked-in per-model overlays look tidy and fall behind
   within one or two releases; large, actively maintained public setups carry
-  overlays for models nobody runs anymore. The same applies to any record this
-  skill might keep of its own past runs. Re-derive every judgement from what is
+  overlays for models nobody runs anymore. Re-derive every judgement from what is
   in front of you.
 - **The local health check is a different job.** Tooling that audits usage counts,
   unused extensions, and context cost works from local data and never fetches
