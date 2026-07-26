@@ -37,9 +37,16 @@ references. If over-triggering: add specificity about what the skill does
 keywords from failing queries — that's overfitting; generalize the
 category instead.
 
+Before treating under-triggering as a wording problem, rule out the
+**listing budget**: a new or rarely-invoked skill can have its description
+evicted from the listing entirely, in which case no rewrite helps
+(`claude-code-extensions.md` → Description budget).
+
 Debug shortcut: ask the agent "When would you use the [skill-name]
 skill?" — it quotes the description back. The mismatch tells you what to
-fix.
+fix. This also separates the two failures: an agent that quotes nothing
+back isn't reading a description at all, so the problem is budget, not
+wording.
 
 ## Output quality evaluation
 

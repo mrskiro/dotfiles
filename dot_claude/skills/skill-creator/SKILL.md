@@ -38,6 +38,10 @@ Skills are over-used (Pritchard via Fowler). Before writing one, ask:
 Reach for the simplest mechanism that fits. A skill that should have been a hook
 either doesn't fire reliably or fires when it shouldn't.
 
+List the existing skills before adding one. A near-duplicate that already exists
+and never fires doesn't need a sibling — it needs its description fixed, and a new
+skill inherits the same trigger problem.
+
 ### Categories that warrant a skill (Anthropic, "Lessons from building Claude Code")
 
 When you do reach for a skill, the best ones cluster into nine categories.
@@ -54,6 +58,12 @@ Skills that straddle several confuse the agent.
 9. **Infrastructure operations** — orphan cleanup with soak periods, dependency approval workflow, cost investigation
 
 If your skill doesn't fit cleanly into one category, that's a sign to split it.
+
+Scoping a skill is like scoping a function, and **too narrow fails too**: skills
+scoped tightly force several to load for one task, adding overhead and letting
+their instructions contradict each other; scoped too broadly, they can't be
+activated precisely. "Query the database and format the results" is one coherent
+unit — adding database administration to it is not.
 
 ### 1. Locate context
 
@@ -98,10 +108,19 @@ Rules:
 - **List indirect contexts.** "even if they don't explicitly mention 'CSV'"
 - **Negative trigger ("Do NOT use for: X (use Y instead)")** prevents misfire between similar skills — essential in any environment with more than ~5 skills
 - **Both what and when.** What the skill does AND when to invoke it
-- The `description` + `when_to_use` combined limit is **1,536 chars** in current Claude Code (was 1,024 in the Feb 2026 PDF guide; the spec evolved). Configurable via `maxSkillDescriptionChars`. Lead with triggers so the truncation tail is the loss-tolerant part
+- **Two limits, two layers — do not conflate them.** The Agent Skills spec caps the `description` *field* at 1024 chars (table A below). Claude Code separately truncates `description` + `when_to_use` **combined at 1,536 chars in the skill listing** — a display budget, not a field limit. Configurable via `skillListingMaxDescChars`. Lead with triggers so the truncation tail is the loss-tolerant part
 - Quote any value containing colons, or use a `>` block scalar — the validator
   parses with strictyaml, which rejects unquoted colons
 - **`metadata.pattern: pipeline`-style fields do nothing** in Claude Code. Only `name` and `description` are used for trigger decisions. Writing pattern names in metadata is self-satisfaction unless your runtime actually reads them (Google ADK does; Claude Code doesn't)
+
+#### A description the matcher never sees cannot trigger
+
+The listing carrying every skill's description is budgeted at ~1% of the context
+window. When it overflows, names survive but **descriptions are dropped starting
+with the skills you invoke least** — a new, rarely-used skill loses its triggers
+first, and silently. This is the third cause of "my skill doesn't fire", alongside
+a bad description and a wrong mechanism; rule it out before rewriting anything.
+Levers: `references/claude-code-extensions.md` → Description budget.
 
 ### 4. Write the body
 
@@ -113,6 +132,24 @@ steps ("next, do X"). The body is typically loaded once on activation and
 stays in context; instructions framed as a sequence may not get
 re-evaluated when their moment arrives.
 
+(This is a different axis from the spec's "favor procedures over declarations",
+which is about *generalizability* — teach a reusable method, not the answer to one
+instance. Both apply: a generalizable method, phrased as a standing condition.)
+
+#### Calibrate prescriptiveness per section, not per skill
+
+Match specificity to **fragility**. Most skills need both registers, and the
+mistake is applying one uniformly:
+
+- **Give freedom** where several approaches are valid and variation is tolerable.
+  Here, explaining *why* beats a rigid directive — an agent that understands the
+  purpose makes better context-dependent calls
+- **Be prescriptive** where the operation is fragile, order matters, or consistency
+  is the point. Spell out the exact command and say not to deviate from it
+
+A skill that is uniformly loose drifts on the fragile steps; one that is uniformly
+rigid wastes the model's judgment on the parts that never needed pinning.
+
 Then choose the patterns that fit. Skip the others — concise wins.
 
 - **Numbered steps** for sequential workflows
@@ -123,8 +160,12 @@ Then choose the patterns that fit. Skip the others — concise wins.
 - **Templates** when output format matters — show literal structure
 - **Workflow checklist** (`- [ ]` items the agent copies and ticks off)
 - **Validation loop** — "do work → run validator → fix → repeat"
-- **Examples (input/output pairs)** when output style matters more than
-  describable rules
+- **Examples (input/output pairs)** when the output *format* is itself the
+  requirement and rules can't describe it. Otherwise leave them out — Anthropic
+  lists examples among the outdated practices for Claude 5 generation models
+  ("examples actually constrain them to a certain exploration space").
+  Reproducing a required format still works; "show good examples and quality
+  improves" no longer does
 - **Conditional branching** — lead with the decision, route from there
 
 Skip:
@@ -151,9 +192,15 @@ For skills with side effects (deploy, migrate, "fix-issue", evolve-feature), inc
 4. **Prefer the boring, obvious solution.** Cleverness is expensive
 5. **Touch only what you're asked to touch.** Scope discipline is the single biggest determinant of whether a PR is mergeable
 
-Keep `SKILL.md` under ~500 lines. Move detail to `references/<name>.md` and
-tell the agent **when** to load each: "Read `references/api-errors.md` if the
-API returns a non-200" beats "see references/ for details."
+Keep `SKILL.md` under ~500 lines **and ~5,000 tokens** — the spec's recommended
+ceiling for the always-loaded body. The limit isn't only cost: an over-comprehensive
+skill makes the agent work to find what applies, and instructions that don't fit the
+current task pull it down unproductive paths. When you catch yourself covering every
+edge case, most of them are better left to the agent's judgment.
+
+Move detail to `references/<name>.md` and tell the agent **when** to load each:
+"Read `references/api-errors.md` if the API returns a non-200" beats "see
+references/ for details."
 
 References stay **one level deep** from `SKILL.md`. For reference files
 >100 lines, include a table of contents at the top. Use **forward slashes**
@@ -218,6 +265,14 @@ When the agent makes a mistake using the skill:
 
 ## Frontmatter quick reference
 
+Two layers. Table A travels with the skill to any compliant runtime; table B only
+means anything in Claude Code. Write to A, reach for B when you need it.
+
+### A. Agent Skills spec — portable
+
+Source: <https://agentskills.io/specification>. This is what `skills-ref validate`
+enforces.
+
 | Field           | Required | Constraint                                                        |
 |-----------------|----------|-------------------------------------------------------------------|
 | `name`          | Yes      | ≤64 chars, kebab-case, matches directory                          |
@@ -226,6 +281,23 @@ When the agent makes a mistake using the skill:
 | `compatibility` | No       | ≤500 chars; runtime, package, or product requirements             |
 | `metadata`      | No       | String→string map; use unique key names                           |
 | `allowed-tools` | No       | Space-separated, experimental                                     |
+
+### B. Claude Code runtime — this client only
+
+Claude Code relaxes two of the spec's requirements and adds its own fields:
+
+- `name` is **optional** — it falls back to the directory name. Keep writing it
+  anyway; the skill stops being portable without it
+- `description` is **recommended**, not required — omitted, Claude Code uses the
+  first paragraph of the body. Relying on that gives the matcher prose that was
+  written for a reader
+- `description` + `when_to_use` are truncated at 1,536 chars **in the listing**.
+  That is display truncation, not the 1024-char field limit in table A
+
+Full field list (`when_to_use`, `disable-model-invocation`, `disallowed-tools`,
+`context: fork`, `model`, `effort`, `paths`, `hooks`, …) is in
+`references/claude-code-extensions.md`. Skills using them fail `skills-ref
+validate` — expected, not a defect.
 
 ```yaml
 ---
@@ -251,7 +323,7 @@ compatibility: Requires Python 3.11+ and pdfplumber
   section with `<details>` instead
 - Generic instructions about basics the model already knows
 - **Configuration when you should reach for architecture** (Pritchard). A "testing skill" that complains about inconsistent test patterns is treating a symptom — fix the tests. Skills accumulate as a "junk drawer" if you reach for them as the default tool
-- **Pushing the user with `A / B / C / D` choices in an autonomous loop.** Strategic decisions belong to the user; tactical decomposition (which file to update, which order, which test, which commit message) is the agent's job. A skill that interrupts every few minutes with multiple-choice prompts is throughput-killing — bake decisions into the skill via stop-and-ask gates only at *meaningful* boundaries (new lexicon term, breaking change, scope explosion). When in doubt, agree on "user expresses intent + approves; agent structures"
+- **Pushing the user with `A / B / C / D` choices in an autonomous loop.** Strategic decisions belong to the user; tactical decomposition (which file to update, which order, which test, which commit message) is the agent's job. A skill that interrupts every few minutes with multiple-choice prompts is throughput-killing — bake decisions into the skill via stop-and-ask gates only at *meaningful* boundaries (new lexicon term, breaking change, scope explosion). When in doubt, agree on "user expresses intent + approves; agent structures". For a loop that must never ask, prose is the weak form: set `disallowed-tools: AskUserQuestion` and the tool leaves the pool entirely. Constraints > instructions applies to the skill you are writing, not just the ones you audit
 - Writing `pattern: pipeline` or other custom `metadata.*` fields and expecting Claude Code to behave differently — only `name` + `description` are read for triggering
 - Skill that just gives info — could it be a hook, a path-scoped rule, or improved code instead?
 - Self-reported "done" without a runtime verification gate

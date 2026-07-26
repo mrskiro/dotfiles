@@ -27,6 +27,7 @@ arguments: [issue, branch]       # Named positional args for $issue / $branch
 argument-hint: "[issue-number]"  # Autocomplete hint shown after the slash command
 disable-model-invocation: true   # User-only invocation. For side-effecting workflows
 user-invocable: false            # Claude-only invocation. For background knowledge
+disallowed-tools: AskUserQuestion  # Tools removed from the pool while active
 model: opus                      # Model override while active; or `inherit`
 effort: high                     # low | medium | high | xhigh | max (model-dependent)
 context: fork                    # Run in a subagent (isolated context)
@@ -57,6 +58,13 @@ the second.
 
 `shell: powershell` runs `!` blocks via PowerShell on Windows; requires
 `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`.
+
+`disallowed-tools` is the mirror of the spec's `allowed-tools`: instead of
+pre-approving tools, it **removes them from the model's pool** for as long as
+the skill is active. This is the deterministic version of a prose prohibition —
+an autonomous loop that must not stop to ask sets
+`disallowed-tools: AskUserQuestion` rather than telling itself not to.
+Accepts the same space- or comma-separated forms as `allowed-tools`.
 
 ## Invocation control
 
@@ -131,11 +139,24 @@ text is capped at **1,536 chars regardless of budget**. Skill names are
 always included; descriptions themselves are what gets trimmed when
 the catalog approaches the limit.
 
+**Eviction order matters more than the number.** When the listing
+overflows, descriptions are dropped **starting with the skills you
+invoke least** — so the newest and rarest skills lose their triggers
+first, and lose them silently. A skill that never fires may have a
+perfect description that the matcher never saw.
+
 **Lead with trigger phrases.** Buried triggers beyond the truncation
 point are never seen by the matcher.
 
-To raise the limit, set `SLASH_COMMAND_TOOL_CHAR_BUDGET` (env var), or
-trim `description` and `when_to_use` at the source.
+Levers, in the order worth trying:
+
+| Lever | Effect |
+|---|---|
+| Trim `description` / `when_to_use` at the source | Frees budget for every skill; key use case first |
+| `skillOverrides: {"<name>": "name-only"}` | Lists that skill without a description — buys room for the rest |
+| `skillListingBudgetFraction` (e.g. `0.02`) | Raises the share of the context window, default `0.01` |
+| `SLASH_COMMAND_TOOL_CHAR_BUDGET` (env var) | Same, as a fixed character count |
+| `skillListingMaxDescChars` | Changes the 1,536 per-entry cap |
 
 ## `context: fork` (subagent isolation)
 
