@@ -14,7 +14,7 @@ description: >
   audit, for usage-log analysis, or for authoring a skill.
 ---
 
-Reconcile the local context engineering against what upstream now provides.
+Reconcile the local environment against what upstream now provides.
 Two source classes pointing in two directions: the **built-in system prompt**
 says what to delete; **release and spec documentation** says what to adopt.
 A run that only prunes has done half the job.
@@ -48,7 +48,8 @@ the upstream change that motivates an edit, it belongs in a different pass.
 Establish both versions before reading anything — every finding downstream is
 scoped to them, and a wrong baseline invalidates the whole run.
 
-- **Model**: the exact ID from your own environment block, e.g. `claude-opus-5[1m]`
+- **Model**: the exact ID from the environment block of your system prompt,
+  e.g. `claude-opus-5[1m]`
 - **Claude Code**: `claude --version`
 
 Put both at the top of the report. If the model actually running differs from the
