@@ -40,8 +40,7 @@ either doesn't fire reliably or fires when it shouldn't.
 
 List the existing skills before adding one. A near-duplicate that already exists
 and never fires doesn't need a sibling — it needs its description fixed, and a new
-skill inherits the same trigger problem. (`skillUsage` in `~/.claude.json` holds
-per-skill invocation counts; `/doctor` and `flywheel` read it for you.)
+skill inherits the same trigger problem.
 
 ### Categories that warrant a skill (Anthropic, "Lessons from building Claude Code")
 
