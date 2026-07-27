@@ -90,8 +90,8 @@ For each line, apply these questions in order:
 Claude Code's built-in system prompt and chat model system prompts evolve. CLAUDE.md items duplicating these become dead weight.
 
 **Sources to check:**
-- **Claude Code built-in system prompt**: visible at session start in the active session — ask the user to paste the relevant sections (especially "Doing tasks", "Tone and style", "Executing actions with care") if they aren't already in context
-- **Chat model system prompt** (Opus 4.7, Sonnet 4.6, etc.): https://platform.claude.com/docs/en/release-notes/system-prompts — ask the user to fetch the latest if relevant
+- **Claude Code built-in system prompt**: already loaded in the active session — read it there rather than asking for a paste. Do not go looking for section names you remember; the set changes between releases, and a section you cannot find may have been folded into another rather than dropped
+- **Chat model system prompt** for the model in use: https://platform.claude.com/docs/en/release-notes/system-prompts — a different product's harness, so treat it as a style reference rather than a source of rules for this one
 
 **Common overlaps to flag:**
 - "KISS / YAGNI / Don't over-engineer" → Claude Code has "Don't add features...beyond what the task requires"
@@ -99,10 +99,12 @@ Claude Code's built-in system prompt and chat model system prompts evolve. CLAUD
 - "Don't add comments explaining what code does" → Claude Code has "Default to writing no comments"
 - "Avoid backwards-compatibility hacks" → Claude Code has this
 
-**Conflicts to flag (let user decide which wins):**
-- "Always confirm before acting" (CLAUDE.md) vs "Make a reasonable attempt now, not interviewed first" (Opus 4.7 chat `<acting_vs_clarifying>`)
+**Conflicts to flag (let user decide which wins).** The pairs below are shapes to
+recognise, quoted from prompts of the day rather than the one you are running —
+confirm the built-in still says its half before reporting the conflict:
+- "Always confirm before acting" (CLAUDE.md) vs "make a reasonable attempt now, not interviewed first" (built-in)
 - "Caution over speed" (CLAUDE.md) vs "Throughput over perfection" (CLAUDE.md own existing principle) — same author may have inconsistencies
-- "Stop when confused" (CLAUDE.md) vs "see it through to a complete answer rather than stopping partway" (Opus 4.7 chat)
+- "Stop when confused" (CLAUDE.md) vs "see it through to a complete answer rather than stopping partway" (built-in)
 
 **Process:**
 1. Get current built-in prompts (Claude Code session start + chat model release notes)
@@ -168,7 +170,7 @@ For each CLAUDE.md file audited, classify every line/block into one of these cat
 | `Admin routing conventions` | **Move to rules/** | Only applies to apps/admin/ |
 | `No pointer to docs/testing.md` | **Missing** | Existing doc not discoverable |
 | `Format with biome` | **Convert to hook** | Should be PostToolUse, not CLAUDE.md |
-| `Always confirm before acting` | **Conflicts with built-in** | Opus 4.7 chat: "make a reasonable attempt now". Choose intentionally |
+| `Always confirm before acting` | **Conflicts with built-in** | Built-in: "make a reasonable attempt now". Choose intentionally |
 
 Categories:
 - **Delete** — doesn't pass litmus test
