@@ -116,6 +116,15 @@ Source classes, in descending value:
 | Format and spec docs | Constraints that changed under the artifacts being maintained |
 | Published system prompts | How the vendor phrases things now. A style reference, not a mandate |
 
+**Configuration needs enumerating, not skimming.** Prose you can read for what
+changed; a settings file you cannot, because what is missing from it leaves no
+trace. List the keys the runtime accepts, subtract the ones in use, and read what
+is left — its own JSON Schema, if it declares one, is the cheapest complete list.
+Most of the remainder will be irrelevant and that is fine; the point is that a
+setting worth adopting is invisible until something enumerates it. Reading a
+config file only for what it contains finds stale values and never finds absent
+ones.
+
 Beyond "what is new", two failure modes are worth hunting specifically:
 
 - **Stale rationale.** A rule whose *conclusion* still holds but whose stated
