@@ -2,7 +2,6 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "model": "opus[1m]",
   "env": {
-    "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
@@ -10,7 +9,7 @@
       "Bash(sudo:*)",
       "Bash(gh secret set *)"
     ],
-    "defaultMode": "bypassPermissions",
+    "defaultMode": "auto",
     "allow": [
       "mcp__pencil"
     ]
@@ -66,9 +65,7 @@
           }
         ]
       }
-    ],
-    "Notification": [],
-    "Stop": []
+    ]
   },
   "statusLine": {
     "type": "command",
@@ -76,13 +73,16 @@
   },
   "enabledPlugins": {},
   "language": "Japanese",
+  "enableWorkflows": true,
   "feedbackSurveyRate": 0,
-  "alwaysThinkingEnabled": true,
   "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "autoCompactEnabled": false,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "classifyAllShell": true
+  }
 }
