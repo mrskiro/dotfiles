@@ -120,6 +120,9 @@ Source classes, in descending value:
 changed; a settings file you cannot, because what is missing from it leaves no
 trace. List the keys the runtime accepts, subtract the ones in use, and read what
 is left — its own JSON Schema, if it declares one, is the cheapest complete list.
+Get the in-use half by extracting key names alone (`jq 'keys'` and the like), never
+by reading the file through: the subtraction needs names, and the values are the
+part that carries secrets.
 Most of the remainder will be irrelevant and that is fine; the point is that a
 setting worth adopting is invisible until something enumerates it. Reading a
 config file only for what it contains finds stale values and never finds absent
