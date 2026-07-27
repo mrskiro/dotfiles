@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
-# pre-tool-safety.sh — PreToolUse hook for destructive command detection
-# Runs on every Bash tool call in bypassPermissions mode.
-# Returns permissionDecision:"deny" for dangerous commands.
-# Safe exceptions (build artifacts) are allowed through.
+# pre-tool-safety.sh — PreToolUse hook, Bash tool only.
+#
+# Scope: rules the auto-mode classifier cannot make for us.
+#
+# Generic destructive-command detection (rm -rf, DROP TABLE, TRUNCATE,
+# kubectl delete, docker prune, terraform apply) used to live here. It is now
+# the classifier's job: permissions.defaultMode is "auto" and
+# autoMode.classifyAllShell routes every shell command through it, and the
+# sandbox confines writes to the working directory on top of that. Re-adding
+# regex rules for those only reintroduces the false positives that forced the
+# build-artifact exception list this hook used to carry.
+#
+# What stays is what the classifier has no way to know:
+#   1. Irreversible loss of *uncommitted* local state. A classifier reads
+#      `git reset --hard` as routine git; it cannot see that there is unpushed
+#      work in the tree.
+#   2. Local policy that is a preference, not a danger.
 set -euo pipefail
 
 INPUT=$(cat)
@@ -16,50 +29,12 @@ if [ -z "$CMD" ]; then
   exit 0
 fi
 
-CMD_LOWER=$(printf '%s' "$CMD" | tr '[:upper:]' '[:lower:]')
-
-# --- Safe exceptions for rm -rf ---
-if printf '%s' "$CMD" | grep -qE 'rm\s+(-[a-zA-Z]*r[a-zA-Z]*\s+|--recursive\s+)' 2>/dev/null; then
-  SAFE_ONLY=true
-  RM_ARGS=$(printf '%s' "$CMD" | sed -E 's/.*rm\s+(-[a-zA-Z]+\s+)*//;s/--recursive\s*//')
-  for target in $RM_ARGS; do
-    case "$target" in
-      */node_modules|node_modules|*/\.next|\.next|*/dist|dist|*/__pycache__|__pycache__|*/\.cache|\.cache|*/build|build|*/\.turbo|\.turbo|*/coverage|coverage|*/.wrangler|.wrangler)
-        ;;
-      -*)
-        ;;
-      *)
-        SAFE_ONLY=false
-        break
-        ;;
-    esac
-  done
-  if [ "$SAFE_ONLY" = true ]; then
-    echo "$ALLOW"
-    exit 0
-  fi
-fi
-
-# --- Destructive pattern checks ---
 WARN=""
 
-# rm -rf / rm -r / rm --recursive
-if printf '%s' "$CMD" | grep -qE 'rm\s+(-[a-zA-Z]*r|--recursive)' 2>/dev/null; then
-  WARN="Destructive: recursive delete. This permanently removes files."
-fi
-
-# DROP TABLE / DROP DATABASE
-if [ -z "$WARN" ] && printf '%s' "$CMD_LOWER" | grep -qE 'drop\s+(table|database)' 2>/dev/null; then
-  WARN="Destructive: SQL DROP detected. This permanently deletes database objects."
-fi
-
-# TRUNCATE
-if [ -z "$WARN" ] && printf '%s' "$CMD_LOWER" | grep -qE '\btruncate\b' 2>/dev/null; then
-  WARN="Destructive: SQL TRUNCATE detected. This deletes all rows from a table."
-fi
+# --- 1. Irreversible loss of uncommitted work ---
 
 # git reset --hard
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+reset\s+--hard' 2>/dev/null; then
+if printf '%s' "$CMD" | grep -qE 'git\s+reset\s+--hard' 2>/dev/null; then
   WARN="Destructive: git reset --hard discards all uncommitted changes."
 fi
 
@@ -68,29 +43,16 @@ if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'git\s+(checkout|restore)\s+\
   WARN="Destructive: discards all uncommitted changes in the working tree."
 fi
 
-# Skip hooks
-if printf '%s' "$CMD" | grep -qE '\-\-no-verify|(^|[;&|]\s*)LEFTHOOK=(0|false)\s' 2>/dev/null; then
-  WARN="Skipping git hooks (--no-verify, LEFTHOOK=0) is not allowed. Fix the underlying issue."
-fi
-
-# kubectl delete
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'kubectl\s+delete' 2>/dev/null; then
-  WARN="Destructive: kubectl delete removes Kubernetes resources."
-fi
-
-# docker rm -f / docker system prune
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'docker\s+(rm\s+-f|system\s+prune)' 2>/dev/null; then
-  WARN="Destructive: Docker force-remove or prune."
-fi
-
-# terraform apply (without plan file)
-if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'terraform\s+apply' 2>/dev/null; then
-  WARN="Caution: terraform apply modifies infrastructure."
-fi
-
-# chezmoi apply --force
+# chezmoi apply --force — overwrites dotfiles the runtime may have written
 if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE 'chezmoi\s+apply\s+.*--force' 2>/dev/null; then
   WARN="Blocked: chezmoi apply --force overwrites local changes. Run 'chezmoi diff' first, then either: (1) show the diff to the user and ask whether to merge into source, or (2) save the local diff, apply, then restore it."
+fi
+
+# --- 2. Local policy ---
+
+# Skip hooks
+if [ -z "$WARN" ] && printf '%s' "$CMD" | grep -qE '\-\-no-verify|(^|[;&|]\s*)LEFTHOOK=(0|false)\s' 2>/dev/null; then
+  WARN="Skipping git hooks (--no-verify, LEFTHOOK=0) is not allowed. Fix the underlying issue."
 fi
 
 # --- Output ---

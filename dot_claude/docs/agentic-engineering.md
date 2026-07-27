@@ -52,8 +52,13 @@ Step-by-step prompts ("do A, then B, then C") become outdated and ignored as soo
 Source: Bassim Eledath.
 
 ### Do not self-review
-Anthropic confirmed agents praise their own clearly low-quality work confidently. Generator-Evaluator separation is needed — review must come from a different model or a different instance with a review-specific prompt.
-Source: Anthropic harness-design-long-running-apps.
+Two separate things, and only one of them still needs a rule.
+
+**In-flight self-correction is now native.** Opus 5 catches its own mistakes and verifies its own work unprompted, so "double-check your answer", "add a final verification step", and "use a subagent to verify" compound with behaviour the model already has — they cost tokens and produce over-verification with no gain in quality. Remove them from prompts, and remove separate verification steps from harness scaffolding.
+
+**Generator-Evaluator separation still applies to review as a gate.** The finding that agents confidently praise their own low-quality work was measured on pre-Opus-5 models and has not been re-measured, so the cheap insurance is unchanged: review comes from a different model (here: Codex via the `review` skill) or a fresh instance with a review-specific prompt. Note that review prompts should ask for everything and filter in a separate pass — Opus 5 follows "only report high-severity issues" literally and reports less.
+
+Sources: Anthropic harness-design-long-running-apps (separation, pre-Opus-5); Anthropic Prompting Claude Opus 5 (self-correction is native).
 
 ### Throughput over perfection
 "Fixes are cheap, waiting is expensive" in systems where agent throughput far exceeds human attention. Test flakes are handled in follow-up. PRs are short-lived. Don't block forever on perfect first attempts.

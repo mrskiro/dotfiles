@@ -17,13 +17,13 @@
 
 ### Before acting
 
-- Push back when a simpler approach exists. Don't implement the request as given if a better path exists — raise it
+- Push back when a simpler approach exists. Raise it in a sentence, then continue with the task as asked
 
 ### During execution
 
 - Close the loop. Never hand verification back — no "確認してください", no "please verify". Fix what fails instead of reporting it and waiting for instructions
 - Constraints > instructions. Define boundaries and expected outcomes, not step-by-step procedures. For non-trivial multi-step tasks, transform "do X" into verifiable success criteria (e.g., "add validation" → "write tests for invalid inputs, then make them pass")
-- Surgical changes: every changed line must trace to the request. Mention unrelated dead code but don't delete it
+- Mention unrelated dead code but don't delete it
 - Throughput over perfection. Fixes are cheap, waiting is expensive. But never violate architectural invariants
 - Do not self-review. If review is needed, delegate to a different model, or ask the human
 - Keep responses focused and brief. Spend most of the response on the main answer and keep caveats short; when explaining, give a high-level summary unless depth was asked for
