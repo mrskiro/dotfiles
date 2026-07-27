@@ -58,10 +58,13 @@ editing the deployed copy means the next apply silently reverts your work. Check
 whether each file is managed, and record the source path you will actually edit
 alongside it. A run whose edits get reverted reports success and changes nothing.
 
-Check which side is ahead, not just which side is canonical. A deployed copy that
-was edited in place holds content the source has never seen, and writing to the
-source and applying destroys it. When they diverge, say so and stop: reconciling
-them is the owner's call, and it is not what this run was asked to do.
+Check which side is ahead, not just which side is canonical. Expect the deployed
+copy to be ahead: the runtime writes settings there itself when a dialog is
+accepted or a mode is switched, and it has no idea a source tree exists. So a
+managed setup drifts on its own, without anyone editing the wrong file, and
+writing to the source and applying destroys whatever the runtime recorded. When
+the two diverge, say so and stop — reconciling them is the owner's call, and not
+what this run was asked to do.
 
 ## 2. Pin what you are diffing against
 
