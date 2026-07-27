@@ -77,8 +77,8 @@ Report as **one row per stage** — group all controls into a single cell per st
 Reference: https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more
 
 **System prompt redundancy check** (do this first):
-- Get the current Claude Code built-in system prompt (visible at session start; ask user to paste relevant sections if not in context)
-- Get the current chat model system prompt from https://platform.claude.com/docs/en/release-notes/system-prompts (ask user to fetch if needed)
+- Read the Claude Code built-in system prompt in your own context — it is already loaded, and a fetched copy describes a version you are not running
+- The chat model system prompt (https://platform.claude.com/docs/en/release-notes/system-prompts) belongs to a different product; use it as a style reference, not as a source of rules for this one
 - For each CLAUDE.md item, flag duplication or conflict with built-in
 - Redo this check whenever Claude Code or the model is updated — built-in prompts evolve
 

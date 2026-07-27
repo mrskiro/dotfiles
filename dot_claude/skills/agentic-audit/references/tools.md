@@ -26,7 +26,7 @@ For gaps, **web search** for available MCP/CLI options. Don't rely on training k
 | Factor | MCP | CLI |
 |---|---|---|
 | Authentication | Built-in OAuth/API key UX | Manual setup |
-| Token cost | Schema injected every turn (unless deferred) | Only output enters context |
+| Token cost | Tool names resident every turn; schema fetched on demand (full schemas only if the server opts out of deferral) | Only output enters context |
 | Composability | Can't pipe with bash | Full bash integration |
 | Recommendation | External services with auth needs | Everything else |
 
@@ -135,7 +135,7 @@ For web projects, the agent needs to verify its work visually.
 
 Preference order (token efficiency):
 1. CLI tools (agent-browser, playwright-cli) — output only enters context when called
-2. Browser MCP — schema injected every turn
+2. Browser MCP — tool names resident every turn, schema fetched on demand
 
 Check authentication handling: agent-browser supports named sessions, profiles, and state save/load for authenticated pages.
 
