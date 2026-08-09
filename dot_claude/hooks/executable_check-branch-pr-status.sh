@@ -42,21 +42,23 @@ if [ -n "$GH_REPO" ]; then
   GH_REPO_ARGS=(--repo "$GH_REPO")
 fi
 
-# Check if this branch has a merged or closed PR
-PR_STATE=$(gh pr list "${GH_REPO_ARGS[@]+"${GH_REPO_ARGS[@]}"}" --head "$BRANCH" --state merged --json number --jq '.[0].number' 2>/dev/null)
-if [ -n "$PR_STATE" ]; then
-  jq -n --arg branch "$BRANCH" --arg pr "$PR_STATE" '{
-    decision: "block",
-    reason: ("Branch \"" + $branch + "\" has merged PR #" + $pr + ". Create a new branch from main for the next task.")
-  }'
-  exit 0
-fi
+# Check if this branch has a merged or closed PR.
+# One `gh pr list` call instead of two: each is a network round-trip (~0.5s), and this
+# hook is on a 10s timeout. On timeout the hook is cancelled and the guard silently
+# does not run, so halving the round-trips halves that exposure.
+# `--state closed` would also return merged PRs, so filter on `.state` instead.
+# MERGED takes priority over CLOSED, matching the previous two-step order.
+PR=$(gh pr list "${GH_REPO_ARGS[@]+"${GH_REPO_ARGS[@]}"}" --head "$BRANCH" --state all --json number,state \
+  --jq '(map(select(.state == "MERGED"))[0] // map(select(.state == "CLOSED"))[0]) | select(.) | "\(.state) \(.number)"' 2>/dev/null)
 
-PR_STATE=$(gh pr list "${GH_REPO_ARGS[@]+"${GH_REPO_ARGS[@]}"}" --head "$BRANCH" --state closed --json number --jq '.[0].number' 2>/dev/null)
-if [ -n "$PR_STATE" ]; then
-  jq -n --arg branch "$BRANCH" --arg pr "$PR_STATE" '{
+if [ -n "$PR" ]; then
+  case "${PR%% *}" in
+    MERGED) PR_LABEL="merged" ;;
+    *) PR_LABEL="closed" ;;
+  esac
+  jq -n --arg branch "$BRANCH" --arg pr "${PR#* }" --arg label "$PR_LABEL" '{
     decision: "block",
-    reason: ("Branch \"" + $branch + "\" has closed PR #" + $pr + ". Create a new branch from main for the next task.")
+    reason: ("Branch \"" + $branch + "\" has " + $label + " PR #" + $pr + ". Create a new branch from main for the next task.")
   }'
   exit 0
 fi
