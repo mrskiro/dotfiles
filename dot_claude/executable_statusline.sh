@@ -1,51 +1,130 @@
 #!/bin/bash
+# Claude Code status line. Two lines, sized for narrow split panes.
+#   line 1: model, effort, worktree (or branch)
+#   line 2: context usage bar, 5h / 7d rate limits
+# Input schema: https://code.claude.com/docs/en/statusline
+#
+# bash 3.2 (the macOS system bash) corrupts multibyte literals when they are
+# appended to a variable under a UTF-8 locale: `b="$b▓"` drops the leading
+# byte. Byte semantics keep the box-drawing glyphs intact, and every string we
+# measure is ASCII, so ${#s} and ${s:0:n} stay correct.
+export LC_ALL=C
 
 input=$(cat)
 
-cwd=$(echo "$input" | jq -r '.workspace.current_dir')
-model=$(echo "$input" | jq -r '.model.display_name')
-context_size=$(echo "$input" | jq -r '.context_window.context_window_size')
-usage=$(echo "$input" | jq '.context_window.current_usage')
-total_input=$(echo "$input" | jq -r '.context_window.total_input_tokens')
-total_output=$(echo "$input" | jq -r '.context_window.total_output_tokens')
+# One jq call, one field per line. Empty fields stay as empty lines.
+i=0
+while IFS= read -r line; do
+  f[$i]="$line"
+  i=$((i + 1))
+done < <(
+  jq -r '[
+    .model.display_name // "",
+    .effort.level // "",
+    (if .fast_mode then "fast" else "" end),
+    (.worktree.name // .workspace.git_worktree // ""),
+    (.context_window.used_percentage // 0 | floor),
+    (if .exceeds_200k_tokens then "1" else "" end),
+    (.rate_limits.five_hour.used_percentage // ""),
+    (.rate_limits.seven_day.used_percentage // ""),
+    (.workspace.current_dir // .cwd // "")
+  ] | .[] | tostring' <<<"$input"
+)
 
-# Context window usage
-if [ "$usage" != "null" ]; then
-  current_tokens=$(echo "$usage" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
-  percent_used=$((current_tokens * 100 / context_size))
-else
-  percent_used=0
-fi
+model=${f[0]}
+effort=${f[1]}
+fast=${f[2]}
+worktree=${f[3]}
+pct=${f[4]}
+exceeds=${f[5]}
+five_hour=${f[6]}
+seven_day=${f[7]}
+cwd=${f[8]}
 
-# Format tokens (e.g., 15234 -> 15.2k)
-format_tokens() {
-  local n=$1
-  if [ "$n" -ge 1000 ]; then
-    printf "%.1fk" "$(echo "scale=1; $n / 1000" | bc)"
-  else
-    printf "%d" "$n"
+cols=${COLUMNS:-80}
+
+DIM=$'\033[2m'
+RED=$'\033[31m'
+YELLOW=$'\033[33m'
+GREEN=$'\033[32m'
+CYAN=$'\033[36m'
+RESET=$'\033[0m'
+
+# Green under 50%, yellow under 80%, red at or above.
+heat() {
+  local n=${1%%.*}
+  if [ "$n" -ge 80 ]; then printf "%s" "$RED"
+  elif [ "$n" -ge 50 ]; then printf "%s" "$YELLOW"
+  else printf "%s" "$GREEN"
   fi
 }
 
-five_hour=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-seven_day=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+truncate() {
+  local s=$1 max=$2
+  if [ ${#s} -gt "$max" ]; then
+    printf "%s…" "${s:0:$((max - 1))}"
+  else
+    printf "%s" "$s"
+  fi
+}
 
-# Git branch
-git_branch=""
-if git_branch_raw=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null); then
-  git_branch="$git_branch_raw"
-elif git_branch_raw=$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null); then
-  git_branch="$git_branch_raw"
+# "Opus 5 (1M context)" -> "Opus 5 1M"
+model=${model/ (1M context)/ 1M}
+model=$(truncate "$model" 20)
+
+# Fall back to the branch (or short SHA) outside a worktree.
+label=$worktree
+if [ -z "$label" ]; then
+  label=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null) ||
+    label=$(git -C "$cwd" rev-parse --short HEAD 2>/dev/null) ||
+    label=""
 fi
 
-# Output
-printf "%s" "$model"
-project_dir="${CLAUDE_PROJECT_DIR:-$cwd}"
-rel_path="${cwd#"${project_dir%/*}/"}"
-printf " │ %s" "$rel_path"
-[ -n "$git_branch" ] && printf " │ %s" "$git_branch"
-[ "$percent_used" -gt 0 ] && printf " │ %d%%" "$percent_used"
-[ "$total_input" -gt 0 ] || [ "$total_output" -gt 0 ] && printf " │ %s/%s" "$(format_tokens "$total_input")" "$(format_tokens "$total_output")"
-[ -n "$five_hour" ] && printf " │ 5h:%.0f%%" "$five_hour"
-[ -n "$seven_day" ] && printf " │ 7d:%.0f%%" "$seven_day"
+# Segments carry their rendered width separately, because the escape codes in
+# the string itself make ${#...} useless for fitting the line to the terminal.
+head=$CYAN$model$RESET
+head_w=${#model}
+
+if [ -n "$effort" ] || [ -n "$fast" ]; then
+  head="$head $DIM│$RESET "
+  head_w=$((head_w + 3))
+  if [ -n "$effort" ]; then
+    head="$head$DIM$effort$RESET"
+    head_w=$((head_w + ${#effort}))
+  fi
+  if [ -n "$fast" ]; then
+    head="$head $YELLOW$fast$RESET"
+    head_w=$((head_w + 1 + ${#fast}))
+  fi
+fi
+
+tail=""
+tail_w=0
+add_tail() { # $1 color, $2 plain text
+  tail="$tail $DIM│$RESET $1$2$RESET"
+  tail_w=$((tail_w + 3 + ${#2}))
+}
+
+add_tail "$(heat "$pct")" "ctx $pct%"
+[ -n "$exceeds" ] && add_tail "$RED" ">200k"
+if [ -n "$five_hour" ]; then
+  printf -v n "%.0f" "$five_hour"
+  add_tail "$(heat "$n")" "5h $n%"
+fi
+if [ -n "$seven_day" ]; then
+  printf -v n "%.0f" "$seven_day"
+  add_tail "$(heat "$n")" "7d $n%"
+fi
+
+# The worktree name gets whatever width is left, and is dropped entirely when
+# that is not enough to stay readable.
+mid=""
+if [ -n "$label" ]; then
+  budget=$((cols - head_w - tail_w - 4))
+  [ "$budget" -gt 24 ] && budget=24
+  [ "$budget" -ge 6 ] && mid=" $DIM│$RESET $(truncate "$label" "$budget")"
+fi
+
+printf "%s%s%s\n" "$head" "$mid" "$tail"
+
 exit 0
