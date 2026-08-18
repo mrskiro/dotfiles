@@ -1,17 +1,41 @@
+#!/usr/bin/env bash
+# chezmoi modify_ script for ~/.claude/settings.json
+#
+# stdin is the file as it exists now (empty on a fresh machine); stdout becomes
+# the new contents. Only the keys below are owned by chezmoi and end up in git.
+# Everything else in the live file passes through untouched, which is the point:
+#
+#   - Claude Code rewrites this file at runtime (effortLevel, preferredNotifChannel,
+#     autoMode.environment, autoMode.soft_deny). A static managed file loses those
+#     on every apply.
+#   - autoMode.environment describes work infrastructure and OTEL_EXPORTER_OTLP_HEADERS
+#     is a live API key. This source repo is public, so neither may be committed.
+#   - The telemetry endpoint, the work skills marketplace and the warp plugin are
+#     specific to this machine and this employer.
+#
+# Leaving a key out of MANAGED never deletes it — it just keeps it out of git.
+set -euo pipefail
+
+CURRENT=$(cat)
+[ -n "$CURRENT" ] || CURRENT='{}'
+
+MANAGED=$(
+  cat <<'JSON'
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "model": "opus[1m]",
+  "language": "Japanese",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "deny": [
-      "Bash(sudo:*)",
-      "Bash(gh secret set *)"
-    ],
     "defaultMode": "auto",
     "allow": [
       "mcp__pencil"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(gh secret set *)"
     ]
   },
   "hooks": {
@@ -26,7 +50,7 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/check-branch-pr-status.sh",
-            "timeout": 10
+            "timeout": 5
           }
         ]
       },
@@ -71,18 +95,25 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  "enabledPlugins": {},
-  "language": "Japanese",
+  "autoMode": {
+    "classifyAllShell": true
+  },
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "voiceEnabled": true,
   "enableWorkflows": true,
-  "feedbackSurveyRate": 0,
+  "autoCompactEnabled": false,
   "autoMemoryEnabled": false,
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
-  "autoCompactEnabled": false,
+  "skipAutoPermissionPrompt": true,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "autoMode": {
-    "classifyAllShell": true
-  }
+  "feedbackSurveyRate": 0
 }
+JSON
+)
+
+printf '%s' "$CURRENT" | jq --argjson managed "$MANAGED" '. * $managed'
