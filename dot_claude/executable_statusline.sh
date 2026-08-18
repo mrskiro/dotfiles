@@ -24,7 +24,6 @@ done < <(
     (if .fast_mode then "fast" else "" end),
     (.worktree.name // .workspace.git_worktree // ""),
     (.context_window.used_percentage // 0 | floor),
-    (if .exceeds_200k_tokens then "1" else "" end),
     (.rate_limits.five_hour.used_percentage // ""),
     (.rate_limits.seven_day.used_percentage // ""),
     (.workspace.current_dir // .cwd // "")
@@ -36,10 +35,9 @@ effort=${f[1]}
 fast=${f[2]}
 worktree=${f[3]}
 pct=${f[4]}
-exceeds=${f[5]}
-five_hour=${f[6]}
-seven_day=${f[7]}
-cwd=${f[8]}
+five_hour=${f[5]}
+seven_day=${f[6]}
+cwd=${f[7]}
 
 cols=${COLUMNS:-80}
 
@@ -106,7 +104,6 @@ add_tail() { # $1 color, $2 plain text
 }
 
 add_tail "$(heat "$pct")" "ctx $pct%"
-[ -n "$exceeds" ] && add_tail "$RED" ">200k"
 if [ -n "$five_hour" ]; then
   printf -v n "%.0f" "$five_hour"
   add_tail "$(heat "$n")" "5h $n%"
