@@ -38,15 +38,21 @@ curl -fsSL https://raw.githubusercontent.com/mrskiro/dotfiles/main/scripts/boots
 gh auth login   # まだなら
 # gh が未インストールなら一時的に: brew install gh
 
-git clone https://github.com/mrskiro/dotfiles.git ~/.local/share/chezmoi
+# chezmoi の source を ~/mrskiro/dotfiles に向ける（clone より先に書く）
+mkdir -p ~/.config/chezmoi
+printf 'sourceDir   = "~/mrskiro/dotfiles"\nworkingTree = "~/mrskiro/dotfiles"\n' > ~/.config/chezmoi/chezmoi.toml
+
+git clone https://github.com/mrskiro/dotfiles.git ~/mrskiro/dotfiles
 ```
 
-> 以降のコマンドは `~/.local/share/chezmoi` を chezmoi の source として参照する前提。
+> chezmoi のデフォルト source は `~/.local/share/chezmoi` だが、作業リポジトリを
+> `~/mrskiro/` に統一しているため `~/.config/chezmoi/chezmoi.toml` で上書きしている。
+> この設定ファイルは chezmoi 管理外（chicken-and-egg のため手で置く）。
 
 ## 4. 残りのアプリを brew bundle
 
 ```sh
-brew bundle --file ~/.local/share/chezmoi/brew/Brewfile
+brew bundle --file ~/mrskiro/dotfiles/brew/Brewfile
 ```
 
 ## 5. chezmoi で dotfiles を apply
@@ -75,7 +81,7 @@ ya pkg install
 GUI でポチポチやらず一括スクリプトで:
 
 ```sh
-bash ~/.local/share/chezmoi/scripts/macos-defaults.sh
+bash ~/mrskiro/dotfiles/scripts/macos-defaults.sh
 ```
 
 内容（トラックパッド・キーボード・Dock・電源）は `scripts/macos-defaults.sh` を参照。
@@ -97,7 +103,7 @@ pmset の sudo パスワード入力プロンプトが出る。再ログイン�
 
 ```sh
 chezmoi doctor
-brew bundle check --file ~/.local/share/chezmoi/brew/Brewfile
+brew bundle check --file ~/mrskiro/dotfiles/brew/Brewfile
 gh auth status
 claude --version
 mise --version

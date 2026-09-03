@@ -6,7 +6,7 @@
 # 使い方:
 #   curl -fsSL https://raw.githubusercontent.com/mrskiro/dotfiles/main/scripts/bootstrap.sh | bash
 # または既に clone 済なら:
-#   bash ~/.local/share/chezmoi/scripts/bootstrap.sh
+#   bash ~/mrskiro/dotfiles/scripts/bootstrap.sh
 
 set -euo pipefail
 
@@ -38,11 +38,16 @@ cat <<'MSG'
 ==> Bootstrap 完了。次にやること:
 
    gh auth login
-   git clone https://github.com/mrskiro/dotfiles.git ~/.local/share/chezmoi
+
+   # chezmoi の source を ~/mrskiro/dotfiles に向ける（clone より先）
+   mkdir -p ~/.config/chezmoi
+   printf 'sourceDir   = "~/mrskiro/dotfiles"\nworkingTree = "~/mrskiro/dotfiles"\n' > ~/.config/chezmoi/chezmoi.toml
+
+   git clone https://github.com/mrskiro/dotfiles.git ~/mrskiro/dotfiles
    chezmoi apply
-   brew bundle --file ~/.local/share/chezmoi/brew/Brewfile
+   brew bundle --file ~/mrskiro/dotfiles/brew/Brewfile
    ya pkg install                                # yazi プラグイン取得
-   bash ~/.local/share/chezmoi/scripts/macos-defaults.sh
+   bash ~/mrskiro/dotfiles/scripts/macos-defaults.sh
 
    詳細は docs/mac-setup.md を参照。
 MSG

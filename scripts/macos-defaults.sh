@@ -3,7 +3,7 @@
 # 詳細は docs/mac-setup.md を参照
 #
 # 使い方:
-#   bash ~/.local/share/chezmoi/scripts/macos-defaults.sh
+#   bash ~/mrskiro/dotfiles/scripts/macos-defaults.sh
 #
 # 反映タイミング:
 #   - Dock 系は即時 (killall Dock)

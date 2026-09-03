@@ -8,20 +8,24 @@ Managed with [chezmoi](https://www.chezmoi.io/).
 # 1. Bootstrap: Homebrew + Chrome + Bitwarden + Claude Code
 curl -fsSL https://raw.githubusercontent.com/mrskiro/dotfiles/main/scripts/bootstrap.sh | bash
 
-# 2. Clone dotfiles
+# 2. Point chezmoi at ~/mrskiro/dotfiles (デフォルトの ~/.local/share/chezmoi は使わない)
+mkdir -p ~/.config/chezmoi
+printf 'sourceDir   = "~/mrskiro/dotfiles"\nworkingTree = "~/mrskiro/dotfiles"\n' > ~/.config/chezmoi/chezmoi.toml
+
+# 3. Clone dotfiles
 gh auth login
-git clone https://github.com/mrskiro/dotfiles.git ~/.local/share/chezmoi
+git clone https://github.com/mrskiro/dotfiles.git ~/mrskiro/dotfiles
 
-# 3. Install packages from Brewfile
-brew bundle --file ~/.local/share/chezmoi/brew/Brewfile
+# 4. Install packages from Brewfile
+brew bundle --file ~/mrskiro/dotfiles/brew/Brewfile
 
-# 4. Apply dotfiles
+# 5. Apply dotfiles
 chezmoi apply
 
-# 5. macOS defaults (trackpad / keyboard / Dock / power)
-bash ~/.local/share/chezmoi/scripts/macos-defaults.sh
+# 6. macOS defaults (trackpad / keyboard / Dock / power)
+bash ~/mrskiro/dotfiles/scripts/macos-defaults.sh
 
-# 6. Default applications for file extensions
+# 7. Default applications for file extensions
 pkgx duti ~/.duti
 ```
 
