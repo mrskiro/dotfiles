@@ -116,4 +116,19 @@ MANAGED=$(
 JSON
 )
 
-printf '%s' "$CURRENT" | jq --argjson managed "$MANAGED" '. * $managed'
+# jq's `*` recurses into objects but replaces arrays wholesale, so a plain
+# `. * $managed` would drop every hook entry the live file has for an event
+# MANAGED also defines — Orca injects its relay hooks that way. Keep the
+# managed entries authoritative and re-append the unmanaged ones, matched on
+# (matcher, commands) so the merge stays idempotent.
+printf '%s' "$CURRENT" | jq --argjson managed "$MANAGED" '
+  def key: [.matcher, [.hooks[]?.command]];
+  . as $live
+  | ($live * $managed)
+  | reduce ($managed.hooks | keys_unsorted[]) as $ev (.;
+      ($managed.hooks[$ev] | map(key)) as $owned
+      | .hooks[$ev] = ( $managed.hooks[$ev]
+                        + [ ($live.hooks[$ev] // [])[]
+                            | select( key as $k | ($owned | any(. == $k)) | not ) ] )
+    )
+'
