@@ -94,8 +94,8 @@ Claude Code's built-in system prompt and chat model system prompts evolve. CLAUD
 - **The model's published system prompt** (SECONDARY / reference): Anthropic's published prompt for the model on first-party surfaces — https://platform.claude.com/docs/en/release-notes/system-prompts . A *different product's harness* from Claude Code, so treat it as a style reference and a read on the model's baseline character, not a source of rules for this one.
 
 **Generation discipline (re-derive every model bump):**
-- Stamp every finding with a **date + model generation** (e.g. "2026-06 / Claude Code on Opus 4.8; model page latest = Opus 4.7"). Built-in prompts change on the order of weeks.
-- **Do not hardcode tag names or version numbers.** Structure shifts between generations — e.g. the `<acting_vs_clarifying>` tag in Opus 4.7 was reorganized into tool-first guidance (`<tool_discovery>`) by 4.8. Enumerate the page fresh each audit; don't trust a stale one-line summary (force the fetch to list every heading).
+- Stamp every finding with the **date and the generation you audited on** — the Claude Code version and the model the session is running, read from the session rather than recalled. Built-in prompts change on the order of weeks, so an unstamped finding cannot be re-checked later.
+- **Do not hardcode tag names or version numbers into this file.** Structure shifts between generations: a tag can be renamed, or folded into another, without the guidance itself changing. Enumerate the prompt fresh each audit; don't trust a stale one-line summary (force the fetch to list every heading).
 - **The newest model's published prompt may not exist yet** — it lags release by weeks. When absent, fall back to the Claude Code harness prompt (self-visible); that, not the consumer prompt, is what actually governs CLAUDE.md.
 
 **Common overlaps to flag:**
@@ -104,10 +104,10 @@ Claude Code's built-in system prompt and chat model system prompts evolve. CLAUD
 - "Don't add comments explaining what code does" → Claude Code has "Default to writing no comments"
 - "Avoid backwards-compatibility hacks" → Claude Code has this
 
-**Conflicts to flag (let user decide which wins)** — examples as of 2026-06, and
-shapes to recognise rather than quotes from the prompt you are actually running:
-confirm the built-in still says its half before reporting the conflict.
-- "Always confirm before acting" (CLAUDE.md) vs "make a reasonable attempt now, not interviewed first" (model baseline; Opus 4.7 `<acting_vs_clarifying>`, carried into 4.8 unchanged). Note: the Claude Code harness already scopes confirmation to *hard-to-reverse / outward-facing* actions, so a broad "always confirm" is stricter than both baselines — and "whether to stop" is really the **permission mode (auto mode)**'s job, not CLAUDE.md's.
+**Conflicts to flag (let user decide which wins).** The pairs below are shapes to
+recognise, quoted from prompts of the day rather than the one you are running —
+confirm the built-in still says its half before reporting the conflict:
+- "Always confirm before acting" (CLAUDE.md) vs "make a reasonable attempt now, not interviewed first" (model baseline). Note: the Claude Code harness already scopes confirmation to *hard-to-reverse / outward-facing* actions, so a broad "always confirm" is stricter than both baselines — and "whether to stop" is really the **permission mode (auto mode)**'s job, not CLAUDE.md's.
 - "Caution over speed" vs "Throughput over perfection" — internal CLAUDE.md inconsistency (same author). Resolve by scoping confirmation to irreversible/outward only; the two stop conflicting once scoped.
 - "Stop when confused" (CLAUDE.md) vs "see it through to a complete answer rather than stopping partway" (model baseline)
 
@@ -209,7 +209,7 @@ For each CLAUDE.md file audited, classify every line/block into one of these cat
 | `Admin routing conventions` | **Move to rules/** | Only applies to apps/admin/ |
 | `No pointer to docs/testing.md` | **Missing** | Existing doc not discoverable |
 | `Format with biome` | **Convert to hook** | Should be PostToolUse, not CLAUDE.md |
-| `Always confirm before acting` | **Conflicts with built-in** | model baseline (stamp date/gen): "make a reasonable attempt now"; harness scopes confirm to irreversible/outward; "whether to stop" is mode's job. Choose intentionally |
+| `Always confirm before acting` | **Conflicts with built-in** | Model baseline: "make a reasonable attempt now". The harness already scopes confirm to irreversible/outward, and "whether to stop" is the permission mode's job. Choose intentionally |
 
 Categories:
 - **Delete** — doesn't pass litmus test
