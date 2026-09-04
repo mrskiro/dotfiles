@@ -6,6 +6,7 @@ tap "xcodesorg/made", trusted: true
 brew "act"
 brew "actionlint"
 brew "bat"
+brew "bitwarden-cli"
 brew "carapace"
 brew "chezmoi"
 brew "cloudflared"
