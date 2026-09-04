@@ -1,5 +1,7 @@
 README.md
 brew
+docs
+scripts
 
 {{- if not (env "BW_SESSION") }}
 .claude/settings.local.json
