@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "mrskiro",
+  "version": "0.1.0",
+  "description": "mrskiro's personal Claude Code skills: ship / review / plan workflows plus GitHub, dotfiles, and knowledge-management utilities.",
+  "author": {
+    "name": "mrskiro",
+    "email": "mrskiro.h@gmail.com"
+  }
+}
