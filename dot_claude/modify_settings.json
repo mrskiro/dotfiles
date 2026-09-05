@@ -14,6 +14,16 @@
 #     specific to this machine and this employer.
 #
 # Leaving a key out of MANAGED never deletes it — it just keeps it out of git.
+#
+# Deliberately unset, so a future pass doesn't "helpfully" add them:
+#
+#   - askUserQuestionTimeout: questions wait forever on purpose; inputNeededNotifEnabled
+#     is what covers being away from the keyboard.
+#   - fallbackModel: an overloaded primary should fail loudly rather than silently
+#     continue on another model. switchModelsOnFlag: false is the same call.
+#
+# advisorModel is managed here even though /advisor rewrites it at runtime: this file
+# is the source of truth, so a pick made in /advisor is reverted on the next apply.
 set -euo pipefail
 
 CURRENT=$(cat)
@@ -24,6 +34,7 @@ MANAGED=$(
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "model": "opus[1m]",
+  "advisorModel": "fable",
   "language": "Japanese",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
@@ -111,7 +122,20 @@ MANAGED=$(
   "skipAutoPermissionPrompt": true,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "feedbackSurveyRate": 0
+  "inputNeededNotifEnabled": true,
+  "feedbackSurveyRate": 0,
+  "cleanupPeriodDays": 365,
+  "timeZone": "Asia/Tokyo",
+  "timeFormat": "24-hour",
+  "keybindingFlavor": "readline",
+  "viewMode": "focus",
+  "switchModelsOnFlag": false,
+  "attribution": {
+    "sessionUrl": false
+  },
+  "sandbox": {
+    "enabled": true
+  }
 }
 JSON
 )
