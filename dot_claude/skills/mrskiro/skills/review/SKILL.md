@@ -1,191 +1,166 @@
 ---
 name: review
 description: >
-  "レビューして" "review this" "コードレビュー" "PR ready" "/review"
-  "PR作る前に確認" "diff レビュー" "code review" — Multi-agent code review
-  combining Codex CLI (cross-vendor) with N dynamically-generated persona
-  reviewers (Sonnet) and a defending consolidator (Opus). Use when the user
-  asks for a code review, mentions getting a PR ready, or wants a diff
-  checked before pushing — even when they don't explicitly say "Codex" or
-  "multi-agent".
+  "レビューして" "review this" "コードレビュー" "PR ready" "PR作る前に確認"
+  "diff レビュー" "code review" — Cross-vendor review: runs the bundled
+  `code-review` skill and Codex CLI in parallel on the same diff, then
+  reconciles the two result sets. Use when the user asks for a code review or
+  wants a diff checked before pushing. Use `/code-review` alone instead when
+  Codex is not installed or a Claude-only review is enough.
 ---
 
 # Review
 
-Multi-agent review of the current diff. Codex (cross-vendor outsider) runs alongside N Claude reviewers each scoped to a dynamically-generated persona. A consolidator opens the actual source files, defends each finding (adopt/reject with reason), and attaches a confidence score.
+The bundled `code-review` skill is the review engine. Codex runs beside it as
+the one signal Claude cannot produce. This skill only reconciles the two.
 
 ## Why this design
 
-- **Codex is the only true cross-vendor signal** — different process, different vendor. Claude family cannot replicate this internally, so Codex stays.
-- **Single-reviewer AI output is noisy.** Multi-Review (arXiv:2509.01494) shows N independent reviews + aggregation lifts recall ~118% (n=10). Mixture-of-Agents (arXiv:2406.04692) shows heterogeneous prompts beat homogeneous.
-- **Without defense, output is a longer noisy list.** A consolidator that opens source files and justifies adopt/reject is what turns "indications" into "findings".
+- **Don't reimplement the engine.** Bundled `code-review` already runs multiple
+  agents, verifies each finding (`CONFIRMED` / `PLAUSIBLE`), requires a concrete
+  failure scenario per finding, and can apply fixes (`--fix`) or post inline PR
+  comments (`--comment`). It runs forked, so its intermediate work never enters
+  this session's context.
+- **Don't rebuild the ensemble.** Running N reviewers and aggregating them is
+  what the bundled engine does internally, with a verify pass on top. Rebuilding
+  that outside it buys nothing and costs context.
+- **Review is a partial net, not a gate.** Every published measurement of LLM
+  review, on every model generation, lands well short of catching all real
+  issues. Report what was found; never say or imply the diff is clean because
+  the review came back empty.
+- **Run the cross-vendor lane whenever it is available.** Every bundled path,
+  `ultra` included, is Claude, so Codex is the only signal from outside that
+  family. Two families do not share blind spots the way two samples of one
+  family do. Standing decision: if `codex` is on `PATH`, it runs.
+- **Give Codex no rewrite authority.** The one failure mode that reproduces
+  across settings is a reviewer that rewrites rather than reports: when
+  uncertain it discards the writer's structure and restarts, turning correct
+  code incorrect. Step 3 keeps Codex advisory. Adopt a Codex-only finding solely
+  when reading the source lets you state the concrete failure.
+- **Reconciliation is the whole job here.** Two lists, deduped, with cross-vendor
+  hits promoted. Nothing else.
 
-## Architecture
+Superseded by this design: dynamically generated personas, N Sonnet reviewers,
+and confidence scored by reviewer agreement ratio. The engine covers the first
+two, and agreement among same-family reviewers measures shared priors as much as
+truth.
 
-```
-Step 1  Haiku subagent → persona generation (2-3 reviewers from diff semantics)
-Step 2  parallel       → Codex CLI  +  Sonnet × N (one per persona)
-Step 3  Opus inline    → defense + confidence + final output
-```
+### On evidence
 
-## Step 1 — Diff and personas
+This skill cites no benchmark numbers on purpose. As of 2026-09 the published
+work is a model generation or more behind what runs here, measured on
+single-file tasks rather than repo diffs, or vendor-run with an explicit
+"not a leaderboard" caveat. Those numbers rot faster than this file gets edited,
+so only the mechanisms above are written down.
 
-### 1a. Determine base and diff
+## Step 1 — Target
 
 ```bash
 BASE=$(git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null)
 git diff "$BASE"..HEAD --stat
-DIFF_FILE=$(mktemp /tmp/review-diff-XXXXXX.patch)
-git diff "$BASE"..HEAD > "$DIFF_FILE"
 ```
 
-If empty, fall back to uncommitted: `git diff --stat` and `git diff > "$DIFF_FILE"`. If still empty, stop and tell the user there is nothing to review.
+If empty, fall back to `git diff --stat` (uncommitted). If still empty, stop and
+say there is nothing to review.
 
-### 1b. Generate personas via Haiku subagent
+## Step 2 — Run both in parallel
 
-Spawn one Agent with `model: "haiku"` and `subagent_type: "general-purpose"`. Pass the diff path. Ask for 2-3 personas as strict JSON.
+Send 2a and 2b **in one message with two tool calls**. Sequential messages
+serialize them and waste minutes.
 
-Prompt template:
+### 2a. Bundled engine
 
-> Read the diff at `<DIFF_FILE>` (use Read or `cat`). Propose 2-3 reviewer personas based on what the change actually does. Personas reflect *change semantics*, not file extensions: auth-touching → "Security Auditor"; DB migration → "Database Migration Specialist"; perf-sensitive hot path → "Performance Engineer". Output strict JSON only, no prose, no fences: `{"personas":[{"name":"...","focus":"...","what_to_look_for":"..."}]}`. Use 2 if the change is narrow, 3 if it spans multiple concerns. Never more than 3.
+Call the Skill tool with `skill: "code-review"`. Pass the effort level the user
+asked for as `args`, defaulting to `high`. Pass a PR number, branch, or path
+through unchanged when the user named one.
 
-Bounds rationale: <2 loses ensemble effect; >3 hits diminishing returns (cost +67% for +15-25% recall at n=3→5 per Multi-Review).
+Do not pass `--fix` or `--comment` from here. Both act on findings before this
+skill has reconciled them; tell the user to run `/code-review --fix` directly
+when that is what they want.
 
-If the subagent returns prose, retry once with "respond with strict JSON only, no prose, no fences."
-
-## Step 2 — Parallel reviews
-
-Run 2a and 2b **in a single message with multiple tool calls** so they execute concurrently. Sequential messages serialize them and waste minutes.
-
-### 2a. Codex CLI
-
-```bash
-which codex >/dev/null 2>&1 && echo FOUND || echo NOT_FOUND
-```
-
-If FOUND:
+### 2b. Codex CLI
 
 ```bash
+which codex >/dev/null 2>&1 || echo NOT_FOUND
 REPO_ROOT=$(git rev-parse --show-toplevel)
-cd "$REPO_ROOT"
-TMPERR=$(mktemp /tmp/codex-review-XXXXXX.txt)
-codex review --base main -c 'model_reasoning_effort="high"' 2>"$TMPERR"
+cd "$REPO_ROOT" && codex review --base main -c 'model_reasoning_effort="high"'
 ```
 
-Timeout: 300000 ms. If the user gave specific focus ("security に注目して"), append it as the prompt argument to `codex review`.
+Timeout: 300000 ms. Append the user's focus ("security に注目して") as the
+prompt argument when they gave one.
 
-If NOT_FOUND, skip Codex and continue with persona reviewers only. State the degradation in the final output.
+If `codex` is missing, run 2a alone and say the run had no cross-vendor signal:
+`/code-review` on its own would have produced the same result.
 
-### 2b. Persona reviewers (Sonnet × N)
+## Step 3 — Reconcile
 
-For each persona from Step 1, spawn an Agent with `model: "sonnet"` and `subagent_type: "general-purpose"`. Pass the diff path and the persona definition. Send all reviewer Agent calls in the **same message** as the Codex Bash call (full parallelism).
+Bundled findings arrive already verified. **Do not re-verify them** — the fork
+opened the source and attached a verdict. Spend the effort on the other groups.
 
-Per-reviewer prompt rules (include verbatim):
+| Group | What to do |
+|---|---|
+| Both vendors, same file + same root cause | Mark `CROSS-VENDOR`. Highest priority regardless of either side's own severity |
+| Bundled only | Keep its severity and `CONFIRMED` / `PLAUSIBLE` verdict as-is |
+| Codex only | Skeptical prior (see above). Open the cited file, read the surrounding code, then adopt or reject in one sentence citing what you saw. Adopt only when you can state the concrete failure; reject when it is mitigated upstream, out of diff scope, or wrong about the code |
 
-- Stay in your focus area. Do **not** flag issues outside your specialty — recall comes from the ensemble, not from any one reviewer being exhaustive.
-- Maximum **5 findings**. Pick by severity, not coverage.
-- Open the actual source files (not just the diff hunk) to verify surrounding context before flagging.
-- Diff scope only. Do not flag pre-existing code untouched by this diff.
-- Severity buckets:
-  - **CRITICAL** — security vulnerability, data loss risk, prod crash
-  - **WARNING** — bug, incorrect behavior, significant maintainability concern
-  - **SUGGESTION** — improvement, non-blocking
-- Output strict JSON only: `{"persona":"<name>","findings":[{"severity":"CRITICAL|WARNING|SUGGESTION","file":"...","line":N,"issue":"...","why":"..."}]}`. No prose, no fences.
+Priority for the merge decision:
 
-## Step 3 — Defense and consolidation (inline)
+- **P0** — `CROSS-VENDOR`, or `CONFIRMED` + security / data loss / crash
+- **P1** — `CONFIRMED` bug, or an adopted Codex finding of the same weight
+- **P2** — everything else, including every `PLAUSIBLE` no second source reached
 
-Once Codex output and all persona JSON outputs are collected, the running agent is the consolidator. Do this inline — do not spawn another agent. The session model should be Opus for best judgment; if not, defense quality is reduced but the workflow still runs.
+**Bias toward merging.** P2 never blocks. If only P2 findings remain, PASS.
 
-### 3a. Defend every finding
-
-For every finding (Codex + each persona):
-
-1. Open the cited source file. Read the surrounding code, not just the diff hunk.
-2. Decide **adopt** or **reject**:
-   - Adopt if the issue is real after reading context.
-   - Reject if mitigated elsewhere (validation upstream, sanitized at boundary, guarded by surrounding code), out of diff scope, or factually wrong about the code.
-3. Write a one-sentence reason that cites what you saw in the source (not just "looks fine").
-
-### 3b. Dedupe and confidence
-
-Group findings that point to the same underlying issue (same file + same root cause), even if worded differently. For each group:
-
-| Confidence | Rule |
-|------------|------|
-| **HIGH**   | ≥66% of reviewers flagged it, OR verified critical bug after source check |
-| **MEDIUM** | ≥40% of reviewers, OR single reviewer + source-verified non-critical |
-| **LOW**    | Single reviewer, unverified, or style only |
-
-"Reviewers" = actual count N (Codex counts as 1 if it ran; otherwise N is just persona count). Compute the ratio against actual N — a 2-reviewer run and a 4-reviewer run must both produce sensible scores.
-
-### 3c. Priority for the PR decision
-
-- **P0** = CRITICAL severity + HIGH confidence → must fix before merge
-- **P1** = CRITICAL + MEDIUM, or WARNING + HIGH → fix before PR
-- **P2** = anything else → defer, do not block
-
-**Bias toward merging.** P2 findings do not block. If only P2 findings remain, verdict is PASS.
-
-## Output format
+## Output
 
 ```
 ## Review Results
 
 **Verdict**: PASS / NEEDS ATTENTION
-**Reviewers**: N (Codex + <persona1>, <persona2>, ...)
+**Sources**: code-review (<effort>) + Codex   ← or "code-review only (codex not installed)"
 
-### Adopted findings (priority order)
+### P0
+#### [CROSS-VENDOR] <title>
+- `path/to/file.ts:42`
+- Both said: <one line per side>
+- Failure: <concrete input/state → wrong output>
 
-#### [P0 / HIGH] <issue title>
-- File: `path/to/file.ts:42`
-- Severity: CRITICAL
-- Confidence: HIGH (3/3 reviewers)
-- Issue: <what is wrong>
-- Source check: <what you saw when you opened the file>
+### P1
+(same shape)
 
-(repeat P0 → P1 → P2)
+### P2
+- `file:line` — <one line each>
 
-### Rejected findings (transparency)
-
-#### <issue title> — REJECTED
-- Raised by: <reviewer name>
-- Reason: <one sentence with source evidence>
-
-(repeat)
-
-### Cross-model agreement
-- Both Codex and ≥1 persona: <count>
-- Codex only: <count>
-- Persona only: <count>
+### Rejected Codex findings
+- `file:line` — <one-sentence reason from reading the source>
 ```
 
-The rejected section is mandatory when there are rejections. Transparency about *why* something was rejected is what lets downstream agents and humans trust the adopted list.
+The rejected section is mandatory when there are rejections. Saying *why*
+something was dropped is what makes the adopted list trustworthy.
 
 ## Gotchas
 
-- **Run Step 2 in a single message.** Multiple tool calls in one message run in parallel; sequential messages serialize them and roughly N× the wall time.
-- **Strict JSON from subagents.** If a subagent returns prose, retry once with "respond with strict JSON only, no prose, no fences." If it fails twice, parse what you can and note the degradation.
-- **Diff scope only.** Reject any finding about pre-existing code untouched by this diff, even if the finding is technically real — out of scope.
-- **Confidence ratio uses actual N.** If Codex was unavailable and you ran with 2 personas, HIGH still requires 2/2 (≥66%), not 2/4. Never use a fixed denominator.
-- **Codex output is verbatim input to defense.** Do not pre-summarize Codex before consolidation — defense needs the original wording to verify against source.
-- **No re-spawn of consolidator.** The current session does consolidation inline. Spawning another Opus agent duplicates context cost without quality gain.
-- **Pushback is allowed.** If the user disagrees with an adopted finding, treat the disagreement as new evidence and re-run Step 3a for that one finding only.
-- **No fixed personas list.** Personas come from diff semantics. Do not maintain a static "Security/Performance/Readability" set — the article's whole point is dynamic personas tied to what the change actually does.
-
-## Fallback when Codex is unavailable
-
-Run Step 2b only (persona reviewers). State in the output:
-
-> Cross-vendor signal unavailable (Codex CLI not found). Running with Claude persona reviewers only. Recall is reduced; consider installing Codex CLI.
-
-Confidence still uses actual N, so internal consistency holds.
+- **One message for Step 2.** Parallel tool calls in a single message; sequential
+  messages roughly double the wall time.
+- **Diff scope only.** Reject findings about pre-existing code the diff didn't
+  touch, even when technically real.
+- **Codex output goes into Step 3 verbatim.** Don't pre-summarize it — the
+  adopt/reject decision needs the original wording to check against source.
+- **No second consolidator agent.** Reconcile inline; spawning another agent
+  duplicates context cost with no quality gain.
+- **Pushback is evidence.** If the user disputes an adopted finding, re-open
+  that one finding's source and decide again.
 
 ## Principles
 
-- The reviewer must not have the implementer's context (subagents are fresh).
-- Diff scope only.
-- Defense is mandatory — every adopted finding cites source evidence.
-- Rejected findings are shown with reasons (transparency).
-- Bias toward merging. P2 does not block.
 - This is a second opinion, not a gate. The human decides.
+- Bias toward merging. P2 does not block.
+- Rejected findings are shown with reasons.
 - False positives are expected with multi-model review. Filter, don't complain.
+
+## When not to use this skill
+
+- Claude-only review is fine, or Codex is not installed → `/code-review`
+- Apply the fixes in the same run → `/code-review --fix`
+- Post findings on a GitHub PR → `/code-review --comment`
+- Deep multi-agent review in the cloud → `/code-review ultra`
