@@ -24,6 +24,14 @@
 #
 # advisorModel is managed here even though /advisor rewrites it at runtime: this file
 # is the source of truth, so a pick made in /advisor is reverted on the next apply.
+#
+# CLAUDE_CODE_THRIFTY_SONIC=false turns off the undocumented "thrifty_sonic" flag
+# (GrowthBook tengu_thrifty_sonic). In auto / bypassPermissions mode it injects an
+# instruction to prefer Bash (cat, sed, heredoc) over Read/Edit/Write and trims the
+# Bash tool description. Path-scoped rules, nested CLAUDE.md, and the Edit|Write
+# hooks below only fire on the dedicated tools, so the flag silently disables all
+# of them. Verified on 2.1.263. Drop this once the docs say rules and hooks also
+# fire for shell equivalents, or the flag is gone from the binary.
 set -euo pipefail
 
 CURRENT=$(cat)
@@ -37,7 +45,8 @@ MANAGED=$(
   "advisorModel": "fable",
   "language": "Japanese",
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_THRIFTY_SONIC": "false"
   },
   "permissions": {
     "defaultMode": "auto",
