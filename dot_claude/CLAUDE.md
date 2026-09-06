@@ -35,6 +35,13 @@
 
 Background context for these principles: `~/.claude/docs/agentic-engineering.md` (framework, vocabulary, source attribution)
 
+## Writing to public destinations
+
+Commit messages, PR titles and bodies, issues — anything that lands in a repo or on a service.
+
+- Write only what is in the diff or in the repo. Don't name files, repos, projects, hosts, or people from outside it, not even as justification. Public upstream projects are fine; anything private or internal is not
+- State the claim, not the evidence. "verified in another project", never which project. If something was checked elsewhere, say it was checked, not where
+
 ## Conventions
 
 - Use pnpm unless otherwise specified
