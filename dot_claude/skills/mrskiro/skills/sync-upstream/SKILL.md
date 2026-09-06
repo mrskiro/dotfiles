@@ -128,7 +128,7 @@ setting worth adopting is invisible until something enumerates it. Reading a
 config file only for what it contains finds stale values and never finds absent
 ones.
 
-Beyond "what is new", two failure modes are worth hunting specifically:
+Beyond "what is new", three failure modes are worth hunting specifically:
 
 - **Stale rationale.** A rule whose *conclusion* still holds but whose stated
   *reason* has become false. These survive audits that only check conclusions, and
@@ -136,6 +136,45 @@ Beyond "what is new", two failure modes are worth hunting specifically:
 - **Prose where a mechanism now exists.** Guidance asking the model not to do
   something, when the runtime has since gained a way to make it impossible.
   A new mechanism turns an old instruction into debt
+- **A local skill the vendor has since shipped.** Bundled skills grow every
+  release, so a hand-built one can quietly become a worse copy of something now
+  included. This is the highest-yield check in the pass — see below
+
+### Local skills against the bundled set
+
+Bundled skills are release output, so they belong in this pass rather than in a
+quality audit. Enumerate both sides and compare:
+
+```bash
+claude plugin details <your-plugin>          # your skills, with token cost
+```
+
+The commands reference marks each bundled skill with **Skill** in its purpose
+column; that page, not memory, is the list. Then check two things per overlap:
+
+- **Function.** Read what the bundled one actually does now, not what it did when
+  yours was written. A skill built to supply multi-agent review, verification, or
+  fan-out is worth re-reading once the runtime ships those natively: what remains
+  yours is usually a thin part worth keeping, wrapped around the bundled engine.
+  Reimplementing an engine costs context on every invocation and drifts behind
+  each release.
+- **Name.** A local skill overrides a bundled one of the same name and hides it,
+  and a bundled *alias* can capture a name you thought was yours. Collisions
+  change silently across releases and across packaging changes, so read the
+  session's actual command list rather than assuming:
+
+```bash
+claude -p "hi" --output-format stream-json --verbose --max-turns 1 \
+  | python3 -c "import sys,json
+for l in sys.stdin:
+    d=json.loads(l)
+    if d.get('type')=='system' and 'slash_commands' in d:
+        print(sorted(d['slash_commands'])); break"
+```
+
+**Cost is measurable, so measure it.** `claude plugin details` prints always-on
+and per-invocation token cost per skill. A trim argued from feel is a guess; the
+same argument with the number attached is a decision.
 
 ## 5. Report, then apply
 
