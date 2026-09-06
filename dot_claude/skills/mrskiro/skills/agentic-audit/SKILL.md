@@ -41,6 +41,29 @@ Read the actual files before judging. Score based on what exists, not assumption
 - `~/.claude/settings.json` — global hooks, deny list, permission mode
 - `~/.claude/skills/` — global skills (list)
 
+**Skill directory health.** Listing names is not enough: an entry can sit there
+for months doing nothing, and nothing reports it. Check each entry resolves, and
+whether anything owns it:
+
+```bash
+find ~/.claude/skills -maxdepth 2 -name SKILL.md -type l ! -exec test -e {} \; -print   # dead symlinks
+for e in ~/.claude/skills/*; do [ -e "$e/SKILL.md" ] || [ -e "$e/.claude-plugin/plugin.json" ] || echo "no SKILL.md: $e"; done
+```
+
+Then subtract what your dotfiles (or whatever manages the directory) actually
+tracks. Three findings to expect, all invisible from a plain listing:
+
+- **Dead entries** — a symlink into a tool whose layout changed, or a leftover
+  wrapper. They never load, so nothing ever errors
+- **Unmanaged skills** — real, working, and absent from version control, so they
+  vanish on the next machine. Check usage before proposing deletion: a skill with
+  no recorded invocations is dead weight, one used 27 times is a real dependency
+  that was superseded
+- **A dependency the directory hides** — a vendored checkout or large tree living
+  under `skills/` that no skill references any more
+
+Usage counts live in `~/.claude.json` under `skillUsage`.
+
 ### 2. Lifecycle controls
 
 **Before evaluating lifecycle controls, read `references/lifecycle.md`.**
