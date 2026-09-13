@@ -9,13 +9,13 @@ description: >
 argument-hint: "<owner/repo or repo URL>"
 ---
 
-Apply a consistent set of GitHub repository settings via `gh api`. These settings reflect the owner's preferences observed across their active repositories (calect, mrskiro.dev, cptr).
+Apply a consistent set of GitHub repository settings via `gh api`. The values below are the owner's standard, derived from their existing repositories.
 
 ## Workflow
 
 ### 1. Identify the target repository
 
-- If an argument is provided, use it as the repo (e.g., `mrskiro/calect`)
+- If an argument is provided, use it as the repo (e.g., `owner/repo`)
 - Otherwise, detect from the current git remote: `git remote get-url origin`
 - Confirm the repo with the user before making changes
 

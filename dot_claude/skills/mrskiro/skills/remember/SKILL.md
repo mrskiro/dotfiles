@@ -34,7 +34,7 @@ Lines (one hit per line); stderr has a one-line summary.
 |---|---|---|
 | `--or` | off (AND) | Match if **any** keyword appears (default requires all) |
 | `--since <duration>` | none | Time window. `7d` `24h` `30m` |
-| `--project <name>` | none | Substring match against the recorded `cwd` (e.g. `calect`) |
+| `--project <name>` | none | Substring match against the recorded `cwd` (e.g. `dotfiles`) |
 | `--role <role>` | none | One of `user` / `assistant` / `summary` |
 | `--limit <n>` | 10 | Top N hits |
 | `--max-snippet <n>` | 150 | Max snippet length in chars |
@@ -51,7 +51,7 @@ more keywords ranks above a hit covering fewer.
 Each stdout line is a compact JSON object — only what's needed downstream:
 
 - `sessionId`: session UUID
-- `project`: basename of the recorded `cwd` (e.g. `me`, `calect`)
+- `project`: basename of the recorded `cwd` (e.g. `dotfiles`)
 - `timestamp`: ISO 8601
 - `role`: `user` / `assistant` / `summary`
 - `snippet`: excerpt centred on the first matched token
