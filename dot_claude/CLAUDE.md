@@ -29,6 +29,13 @@
 - Keep responses focused and brief. Spend most of the response on the main answer and keep caveats short; when explaining, give a high-level summary unless depth was asked for
 - Match the length of files you write — reports, Markdown, summaries — to what the task needs. No filler sections, redundant summaries, or boilerplate
 
+### Writing code
+
+- Before writing anything, check in this order: already in this codebase → stdlib → a platform feature (HTML input types, CSS, a DB constraint) → an already-installed dependency. Write new code only past that, and never add a dependency for what a few lines cover
+- No abstraction until a second caller exists. No interface with one implementation, no config for a value that never changes, no scaffolding "for later"
+- Never trade away: validation at trust boundaries, error handling that prevents data loss, security, accessibility. Unnecessary is what gets cut, not small
+- Fix a bug where every caller routes through it. Grep the callers before editing — one guard in the shared function beats a guard per call site, and patching only the reported path leaves its siblings broken
+
 ### Tool choice
 
 - Prefer CLI over MCP for equivalent capability. MCP tool schemas are deferred behind ToolSearch now, so the cost is names-only rather than full schemas — but every server's tool names still sit in context each turn, and models are far better trained on CLI than on any given MCP surface. When an MCP is suggested, look for a CLI alternative first (gh, sqlite3, agent-browser, etc.)
