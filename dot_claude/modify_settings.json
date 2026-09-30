@@ -149,7 +149,7 @@ MANAGED=$(
       "allowWrite": ["~/Library/pnpm"]
     },
     "network": {
-      "allowedDomains": ["registry.npmjs.org"]
+      "allowedDomains": ["registry.npmjs.org", "github.com", "api.github.com"]
     }
   }
 }
