@@ -143,7 +143,14 @@ MANAGED=$(
     "sessionUrl": false
   },
   "sandbox": {
-    "enabled": true
+    "enabled": true,
+    "enableWeakerNetworkIsolation": true,
+    "filesystem": {
+      "allowWrite": ["~/Library/pnpm"]
+    },
+    "network": {
+      "allowedDomains": ["registry.npmjs.org"]
+    }
   }
 }
 JSON
