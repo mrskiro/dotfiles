@@ -10,8 +10,8 @@
 #     on every apply.
 #   - autoMode.environment describes work infrastructure and OTEL_EXPORTER_OTLP_HEADERS
 #     is a live API key. This source repo is public, so neither may be committed.
-#   - The telemetry endpoint, the work skills marketplace and the warp plugin are
-#     specific to this machine and this employer.
+#   - The telemetry endpoint and the work skills marketplace are specific to this
+#     machine and this employer.
 #
 # Leaving a key out of MANAGED never deletes it — it just keeps it out of git.
 #
