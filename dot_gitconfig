@@ -7,3 +7,5 @@
 	autostash = true
 [push]
 	default = current
+[branch]
+	autoSetupMerge = false
