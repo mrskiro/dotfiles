@@ -5,7 +5,7 @@
 # the new contents. Only the keys below are owned by chezmoi and end up in git.
 # Everything else in the live file passes through untouched, which is the point:
 #
-#   - Claude Code rewrites this file at runtime (effortLevel, preferredNotifChannel,
+#   - Claude Code rewrites this file at runtime (modelSettings, preferredNotifChannel,
 #     autoMode.environment, autoMode.soft_deny). A static managed file loses those
 #     on every apply.
 #   - autoMode.environment describes work infrastructure and OTEL_EXPORTER_OTLP_HEADERS
@@ -41,7 +41,7 @@ MANAGED=$(
   cat <<'JSON'
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opus[1m]",
+  "model": "opus",
   "advisorModel": "fable",
   "language": "Japanese",
   "env": {
@@ -65,7 +65,8 @@ MANAGED=$(
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/pre-tool-safety.sh"
+            "command": "~/.claude/hooks/pre-tool-safety.sh",
+            "onFailure": "block"
           },
           {
             "type": "command",
@@ -79,7 +80,8 @@ MANAGED=$(
         "hooks": [
           {
             "type": "command",
-            "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$FILE\" in \"$HOME\"/.local/share/chezmoi/*) exit 0 ;; esac && SOURCE=$(chezmoi source-path \"$FILE\" 2>/dev/null) && echo \"Blocked: chezmoi managed. Edit: $SOURCE\" >&2 && exit 2 || exit 0"
+            "command": "FILE=$(jq -re '.tool_input.file_path') && case \"$FILE\" in \"$HOME\"/.local/share/chezmoi/*) exit 0 ;; esac && SOURCE=$(chezmoi source-path \"$FILE\" 2>/dev/null) && echo \"Blocked: chezmoi managed. Edit: $SOURCE\" >&2 && exit 2 || exit 0",
+            "onFailure": "block"
           }
         ]
       },
@@ -136,7 +138,6 @@ MANAGED=$(
   "cleanupPeriodDays": 365,
   "timeZone": "Asia/Tokyo",
   "timeFormat": "24-hour",
-  "keybindingFlavor": "readline",
   "viewMode": "focus",
   "switchModelsOnFlag": false,
   "attribution": {
@@ -162,9 +163,13 @@ JSON
 # MANAGED also defines — Orca injects its relay hooks that way. Keep the
 # managed entries authoritative and re-append the unmanaged ones, matched on
 # (matcher, commands) so the merge stays idempotent.
+#
+# keybindingFlavor is deleted from the live file: deprecated in 2.1.261, the
+# prompt's word keys always follow Bash now.
 printf '%s' "$CURRENT" | jq --argjson managed "$MANAGED" '
   def key: [.matcher, [.hooks[]?.command]];
-  . as $live
+  del(.keybindingFlavor) as $live
+  | $live
   | ($live * $managed)
   | reduce ($managed.hooks | keys_unsorted[]) as $ev (.;
       ($managed.hooks[$ev] | map(key)) as $owned
