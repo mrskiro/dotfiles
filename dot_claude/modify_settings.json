@@ -149,7 +149,8 @@ MANAGED=$(
       "allowWrite": ["~/Library/pnpm"]
     },
     "network": {
-      "allowedDomains": ["registry.npmjs.org", "github.com", "api.github.com"]
+      "allowedDomains": ["registry.npmjs.org", "github.com", "api.github.com"],
+      "allowLocalBinding": true
     }
   }
 }
