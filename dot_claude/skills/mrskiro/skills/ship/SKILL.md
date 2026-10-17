@@ -51,6 +51,8 @@ Each worker:
 5. Runs local verification (test/lint/typecheck)
 6. Commits and creates a PR
 
+A worker whose turn ends in text has reported, not finished: Opus 5.5 can end a turn on a progress update. Confirm the branch, diff, and PR exist before treating the task as done.
+
 **HITL tasks:**
 Implement in the main session. Ask the user for judgment where needed.
 

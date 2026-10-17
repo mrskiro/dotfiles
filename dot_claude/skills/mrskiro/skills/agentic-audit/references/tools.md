@@ -95,7 +95,7 @@ The harness now ships many non-MCP tools that also load on demand (visible in `<
 - `ScheduleWakeup` / `CronCreate` / `CronList` / `CronDelete` — scheduled re-invocation, recurring agents (Routines)
 - `Monitor` — stream events from background processes into the session
 - `EnterWorktree` / `ExitWorktree` — isolated git worktrees for parallel mutations
-- `SendMessage` / `TaskCreate` / `TaskUpdate` / `TaskList` — sub-agent addressing, task graph
+- `SendMessage` / `TaskCreate` / `TaskUpdate` / `TaskList` — sub-agent addressing, task graph (the Task* tools are not offered on Opus 4.8+ / Sonnet 5+ unless `CLAUDE_CODE_ENABLE_TODO_TOOLS=1`)
 - `RemoteTrigger` / `PushNotification` — cross-surface coordination
 - `WebFetch` / `WebSearch` — research without leaving the session
 

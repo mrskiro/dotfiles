@@ -54,11 +54,11 @@ Source: Bassim Eledath.
 ### Do not self-review
 Two separate things, and only one of them still needs a rule.
 
-**In-flight self-correction is now native.** Opus 5 catches its own mistakes and verifies its own work unprompted, so "double-check your answer", "add a final verification step", and "use a subagent to verify" compound with behaviour the model already has — they cost tokens and produce over-verification with no gain in quality. Remove them from prompts, and remove separate verification steps from harness scaffolding.
+**In-flight self-correction is now native.** Opus 5 and later catch its own mistakes and verifies its own work unprompted, so "double-check your answer", "add a final verification step", and "use a subagent to verify" compound with behaviour the model already has — they cost tokens and produce over-verification with no gain in quality. Remove them from prompts, and remove separate verification steps from harness scaffolding.
 
-**Generator-Evaluator separation still applies to review as a gate.** The finding that agents confidently praise their own low-quality work was measured on pre-Opus-5 models and has not been re-measured, so the cheap insurance is unchanged: review comes from a different model (here: Codex via the `review` skill) or a fresh instance with a review-specific prompt. Note that review prompts should ask for everything and filter in a separate pass — Opus 5 follows "only report high-severity issues" literally and reports less.
+**Generator-Evaluator separation still applies to review as a gate.** The finding that agents confidently praise their own low-quality work was measured on pre-Opus-5 models and has not been re-measured through Opus 5.5, whose prompting guide says the Opus 5 patterns still hold, so the cheap insurance is unchanged: review comes from a different model (here: Codex via the `review` skill) or a fresh instance with a review-specific prompt. Note that review prompts should ask for everything and filter in a separate pass — Opus 5 follows "only report high-severity issues" literally and reports less. Unresolved: Anthropic's Opus 5.5 blog post shows a review prompt that lists only merge-blocking problems, which runs against this; no measurement settles it yet.
 
-Sources: Anthropic harness-design-long-running-apps (separation, pre-Opus-5); Anthropic Prompting Claude Opus 5 (self-correction is native).
+Sources: Anthropic harness-design-long-running-apps (separation, pre-Opus-5); Anthropic Prompting Claude Opus 5 (self-correction is native); Anthropic Prompting Claude Opus 5.5 (Opus 5 patterns remain a starting point); claude.dev Getting the most out of Opus 5.5 (merge-blocking review prompt).
 
 ### Throughput over perfection
 "Fixes are cheap, waiting is expensive" in systems where agent throughput far exceeds human attention. Test flakes are handled in follow-up. PRs are short-lived. Don't block forever on perfect first attempts.
