@@ -23,8 +23,9 @@ that only prunes has done half the job.
 ## Scope
 
 `~/.claude/` and whatever the current project loads: guidance (`CLAUDE.md`,
-`rules/`, `docs/`), skills, and configuration (`settings.json` — model and effort
-selection, hooks, permissions — plus `.mcp.json`).
+`AGENTS.md`, `rules/`, `docs/`), skills, and configuration (`settings.json` —
+model and effort selection, hooks and the scripts they call, permissions — plus
+`.mcp.json`).
 
 **The boundary is a question, not a file list.** In scope means a release changed
 something that makes this wrong, or newly possible:
@@ -47,10 +48,13 @@ pass.**
 ## 1. List what is loaded, and where it is really written
 
 Enumerate before diffing. Past the obvious `~/.claude/CLAUDE.md`, look for
-the project `CLAUDE.md` and any nested ones, `rules/` entries whose `paths:`
-frontmatter means they load only for matching files, and skills whose bodies load
-only on invocation. Something you did not enumerate is something you cannot audit;
-something you assume is loaded but is not produces findings that change nothing.
+the project `CLAUDE.md` and any nested ones, `AGENTS.md` files (loaded natively
+where no `CLAUDE.md` exists), `rules/` entries whose `paths:` frontmatter means
+they load only for matching files, skills whose bodies load only on invocation,
+and the scripts each hook entry runs — the settings entry says when a hook fires,
+only the script says what it decides. Something you did not enumerate is
+something you cannot audit; something you assume is loaded but is not produces
+findings that change nothing.
 
 **Resolve the write target before you plan any edit.** Dotfiles are often
 generated from a source tree by a manager such as chezmoi, stow, yadm, or Nix, and
@@ -191,6 +195,11 @@ found clean is a result and belongs in the report; silence about it is
 indistinguishable from never having opened it, and the reader cannot tell which
 they are getting. Skipping is allowed — running out of room, or a surface the
 request excluded — but only when named.
+
+"Audited" means the body was read. An artifact you only grepped is skipped, and
+the report says which terms were searched; a clean grep is not a clean audit,
+because the concept a release made stale is rarely phrased in the words you
+searched for.
 
 Then apply only what is approved, one file at a time — to the write target
 resolved in step 1, not to the deployed copy.
