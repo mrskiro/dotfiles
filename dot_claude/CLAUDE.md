@@ -32,7 +32,7 @@
 ### Writing code
 
 - Before writing anything, check in this order: already in this codebase → stdlib → a platform feature (HTML input types, CSS, a DB constraint) → an already-installed dependency. Write new code only past that, and never add a dependency for what a few lines cover
-- No abstraction until a second caller exists. No interface with one implementation, no config for a value that never changes, no scaffolding "for later"
+- Duplication alone is never a reason to extract. Extract a function, constant, or variable only when the copies must change together or something breaks. No interface with one implementation, no config for a value that never changes, no scaffolding "for later"
 - Never trade away: validation at trust boundaries, error handling that prevents data loss, security, accessibility. Unnecessary is what gets cut, not small
 - Fix a bug where every caller routes through it. Grep the callers before editing — one guard in the shared function beats a guard per call site, and patching only the reported path leaves its siblings broken
 
