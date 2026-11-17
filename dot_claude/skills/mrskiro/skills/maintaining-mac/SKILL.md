@@ -146,8 +146,6 @@ Common large-but-regenerable items: Rust `target/`, `node_modules/`, VM images, 
   instead of the value, which silently corrupts a survey table. Verify with `mdutil -s /`.
 - **PATH is lost in `$(...)` inside loops** when the script narrowed `PATH` at the top —
   `sed`/`head` suddenly "command not found". Set an explicit PATH or use absolute paths.
-- **`find` may be shadowed by an alias.** This machine aliases it to `rtk find`, which
-  rejects `-exec` and compound predicates. Use `/usr/bin/find` in scripts.
 
 ## Notes
 

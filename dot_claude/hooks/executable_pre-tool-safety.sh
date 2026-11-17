@@ -22,12 +22,11 @@ INPUT=$(cat)
 
 CMD=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
-ALLOW='{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
-
-if [ -z "$CMD" ]; then
-  echo "$ALLOW"
-  exit 0
-fi
+# A command this hook has no objection to gets no output, not "allow". "allow" skips the
+# permission prompt — in auto mode that is the classifier's review, so a blanket allow
+# here silently disabled the review that the header above relies on, along with the
+# per-command allowed_domains it approves.
+[ -n "$CMD" ] || exit 0
 
 WARN=""
 
@@ -59,6 +58,4 @@ fi
 if [ -n "$WARN" ]; then
   WARN_ESCAPED=$(printf '%s' "$WARN" | sed 's/"/\\"/g')
   printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$WARN_ESCAPED"
-else
-  echo "$ALLOW"
 fi

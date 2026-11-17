@@ -84,16 +84,6 @@ MANAGED=$(
             "onFailure": "block"
           }
         ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude",
-            "timeout": 5
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -166,9 +156,18 @@ JSON
 #
 # keybindingFlavor is deleted from the live file: deprecated in 2.1.261, the
 # prompt's word keys always follow Bash now.
+#
+# The rtk PreToolUse entries are deleted too. rtk rewrote Bash commands after auto
+# mode had reviewed them, which voids the review and forces every rewritten call to
+# be sent twice (https://github.com/rtk-ai/rtk/issues/4627), so rtk is no longer used.
+# Without this, the merge below would keep a live entry as an unmanaged one.
 printf '%s' "$CURRENT" | jq --argjson managed "$MANAGED" '
   def key: [.matcher, [.hooks[]?.command]];
-  del(.keybindingFlavor) as $live
+  del(.keybindingFlavor)
+  | (if .hooks.PreToolUse then .hooks.PreToolUse |= map(select(
+      key != ["Bash", ["rtk hook claude"]] and key != ["Bash", ["~/.claude/hooks/rtk-rewrite.sh"]]
+    )) else . end)
+  as $live
   | $live
   | ($live * $managed)
   | reduce ($managed.hooks | keys_unsorted[]) as $ev (.;
